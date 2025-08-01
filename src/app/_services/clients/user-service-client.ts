@@ -1,5 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
+import { User } from '../../_model/user';
 
 @Injectable({
   providedIn: 'root'
@@ -15,10 +16,14 @@ export class UserServiceClient {
   };
 
   getAllUsers() {
-    return this.http.get(this.url, this.httpOptions);
+    return this.http.get<User[]>(this.url, this.httpOptions);
   }
 
-  getUser(userId: string) {
-    return this.http.get(`${this.url}/${userId}`, this.httpOptions);
+  getUser(userId: number) {
+    return this.http.get<User>(`${this.url}/${userId}`, this.httpOptions);
+  }
+
+  postUser(user: User) {
+    return this.http.post<User>(this.url, user, this.httpOptions);
   }
 }
