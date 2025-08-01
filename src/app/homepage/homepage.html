@@ -1,4 +1,4 @@
-@if (!authService.isAuthenticated) {
+@if (!authService.isAuthenticated()) {
 <button (click)="authService.login()">Login</button>
 <hr />
 } @else {
@@ -6,7 +6,7 @@
 
 <br />
 
-Is Authenticated: {{ authService.isAuthenticated }}
+Is Authenticated: {{ authService.isAuthenticated() }}
 
 <br />
 userData
