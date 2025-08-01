@@ -8,8 +8,8 @@ export const authConfig: PassedInitialConfig = {
     clientId: '5qdd485015k9doea0l14jcv5k0',
     scope: 'email openid phone profile', // 'openid profile offline_access ' + your scopes
     responseType: 'code',
-    // silentRenew: true,
-    // useRefreshToken: true,
-    // renewTimeBeforeTokenExpiresInSeconds: 30,
+    silentRenew: true,
+    useRefreshToken: true,
+    renewTimeBeforeTokenExpiresInSeconds: 30,
   }
 }
