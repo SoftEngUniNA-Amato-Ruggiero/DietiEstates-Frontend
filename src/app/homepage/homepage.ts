@@ -6,10 +6,11 @@ import { UserServiceClient } from '../_services/clients/user-service-client';
 import { User } from '../_model/user';
 import { Credentials } from '../_model/credentials';
 import { UserInfo } from '../_model/user-info';
+import { TestButtons } from '../test-buttons/test-buttons';
 
 @Component({
   selector: 'app-homepage',
-  imports: [AsyncPipe, JsonPipe, MapComponent],
+  imports: [AsyncPipe, JsonPipe, MapComponent, TestButtons],
   templateUrl: './homepage.html',
   styleUrl: './homepage.scss'
 })
