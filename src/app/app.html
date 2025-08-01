@@ -1,19 +1,1 @@
-@if (!authService.isAuthenticated) {
-<button (click)="authService.login()">Login</button>
-<hr />
-} @else {
-<button (click)="authService.logout()">Logout</button>
-
-<br />
-
-Is Authenticated: {{ authService.isAuthenticated }}
-
-<br />
-userData
-<pre>{{ authService.userData$ | async | json }}</pre>
-
-<br />
-}
-
-
 <router-outlet />
