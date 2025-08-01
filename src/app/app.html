@@ -1,16 +1,16 @@
-@if (!isAuthenticated) {
-<button (click)="login()">Login</button>
+@if (!authService.isAuthenticated) {
+<button (click)="authService.login()">Login</button>
 <hr />
 } @else {
-<button (click)="logout()">Logout</button>
+<button (click)="authService.logout()">Logout</button>
 
 <br />
 
-Is Authenticated: {{ isAuthenticated }}
+Is Authenticated: {{ authService.isAuthenticated }}
 
 <br />
 userData
-<pre>{{ userData$ | async | json }}</pre>
+<pre>{{ authService.userData$ | async | json }}</pre>
 
 <br />
 }
