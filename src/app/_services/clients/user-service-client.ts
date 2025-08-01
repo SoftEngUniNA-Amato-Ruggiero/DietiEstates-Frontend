@@ -1,6 +1,8 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { User } from '../../_model/user';
+import { Agency } from '../../_model/agency';
+import { RealEstateAgent } from '../../_model/realEstateAgent';
 
 @Injectable({
   providedIn: 'root'
@@ -39,11 +41,19 @@ export class UserServiceClient {
     return this.http.post<User>(`${this.url}/customers`, user, this.httpOptions);
   }
 
-  postAgent(user: User) {
-    return this.http.post<User>(`${this.url}/agents`, user, this.httpOptions);
+  postAgent(user: RealEstateAgent) {
+    return this.http.post<RealEstateAgent>(`${this.url}/agents`, user, this.httpOptions);
   }
 
-  postManager(user: User) {
-    return this.http.post<User>(`${this.url}/managers`, user, this.httpOptions);
+  postManager(user: RealEstateAgent) {
+    return this.http.post<RealEstateAgent>(`${this.url}/managers`, user, this.httpOptions);
+  }
+
+  getAgencies() {
+    return this.http.get<Agency[]>(`${this.url}/agencies`, this.httpOptions);
+  }
+
+  postAgency(agency: Agency) {
+    return this.http.post<Agency>(`${this.url}/agencies`, agency, this.httpOptions);
   }
 }
