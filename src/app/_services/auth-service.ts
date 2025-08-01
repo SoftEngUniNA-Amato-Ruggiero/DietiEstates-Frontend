@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
 
 @Injectable({
@@ -11,14 +11,14 @@ export class AuthService {
 
   userData$ = this.oidcSecurityService.userData$;
 
-  isAuthenticated = false;
+  isAuthenticated = signal(false);
 
   constructor() {
     this.oidcSecurityService.checkAuth().subscribe();
 
     this.oidcSecurityService.isAuthenticated$.subscribe(
       ({ isAuthenticated }) => {
-        this.isAuthenticated = isAuthenticated;
+        this.isAuthenticated.set(isAuthenticated);
 
         console.warn('authenticated: ', isAuthenticated);
       }
