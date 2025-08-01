@@ -8,6 +8,15 @@
       "schematics": {
         "@schematics/angular:component": {
           "style": "scss"
+        },
+        "@schematics/angular:service": {
+          "path": "src/app/_services"
+        },
+        "@schematics/angular:guard": {
+          "path": "src/app/_guards"
+        },
+        "@schematics/angular:interceptor": {
+          "path": "src/app/_interceptors"
         }
       },
       "root": "",
