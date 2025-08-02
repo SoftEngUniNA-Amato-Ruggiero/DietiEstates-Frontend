@@ -21,6 +21,10 @@ export class UserServiceClient {
     return this.http.get<User[]>(this.url, this.httpOptions);
   }
 
+  public getUserByEmail(email: string) {
+    return this.http.get<User[]>(`${this.url}?email=${email}`, this.httpOptions);
+  }
+
   public getUser(userId: number) {
     return this.http.get<User>(`${this.url}/${userId}`, this.httpOptions);
   }
