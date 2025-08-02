@@ -27,7 +27,7 @@ export class TestButtons {
 
   protected postManager() {
     const agent = new RealEstateAgent(
-      new Credentials('manager', 'password'),
+      new Credentials('manager@example.com', 'password'),
       new UserInfo('Manager', 'Zero'),
       1
     );
@@ -39,7 +39,7 @@ export class TestButtons {
 
   protected postAgent() {
     const agent = new RealEstateAgent(
-      new Credentials('agent1', 'password1'),
+      new Credentials('agent1@example.com', 'password1'),
       new UserInfo('Agent', 'One'),
       1
     );
@@ -52,6 +52,12 @@ export class TestButtons {
   protected getUsers() {
     this.userServiceClient.getAllUsers().subscribe(users => {
       console.log('All users:', users);
+    });
+  }
+
+  protected getUserByEmail(email: string) {
+    this.userServiceClient.getUserByEmail(email).subscribe(users => {
+      console.log('User found:', users[0]);
     });
   }
 
