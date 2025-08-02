@@ -12,9 +12,9 @@ import { Agency } from '../_model/agency';
   styleUrl: './test-buttons.scss'
 })
 export class TestButtons {
-  userServiceClient = inject(UserServiceClient);
+  private readonly userServiceClient = inject(UserServiceClient);
 
-  postAgency() {
+  protected postAgency() {
     const agency = new Agency(
       'iban',
       'name'
@@ -25,7 +25,7 @@ export class TestButtons {
     });
   }
 
-  postManager() {
+  protected postManager() {
     const agent = new RealEstateAgent(
       new Credentials('manager', 'password'),
       new UserInfo('Manager', 'Zero'),
@@ -37,7 +37,7 @@ export class TestButtons {
     });
   }
 
-  postAgent() {
+  protected postAgent() {
     const agent = new RealEstateAgent(
       new Credentials('agent1', 'password1'),
       new UserInfo('Agent', 'One'),
@@ -49,13 +49,13 @@ export class TestButtons {
     });
   }
 
-  getUsers() {
+  protected getUsers() {
     this.userServiceClient.getAllUsers().subscribe(users => {
       console.log('All users:', users);
     });
   }
 
-  getAgencies() {
+  protected getAgencies() {
     this.userServiceClient.getAgencies().subscribe(agencies => {
       console.log('All agencies:', agencies);
     });

@@ -11,49 +11,49 @@ export class UserServiceClient {
   private readonly http = inject(HttpClient);
   private readonly url = 'http://localhost:8081/api/users';
 
-  httpOptions = {
+  private readonly httpOptions = {
     headers: new HttpHeaders({
       'Content-Type': 'application/json'
     })
   };
 
-  getAllUsers() {
+  public getAllUsers() {
     return this.http.get<User[]>(this.url, this.httpOptions);
   }
 
-  getUser(userId: number) {
+  public getUser(userId: number) {
     return this.http.get<User>(`${this.url}/${userId}`, this.httpOptions);
   }
 
-  postUser(user: User) {
+  public postUser(user: User) {
     return this.http.post<User>(this.url, user, this.httpOptions);
   }
 
-  getCustomers() {
+  public getCustomers() {
     return this.http.get<User[]>(`${this.url}/customers`, this.httpOptions);
   }
 
-  getCustomer(userId: number) {
+  public getCustomer(userId: number) {
     return this.http.get<User>(`${this.url}/customers/${userId}`, this.httpOptions);
   }
 
-  postCustomer(user: User) {
+  public postCustomer(user: User) {
     return this.http.post<User>(`${this.url}/customers`, user, this.httpOptions);
   }
 
-  postAgent(user: RealEstateAgent) {
+  public postAgent(user: RealEstateAgent) {
     return this.http.post<RealEstateAgent>(`${this.url}/agents`, user, this.httpOptions);
   }
 
-  postManager(user: RealEstateAgent) {
+  public postManager(user: RealEstateAgent) {
     return this.http.post<RealEstateAgent>(`${this.url}/managers`, user, this.httpOptions);
   }
 
-  getAgencies() {
+  public getAgencies() {
     return this.http.get<Agency[]>(`${this.url}/agencies`, this.httpOptions);
   }
 
-  postAgency(agency: Agency) {
+  public postAgency(agency: Agency) {
     return this.http.post<Agency>(`${this.url}/agencies`, agency, this.httpOptions);
   }
 }

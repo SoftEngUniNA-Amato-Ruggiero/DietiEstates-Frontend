@@ -9,14 +9,14 @@ import { latLng, tileLayer, icon, Icon } from 'leaflet';
   styleUrl: './map-component.scss'
 })
 export class MapComponent {
-  icon = icon({
+  private readonly icon = icon({
     ...Icon.Default.prototype.options,
     iconUrl: 'assets/marker-icon.png',
     iconRetinaUrl: 'assets/marker-icon-2x.png',
     shadowUrl: 'assets/marker-shadow.png'
   })
 
-  options = {
+  protected readonly options = {
     layers: [
       tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '...' })
     ],
