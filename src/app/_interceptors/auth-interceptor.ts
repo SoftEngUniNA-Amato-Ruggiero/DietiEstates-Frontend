@@ -9,13 +9,12 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
   if (backendUrlList.some(url => req.url.includes(url))) {
     let token: string | null = null;
 
-    oidcSecurityService.getIdToken().subscribe({
-      next: (idToken) => {
-        token = idToken;
-        console.info('ID Token:', token);
+    oidcSecurityService.getAccessToken().subscribe({
+      next: (accessToken) => {
+        token = accessToken;
       },
       error: (err) => {
-        console.error('Error fetching ID token', err);
+        console.error('Error fetching Access token', err);
       }
     });
 

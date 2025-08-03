@@ -21,12 +21,12 @@ export class Homepage {
       if (!user) {
         return;
       }
-      this.userClient.postCustomer(user).subscribe({
+      this.userClient.postUser(user).subscribe({
         next: (response) => {
           console.info('User created in the database:', response);
         },
         error: (err) => {
-          console.info('User exists in the database:', err);
+          console.warn('Post request error, see response to check if user was already in the database:', err);
         }
       });
     });

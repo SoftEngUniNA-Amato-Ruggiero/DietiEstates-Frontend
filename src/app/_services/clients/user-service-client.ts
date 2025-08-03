@@ -30,27 +30,13 @@ export class UserServiceClient {
   }
 
   public postUser(user: User) {
-    return this.http.post<User>(this.url, user, this.httpOptions);
+    console.log('user: \n', user);
+    return this.http.post<User>(`${this.url}/`, user, this.httpOptions);
   }
 
-  public getCustomers() {
-    return this.http.get<User[]>(`${this.url}/customers`, this.httpOptions);
-  }
-
-  public getCustomer(userId: number) {
-    return this.http.get<User>(`${this.url}/customers/${userId}`, this.httpOptions);
-  }
-
-  public postCustomer(user: User) {
-    return this.http.post<User>(`${this.url}/customers`, user, this.httpOptions);
-  }
 
   public postAgent(user: RealEstateAgent) {
     return this.http.post<RealEstateAgent>(`${this.url}/agents`, user, this.httpOptions);
-  }
-
-  public postManager(user: RealEstateAgent) {
-    return this.http.post<RealEstateAgent>(`${this.url}/managers`, user, this.httpOptions);
   }
 
   public getAgencies() {

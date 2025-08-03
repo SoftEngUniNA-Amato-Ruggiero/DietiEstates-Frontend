@@ -25,18 +25,6 @@ export class TestButtons {
     });
   }
 
-  protected postManager() {
-    const agent = new RealEstateAgent(
-      new Credentials('manager@example.com', 'password'),
-      new UserInfo('Manager', 'Zero'),
-      1
-    );
-
-    this.userServiceClient.postManager(agent).subscribe(response => {
-      console.log('Manager created:', response);
-    });
-  }
-
   protected postAgent() {
     const agent = new RealEstateAgent(
       new Credentials('agent1@example.com', 'password1'),
