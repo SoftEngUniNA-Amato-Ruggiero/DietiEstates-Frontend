@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { UserServiceClient } from '../_services/clients/user-service-client';
 import { RealEstateAgent } from '../_model/realEstateAgent';
-import { Credentials } from '../_model/credentials';
 import { UserInfo } from '../_model/user-info';
 import { Agency } from '../_model/agency';
 
@@ -25,27 +24,32 @@ export class TestButtons {
     });
   }
 
+  protected putAgency(agencyId: number) {
+    const agency = new Agency(
+      'iban',
+      'new-name'
+    );
+
+    this.userServiceClient.putAgency(agencyId, agency).subscribe(response => {
+      console.log('Agency updated:', response);
+    });
+  }
+
   protected postAgent() {
     const agent = new RealEstateAgent(
-      new Credentials('agent1@example.com', 'password1'),
+      'agent1@example.com',
       new UserInfo('Agent', 'One'),
       1
     );
 
-    this.userServiceClient.postAgent(agent).subscribe(response => {
+    this.userServiceClient.postAgent(1, agent).subscribe(response => {
       console.log('Agent created:', response);
     });
   }
 
-  protected getUsers() {
-    this.userServiceClient.getAllUsers().subscribe(users => {
-      console.log('All users:', users);
-    });
-  }
-
   protected getUserByEmail(email: string) {
-    this.userServiceClient.getUserByEmail(email).subscribe(users => {
-      console.log('User found:', users[0]);
+    this.userServiceClient.getUserByEmail(email).subscribe(user => {
+      console.log('User found:', user);
     });
   }
 

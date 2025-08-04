@@ -1,12 +1,11 @@
-import { Credentials } from './credentials';
 import { UserInfo } from './user-info';
 
 export class User {
-    credentials: Credentials;
+    email: string;
     info: UserInfo;
 
-    constructor(credentials: Credentials, info: UserInfo) {
-        this.credentials = credentials;
+    constructor(email: string, info: UserInfo) {
+        this.email = email;
         this.info = info;
     }
 }

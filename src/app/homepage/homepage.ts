@@ -21,7 +21,7 @@ export class Homepage {
       if (!user) {
         return;
       }
-      this.userClient.postUser(user).subscribe({
+      this.userClient.postSelf(user).subscribe({
         next: (response) => {
           console.info('User created in the database:', response);
         },

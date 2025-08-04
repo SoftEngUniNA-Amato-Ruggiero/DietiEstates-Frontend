@@ -1,7 +1,6 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { OidcSecurityService, UserDataResult } from 'angular-auth-oidc-client';
 import { User } from '../_model/user';
-import { Credentials } from '../_model/credentials';
 import { UserInfo } from '../_model/user-info';
 
 @Injectable({
@@ -67,9 +66,8 @@ export class AuthService {
       throw new Error('Missing user data: email, cognitoSub, firstName, or lastName is undefined. But isAuthenticated is true.');
     }
 
-    const credentials = new Credentials(email, cognitoSub);
     const info = new UserInfo(firstName, lastName);
-    this.authenticatedUser.set(new User(credentials, info));
+    this.authenticatedUser.set(new User(email, info));
 
     console.info(this.user(), groups);
   }

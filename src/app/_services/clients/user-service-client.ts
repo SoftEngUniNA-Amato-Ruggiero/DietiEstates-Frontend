@@ -9,7 +9,7 @@ import { RealEstateAgent } from '../../_model/realEstateAgent';
 })
 export class UserServiceClient {
   private readonly http = inject(HttpClient);
-  private readonly url = 'http://localhost:8081/api/users';
+  private readonly url = 'http://localhost:8081/api';
 
   private readonly httpOptions = {
     headers: new HttpHeaders({
@@ -17,27 +17,20 @@ export class UserServiceClient {
     })
   };
 
-  public getAllUsers() {
-    return this.http.get<User[]>(this.url, this.httpOptions);
-  }
-
   public getUserByEmail(email: string) {
-    return this.http.get<User[]>(`${this.url}?email=${email}`, this.httpOptions);
+    return this.http.get<User>(`${this.url}/users?email=${email}`, this.httpOptions);
   }
 
-  public getUser(userId: number) {
-    return this.http.get<User>(`${this.url}/${userId}`, this.httpOptions);
+  public getUserById(userId: number) {
+    return this.http.get<User>(`${this.url}/users/${userId}`, this.httpOptions);
   }
 
-  public postUser(user: User) {
+  public postSelf(user: User) {
     console.log('user: \n', user);
-    return this.http.post<User>(`${this.url}/`, user, this.httpOptions);
+    return this.http.post<User>(`${this.url}/users/self`, user, this.httpOptions);
   }
 
-
-  public postAgent(user: RealEstateAgent) {
-    return this.http.post<RealEstateAgent>(`${this.url}/agents`, user, this.httpOptions);
-  }
+  // TODO: update and delete self
 
   public getAgencies() {
     return this.http.get<Agency[]>(`${this.url}/agencies`, this.httpOptions);
@@ -45,5 +38,13 @@ export class UserServiceClient {
 
   public postAgency(agency: Agency) {
     return this.http.post<Agency>(`${this.url}/agencies`, agency, this.httpOptions);
+  }
+
+  public putAgency(agencyId: number, agency: Agency) {
+    return this.http.put<Agency>(`${this.url}/agencies/${agencyId}`, agency, this.httpOptions);
+  }
+
+  public postAgent(agencyId: number, user: RealEstateAgent) {
+    return this.http.post<RealEstateAgent>(`${this.url}/agencies/${agencyId}/agents`, user, this.httpOptions);
   }
 }
