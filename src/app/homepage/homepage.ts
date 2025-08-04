@@ -24,6 +24,7 @@ export class Homepage {
       this.userClient.postSelf(user).subscribe({
         next: (response) => {
           console.info('User created in the database:', response);
+          this.authService.roleSignal.set(response.role);
         },
         error: (err) => {
           console.warn('Post request error, see response to check if user was already in the database:', err);

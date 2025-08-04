@@ -27,17 +27,17 @@ export class UserServiceClient {
 
   public postSelf(user: User) {
     console.log('user: \n', user);
-    return this.http.post<User>(`${this.url}/users/self`, user, this.httpOptions);
+    return this.http.post<{ user: User, role: string }>(`${this.url}/users/self`, user, this.httpOptions);
   }
 
-  // TODO: update and delete self
+  // TODO: update and delete self (not mandatory)
 
   public getAgencies() {
     return this.http.get<Agency[]>(`${this.url}/agencies`, this.httpOptions);
   }
 
   public postAgency(agency: Agency) {
-    return this.http.post<Agency>(`${this.url}/agencies`, agency, this.httpOptions);
+    return this.http.post<{ agency: Agency, role: string }>(`${this.url}/agencies`, agency, this.httpOptions);
   }
 
   public putAgency(agencyId: number, agency: Agency) {

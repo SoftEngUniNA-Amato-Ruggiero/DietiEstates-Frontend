@@ -3,6 +3,7 @@ import { UserServiceClient } from '../_services/clients/user-service-client';
 import { RealEstateAgent } from '../_model/realEstateAgent';
 import { UserInfo } from '../_model/user-info';
 import { Agency } from '../_model/agency';
+import { AuthService } from '../_services/auth-service';
 
 @Component({
   selector: 'app-test-buttons',
@@ -12,6 +13,7 @@ import { Agency } from '../_model/agency';
 })
 export class TestButtons {
   private readonly userServiceClient = inject(UserServiceClient);
+  private readonly authService = inject(AuthService);
 
   protected postAgency() {
     const agency = new Agency(
@@ -21,6 +23,7 @@ export class TestButtons {
 
     this.userServiceClient.postAgency(agency).subscribe(response => {
       console.log('Agency created:', response);
+      this.authService.roleSignal.set(response.role);
     });
   }
 

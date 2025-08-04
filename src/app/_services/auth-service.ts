@@ -9,6 +9,7 @@ import { UserInfo } from '../_model/user-info';
 export class AuthService {
   public readonly isAuthenticated = computed(() => this.isAuthenticatedSignal());
   public readonly user = computed(() => this.authenticatedUser());
+  public readonly roleSignal = signal<string | null>(null);
 
   private readonly oidcSecurityService = inject(OidcSecurityService);
   private readonly configuration$ = this.oidcSecurityService.getConfiguration();
@@ -17,6 +18,7 @@ export class AuthService {
 
   private readonly isAuthenticatedSignal = signal(false);
   private readonly authenticatedUser = signal<User | null>(null);
+
 
   constructor() {
     this.oidcSecurityService.checkAuth().subscribe();
@@ -38,6 +40,12 @@ export class AuthService {
           this.initializeAuthenticatedUser(userData);
         }
       });
+    });
+
+    effect(() => {
+      if (this.roleSignal()) {
+        console.info('Role signal updated:', this.roleSignal());
+      }
     });
   }
 
