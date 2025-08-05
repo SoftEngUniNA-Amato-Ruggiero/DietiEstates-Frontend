@@ -62,21 +62,23 @@ export class AuthService {
   }
 
   private initializeAuthenticatedUser(userData: UserDataResult) {
-    const email: string | undefined = userData.userData.email;
-    const cognitoSub: string | undefined = userData.userData.sub;
+    if (userData?.userData) {
+      const email: string | undefined = userData.userData.email;
+      const cognitoSub: string | undefined = userData.userData.sub;
 
-    const firstName: string | undefined = userData.userData.given_name;
-    const lastName: string | undefined = userData.userData.family_name;
+      const firstName: string | undefined = userData.userData.given_name;
+      const lastName: string | undefined = userData.userData.family_name;
 
-    const groups: string[] = userData.userData['cognito:groups'] ?? [];
+      const groups: string[] = userData.userData['cognito:groups'] ?? [];
 
-    if (!email || !cognitoSub || !firstName || !lastName) {
-      throw new Error('Missing user data: email, cognitoSub, firstName, or lastName is undefined. But isAuthenticated is true.');
+      if (!email || !cognitoSub || !firstName || !lastName) {
+        throw new Error('Missing user data: email, cognitoSub, firstName, or lastName is undefined. But isAuthenticated is true.');
+      }
+
+      const info = new UserInfo(firstName, lastName);
+      this.authenticatedUser.set(new User(email, info));
+
+      console.info(this.user(), groups);
     }
-
-    const info = new UserInfo(firstName, lastName);
-    this.authenticatedUser.set(new User(email, info));
-
-    console.info(this.user(), groups);
   }
 }
