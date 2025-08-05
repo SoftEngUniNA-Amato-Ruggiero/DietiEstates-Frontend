@@ -39,13 +39,7 @@ export class TestButtons {
   }
 
   protected postAgent() {
-    const agent = new RealEstateAgent(
-      'agent1@example.com',
-      new UserInfo('Agent', 'One'),
-      1
-    );
-
-    this.userServiceClient.postAgent(1, agent).subscribe(response => {
+    this.userServiceClient.postAgent(1, 'giuseppe.mta97@gmail.com').subscribe(response => {
       console.log('Agent created:', response);
     });
   }
