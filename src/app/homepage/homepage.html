@@ -3,16 +3,6 @@
 <hr />
 } @else {
 <button (click)="authService.logout()">Logout</button>
-
-<br />
-
-Is Authenticated: {{ authService.isAuthenticated() }}
-
-<br />
-userData
-<pre>{{ authService.userData$ | async | json }}</pre>
-
-<br />
 }
 
 <app-map-component></app-map-component>
