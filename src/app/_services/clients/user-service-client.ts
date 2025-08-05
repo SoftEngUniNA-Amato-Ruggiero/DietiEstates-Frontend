@@ -44,7 +44,7 @@ export class UserServiceClient {
     return this.http.put<Agency>(`${this.url}/agencies/${agencyId}`, agency, this.httpOptions);
   }
 
-  public postAgent(agencyId: number, user: RealEstateAgent) {
-    return this.http.post<RealEstateAgent>(`${this.url}/agencies/${agencyId}/agents`, user, this.httpOptions);
+  public postAgent(agencyId: number, email: string) {
+    return this.http.post<RealEstateAgent>(`${this.url}/agencies/${agencyId}/agents`, { email }, this.httpOptions);
   }
 }
