@@ -4,6 +4,7 @@ import { latLng, tileLayer, LatLng, Marker, marker, Browser, control } from 'lea
 import { Observable } from 'rxjs';
 import '@geoapify/leaflet-address-search-plugin';
 import * as MapConstants from './map-component.constants';
+import { test_layer } from './test-layer';
 
 @Component({
   selector: 'app-map-component',
@@ -32,12 +33,12 @@ export class MapComponent {
   };
 
   protected readonly addressSearchControl = (control as any).addressSearch(MapConstants.GEOAPIFY_API_KEY, {
-    position: 'topleft',
+    position: 'topright',
     resultCallback: (address: any) => {
       console.log(address)
       if (address?.lat && address?.lon) {
         const latLngPosition = latLng(address.lat, address.lon);
-        this.map?.setView(latLngPosition, 20);
+        this.map?.setView(latLngPosition, 18);
         this.clickedAtSignal.set(latLngPosition);
       }
     },
@@ -70,13 +71,13 @@ export class MapComponent {
 
   protected onMapReady(map: L.Map) {
     this.map = map;
+    map.addControl(this.addressSearchControl);
+    map.addLayer(test_layer);
 
     this.currentPositionObservable.subscribe({
       next: (pos) => { map.setView(pos, 16); },
       error: (error) => { console.error('Error getting current position:', error); }
     });
-
-    map.addControl(this.addressSearchControl);
 
     map.on('click', (e: L.LeafletMouseEvent) => {
       this.clickedAtSignal.set(e.latlng);
