@@ -8,6 +8,7 @@ import { UserInfo } from '../_model/user-info';
 })
 export class AuthService {
   public readonly isAuthenticated = computed(() => this.isAuthenticatedSignal());
+  public readonly isManager = computed(() => this.isManagerSignal());
   public readonly user = computed(() => this.authenticatedUser());
   public readonly roleSignal = signal<string | null>(null);
 
@@ -17,6 +18,7 @@ export class AuthService {
   public readonly userData$ = this.oidcSecurityService.userData$;
 
   private readonly isAuthenticatedSignal = signal(false);
+  private readonly isManagerSignal = signal(true); //TODO: Change to false and fetch user role from backend (or jwt)
   private readonly authenticatedUser = signal<User | null>(null);
 
 
