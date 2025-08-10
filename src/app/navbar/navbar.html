@@ -2,5 +2,10 @@
     <ul>
         <li><a routerLink="/">Home</a></li>
         <li><a routerLink="/profile">Profile</a></li>
+        @if (!authService.isAuthenticated()) {
+        <li><button (click)="authService.login()">Log in / Sign up</button></li>
+        } @else {
+        <li><button (click)="authService.logout()">Logout</button></li>
+        }
     </ul>
 </nav>
