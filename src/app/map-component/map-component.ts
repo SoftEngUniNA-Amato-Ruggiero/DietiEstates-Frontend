@@ -1,7 +1,8 @@
 import { Component, computed, effect, signal } from '@angular/core';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
-import { latLng, tileLayer, icon, Icon, LatLng, Marker, marker } from 'leaflet';
+import { latLng, tileLayer, LatLng, Marker, marker, Browser } from 'leaflet';
 import { Observable } from 'rxjs';
+import * as MapConstants from './map-component.constants';
 
 @Component({
   selector: 'app-map-component',
@@ -17,18 +18,17 @@ export class MapComponent {
 
   protected readonly options = {
     layers: [
-      tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 18, attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>' })
+      tileLayer(Browser.retina ? MapConstants.GEOAPIFY_RETINA_URL : MapConstants.GEOAPIFY_TILE_URL, {
+        maxZoom: MapConstants.MAX_ZOOM,
+        attribution: MapConstants.GEOAPIFY_COPYRIGHT,
+        id: MapConstants.STYLE_ID
+      })
     ],
     zoom: 16,
-    center: latLng(40.828172, 14.190613)
+    center: MapConstants.DEFAULT_CENTER
   };
 
-  private readonly icon = icon({
-    ...Icon.Default.prototype.options,
-    iconUrl: 'assets/marker-icon.png',
-    iconRetinaUrl: 'assets/marker-icon-2x.png',
-    shadowUrl: 'assets/marker-shadow.png'
-  });
+  private readonly clickedAtSignal = signal<LatLng | undefined>(undefined);
 
   private readonly currentPositionObservable = new Observable<LatLng>((subscriber) => {
     navigator.geolocation.getCurrentPosition(
@@ -41,18 +41,16 @@ export class MapComponent {
     );
   });
 
-  private readonly clickedAtSignal = signal<LatLng | undefined>(undefined);
-
   constructor() {
     effect(() => {
       const clickPos = this.clickedAt();
       if (clickPos) {
-        this.userMarkerLayer = [marker(clickPos, { icon: this.icon })];
+        this.userMarkerLayer = [marker(clickPos, { icon: MapConstants.MARKER_ICON })];
       }
     });
   }
 
-  onMapReady(map: L.Map) {
+  protected onMapReady(map: L.Map) {
     this.currentPositionObservable.subscribe({
       next: (pos) => { map.setView(pos, 16); },
       error: (error) => { console.error('Error getting current position:', error); }
