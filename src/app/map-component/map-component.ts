@@ -1,7 +1,8 @@
 import { Component, computed, effect, signal } from '@angular/core';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
-import { latLng, tileLayer, LatLng, Marker, marker, Browser } from 'leaflet';
+import { latLng, tileLayer, LatLng, Marker, marker, Browser, control } from 'leaflet';
 import { Observable } from 'rxjs';
+import '@geoapify/leaflet-address-search-plugin';
 import * as MapConstants from './map-component.constants';
 
 @Component({
@@ -13,6 +14,8 @@ import * as MapConstants from './map-component.constants';
 export class MapComponent {
 
   public readonly clickedAt = computed(() => this.clickedAtSignal());
+
+  protected map: L.Map | undefined;
 
   protected userMarkerLayer: Array<Marker> = [];
 
@@ -27,6 +30,21 @@ export class MapComponent {
     zoom: 16,
     center: MapConstants.DEFAULT_CENTER
   };
+
+  protected readonly addressSearchControl = (control as any).addressSearch(MapConstants.GEOAPIFY_API_KEY, {
+    position: 'topleft',
+    resultCallback: (address: any) => {
+      console.log(address)
+      if (address?.lat && address?.lon) {
+        const latLngPosition = latLng(address.lat, address.lon);
+        this.map?.setView(latLngPosition, 20);
+        this.clickedAtSignal.set(latLngPosition);
+      }
+    },
+    suggestionsCallback: (suggestions: any) => {
+      console.log(suggestions);
+    }
+  });
 
   private readonly clickedAtSignal = signal<LatLng | undefined>(undefined);
 
@@ -51,10 +69,14 @@ export class MapComponent {
   }
 
   protected onMapReady(map: L.Map) {
+    this.map = map;
+
     this.currentPositionObservable.subscribe({
       next: (pos) => { map.setView(pos, 16); },
       error: (error) => { console.error('Error getting current position:', error); }
     });
+
+    map.addControl(this.addressSearchControl);
 
     map.on('click', (e: L.LeafletMouseEvent) => {
       this.clickedAtSignal.set(e.latlng);
