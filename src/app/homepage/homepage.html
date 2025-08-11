@@ -2,4 +2,9 @@
 
 <br />
 
-<app-test-buttons></app-test-buttons>
+@if (authService.isAuthenticated() && !authService.isManager()){
+<p>Are you the manager of a real estate agency?</p>
+<app-agency-upload></app-agency-upload>
+}
+
+<!-- <app-test-buttons></app-test-buttons> -->

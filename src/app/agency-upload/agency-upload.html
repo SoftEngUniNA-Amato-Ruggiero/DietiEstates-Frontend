@@ -1,0 +1,9 @@
+<form [formGroup]="agencyUploadForm" (ngSubmit)="onSubmit()">
+    <label for="agencyName">Agency Name:</label>
+    <input id="agencyName" formControlName="agencyName">
+
+    <label for="agencyIban">Agency IBAN:</label>
+    <input id="agencyIban" formControlName="agencyIban">
+
+    <button type="submit">Sign up your agency</button>
+</form>

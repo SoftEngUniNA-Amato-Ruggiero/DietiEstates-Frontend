@@ -1,0 +1,37 @@
+import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { UserServiceClient } from '../_services/clients/user-service-client';
+import { Agency } from '../_model/agency';
+import { AuthService } from '../_services/auth-service';
+
+@Component({
+  selector: 'app-agency-upload',
+  imports: [ReactiveFormsModule],
+  templateUrl: './agency-upload.html',
+  styleUrl: './agency-upload.scss'
+})
+export class AgencyUpload {
+  private readonly client = inject(UserServiceClient);
+  private readonly authService = inject(AuthService);
+
+  protected agencyUploadForm = new FormGroup({
+    agencyName: new FormControl(''),
+    agencyIban: new FormControl(''),
+  });
+
+  protected onSubmit() {
+    if (this.agencyUploadForm.valid && this.agencyUploadForm.value?.agencyIban && this.agencyUploadForm.value?.agencyName) {
+      const agency = new Agency(this.agencyUploadForm.value.agencyIban, this.agencyUploadForm.value.agencyName);
+
+      this.client.postAgency(agency).subscribe({
+        next: (response) => {
+          console.log('Agency created:', response);
+          this.authService.roleSignal.set(response.role);
+        },
+        error: (error) => {
+          console.error('Error uploading agency:', error);
+        }
+      });
+    }
+  }
+}
