@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { UserServiceClient } from '../../_services/clients/user-service-client';
+import { UserServiceClient } from '../../_services/user-service-client';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { User } from '../../_dto/user';
 

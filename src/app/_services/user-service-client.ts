@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { User } from '../../_dto/user';
-import { Agency } from '../../_dto/agency';
+import { User } from '../_dto/user';
+import { Agency } from '../_dto/agency';
 
 @Injectable({
   providedIn: 'root'

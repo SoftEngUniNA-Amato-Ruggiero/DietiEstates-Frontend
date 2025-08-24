@@ -78,7 +78,8 @@ export class AuthService {
 
       this.authenticatedUser.set(new User(email));
 
-      console.info(this.user(), groups);
+      console.info("User data:", this.user());
+      console.info("User groups:", groups);
     }
   }
 }

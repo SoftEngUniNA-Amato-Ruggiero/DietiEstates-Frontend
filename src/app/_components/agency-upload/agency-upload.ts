@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { UserServiceClient } from '../../_services/clients/user-service-client';
+import { UserServiceClient } from '../../_services/user-service-client';
 import { Agency } from '../../_dto/agency';
 import { AuthService } from '../../_services/auth-service';
 import { ROLE } from '../../_dto/roles';
