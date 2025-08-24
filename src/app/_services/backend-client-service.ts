@@ -1,12 +1,12 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
-import { User } from '../_dto/user';
-import { Agency } from '../_dto/agency';
+import { User } from '../_types/user';
+import { Agency } from '../_types/agency';
 
 @Injectable({
   providedIn: 'root'
 })
-export class UserServiceClient {
+export class BackendClientService {
   private readonly http = inject(HttpClient);
   private readonly url = 'http://localhost:8081/api';
 
@@ -25,7 +25,7 @@ export class UserServiceClient {
   }
 
   public getRole() {
-    return this.http.get<{ role: string }>(`${this.url}/users/role`, this.httpOptions);
+    return this.http.get<{ user: User, role: string }>(`${this.url}/users/role`, this.httpOptions);
   }
 
   public getAgencies() {
@@ -37,7 +37,7 @@ export class UserServiceClient {
   }
 
   public postAgency(agency: Agency) {
-    return this.http.post<{ agency: Agency, manager: User }>(`${this.url}/agencies`, agency, this.httpOptions);
+    return this.http.post<{ agency: Agency, manager: User, role: string }>(`${this.url}/agencies`, agency, this.httpOptions);
   }
 
   public postAgent(user: User) {

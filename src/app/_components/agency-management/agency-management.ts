@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { UserServiceClient } from '../../_services/user-service-client';
+import { BackendClientService } from '../../_services/backend-client-service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { User } from '../../_dto/user';
+import { User } from '../../_types/user';
 
 @Component({
   selector: 'app-agency-management',
@@ -10,7 +10,7 @@ import { User } from '../../_dto/user';
   styleUrl: './agency-management.scss'
 })
 export class AgencyManagement {
-  protected userServiceClient = inject(UserServiceClient);
+  protected client = inject(BackendClientService);
 
   protected postAgentForm = new FormGroup({
     email: new FormControl(''),
@@ -25,7 +25,7 @@ export class AgencyManagement {
       console.error('Invalid email');
       return;
     }
-    this.userServiceClient.postAgent(new User(email)).subscribe({
+    this.client.postAgent(new User(email)).subscribe({
       next: (response) => {
         console.log('Agent created:', response);
       },

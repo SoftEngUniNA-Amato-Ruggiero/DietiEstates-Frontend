@@ -1,9 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { UserServiceClient } from '../../_services/user-service-client';
-import { Agency } from '../../_dto/agency';
+import { BackendClientService } from '../../_services/backend-client-service';
+import { Agency } from '../../_types/agency';
 import { AuthService } from '../../_services/auth-service';
-import { ROLE } from '../../_dto/roles';
+import { ROLE } from '../../_types/roles';
 
 @Component({
   selector: 'app-agency-upload',
@@ -12,7 +12,7 @@ import { ROLE } from '../../_dto/roles';
   styleUrl: './agency-upload.scss'
 })
 export class AgencyUpload {
-  private readonly client = inject(UserServiceClient);
+  private readonly client = inject(BackendClientService);
   private readonly authService = inject(AuthService);
 
   protected agencyUploadForm = new FormGroup({

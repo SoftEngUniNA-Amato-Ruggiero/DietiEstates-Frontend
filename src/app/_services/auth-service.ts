@@ -1,26 +1,28 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { OidcSecurityService, UserDataResult } from 'angular-auth-oidc-client';
-import { User } from '../_dto/user';
-import { ROLE } from '../_dto/roles';
+import { User } from '../_types/user';
+import { ROLE } from '../_types/roles';
+import { BackendClientService } from './backend-client-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
+  private readonly oidcSecurityService = inject(OidcSecurityService);
+  private readonly client = inject(BackendClientService);
+
+  private readonly isAuthenticatedSignal = signal(false);
   public readonly isAuthenticated = computed(() => this.isAuthenticatedSignal());
+
+  public readonly roleSignal = signal<string | null>(null);
   public readonly isManager = computed(() => this.roleSignal() === ROLE.MANAGER);
   public readonly isAgent = computed(() => this.roleSignal() === ROLE.MANAGER || this.roleSignal() === ROLE.AGENT);
 
+  private readonly authenticatedUser = signal<User | null>(null);
   public readonly user = computed(() => this.authenticatedUser());
-  public readonly roleSignal = signal<string | null>(null);
-
-  private readonly oidcSecurityService = inject(OidcSecurityService);
-  private readonly configuration$ = this.oidcSecurityService.getConfiguration();
 
   public readonly userData$ = this.oidcSecurityService.userData$;
-
-  private readonly isAuthenticatedSignal = signal(false);
-  private readonly authenticatedUser = signal<User | null>(null);
+  private readonly configuration$ = this.oidcSecurityService.getConfiguration();
 
   constructor() {
     this.oidcSecurityService.checkAuth().subscribe();
@@ -32,6 +34,7 @@ export class AuthService {
       }
     );
 
+    // Subscribe to user data from OIDC when authenticated
     effect(() => {
       if (!this.isAuthenticated()) {
         return;
@@ -43,6 +46,22 @@ export class AuthService {
       });
     });
 
+    // Subscribe to user role from backend when authenticated
+    effect(() => {
+      if (!this.isAuthenticated()) {
+        return;
+      }
+      this.client.getRole().subscribe({
+        next: (response) => {
+          this.roleSignal.set(response.role);
+        },
+        error: (error) => {
+          console.error('Error fetching user role:', error);
+        }
+      });
+    });
+
+    // Log role when it is updated 
     effect(() => {
       if (this.roleSignal()) {
         console.info('Role signal updated:', this.roleSignal());
