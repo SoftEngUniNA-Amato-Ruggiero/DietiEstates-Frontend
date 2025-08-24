@@ -6,5 +6,13 @@ ul {
     li {
         margin-top: 1rem;
         margin-inline: 4rem;
+
+        a {
+            color: blue;
+        }
+
+        a.active {
+            color: black;
+        }
     }
 }

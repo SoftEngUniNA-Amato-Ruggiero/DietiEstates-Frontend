@@ -1,16 +1,16 @@
 <nav>
     <ul>
-        <li><a routerLink="/">Home</a></li>
+        <li><a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a></li>
         @if (!authService.isAuthenticated()) {
-        <li><a routerLink="/login">Log in / Sign up</a></li>
+        <li><a routerLink="/login" routerLinkActive="active">Log in / Sign up</a></li>
         } @else {
-        <li><a routerLink="/profile">Profile</a></li>
+        <li><a routerLink="/profile" routerLinkActive="active">Profile</a></li>
 
         @if (authService.isManager()){
-        <li><a routerLink="/agency">Agency Management</a></li>
+        <li><a routerLink="/agency" routerLinkActive="active">Agency Management</a></li>
         }
 
-        <li><a routerLink="/logout">Logout</a></li>
+        <li><a routerLink="/logout" routerLinkActive="active">Logout</a></li>
         }
     </ul>
 </nav>
