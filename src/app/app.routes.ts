@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { Homepage } from './homepage/homepage';
-import { UserProfile } from './user-profile/user-profile';
-import { AgencyManagement } from './agency-management/agency-management';
+import { Homepage } from './_components/homepage/homepage';
+import { UserProfile } from './_components/user-profile/user-profile';
+import { AgencyManagement } from './_components/agency-management/agency-management';
 import { authGuard } from './_guards/auth-guard';
 import { managerGuard } from './_guards/manager-guard';
-import { Login } from './auth/login/login';
-import { Logout } from './auth/logout/logout';
+import { Login } from './_components/login/login';
+import { Logout } from './_components/logout/logout';
 import { noAuthGuard } from './_guards/no-auth-guard';
 
 export const routes: Routes = [

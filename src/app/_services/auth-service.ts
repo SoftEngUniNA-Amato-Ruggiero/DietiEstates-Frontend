@@ -1,7 +1,6 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { OidcSecurityService, UserDataResult } from 'angular-auth-oidc-client';
-import { User } from '../_model/user';
-import { UserInfo } from '../_model/user-info';
+import { User } from '../_dto/user';
 
 @Injectable({
   providedIn: 'root'
@@ -9,6 +8,8 @@ import { UserInfo } from '../_model/user-info';
 export class AuthService {
   public readonly isAuthenticated = computed(() => this.isAuthenticatedSignal());
   public readonly isManager = computed(() => this.roleSignal() === "AGENCY_MANAGER");
+  public readonly isAgent = computed(() => this.roleSignal() === "AGENCY_MANAGER" || this.roleSignal() === "AGENT");
+
   public readonly user = computed(() => this.authenticatedUser());
   public readonly roleSignal = signal<string | null>(null);
 
@@ -20,15 +21,13 @@ export class AuthService {
   private readonly isAuthenticatedSignal = signal(false);
   private readonly authenticatedUser = signal<User | null>(null);
 
-
   constructor() {
     this.oidcSecurityService.checkAuth().subscribe();
 
     this.oidcSecurityService.isAuthenticated$.subscribe(
       ({ isAuthenticated }) => {
         this.isAuthenticatedSignal.set(isAuthenticated);
-
-        console.warn('authenticated: ', isAuthenticated);
+        console.info('authenticated: ', isAuthenticated);
       }
     );
 
@@ -76,8 +75,7 @@ export class AuthService {
         throw new Error('Missing user data: email, cognitoSub, firstName, or lastName is undefined. But isAuthenticated is true.');
       }
 
-      const info = new UserInfo(firstName, lastName);
-      this.authenticatedUser.set(new User(email, info));
+      this.authenticatedUser.set(new User(email));
 
       console.info(this.user(), groups);
     }

@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { UserServiceClient } from '../_services/clients/user-service-client';
-import { Agency } from '../_model/agency';
-import { AuthService } from '../_services/auth-service';
+import { UserServiceClient } from '../../_services/clients/user-service-client';
+import { Agency } from '../../_dto/agency';
+import { AuthService } from '../../_services/auth-service';
 
 @Component({
   selector: 'app-agency-upload',
@@ -26,7 +26,7 @@ export class AgencyUpload {
       this.client.postAgency(agency).subscribe({
         next: (response) => {
           console.log('Agency created:', response);
-          this.authService.roleSignal.set(response.role);
+          this.authService.roleSignal.set("AGENCY_MANAGER");
         },
         error: (error) => {
           console.error('Error uploading agency:', error);

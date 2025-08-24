@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { MapComponent } from "../map-component/map-component";
 import { TestButtons } from '../test-buttons/test-buttons';
-import { AuthService } from '../_services/auth-service';
 import { AgencyUpload } from '../agency-upload/agency-upload';
+import { AuthService } from '../../_services/auth-service';
 
 @Component({
   selector: 'app-homepage',
@@ -11,5 +11,5 @@ import { AgencyUpload } from '../agency-upload/agency-upload';
   styleUrl: './homepage.scss'
 })
 export class Homepage {
-  authService = inject(AuthService);
+  readonly authService = inject(AuthService);
 }

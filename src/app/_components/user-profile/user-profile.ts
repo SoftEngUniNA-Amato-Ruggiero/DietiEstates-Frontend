@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { AsyncPipe, JsonPipe } from '@angular/common';
-import { AuthService } from '../_services/auth-service';
+import { AuthService } from '../../_services/auth-service';
 
 @Component({
   selector: 'app-user-profile',

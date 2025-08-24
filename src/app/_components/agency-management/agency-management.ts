@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { UserServiceClient } from '../_services/clients/user-service-client';
+import { UserServiceClient } from '../../_services/clients/user-service-client';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { User } from '../../_dto/user';
 
 @Component({
   selector: 'app-agency-management',
@@ -24,8 +25,13 @@ export class AgencyManagement {
       console.error('Invalid email');
       return;
     }
-    this.userServiceClient.postAgent(1, email).subscribe(response => {
-      console.log('Agent created:', response);
+    this.userServiceClient.postAgent(new User(email)).subscribe({
+      next: (response) => {
+        console.log('Agent created:', response);
+      },
+      error: (error) => {
+        console.error('Error creating agent:', error);
+      }
     });
   }
 
