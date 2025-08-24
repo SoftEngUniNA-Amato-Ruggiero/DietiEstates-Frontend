@@ -43,4 +43,8 @@ export class BackendClientService {
   public postAgent(user: User) {
     return this.http.post<User>(`${this.url}/agents`, user, this.httpOptions);
   }
+
+  public postManager(user: User) {
+    return this.http.post<User>(`${this.url}/managers`, user, this.httpOptions);
+  }
 }

@@ -1,7 +1,7 @@
 <h2>Your Agency</h2>
 <p>Agency info will be displayed here</p>
 
-<form [formGroup]="postAgentForm" (ngSubmit)="postAgent(postAgentForm.value.email)">
+<form [formGroup]="agentForm" (ngSubmit)="submitAgentForm(agentForm.value.email)">
     <h3>Add Agent</h3>
     <label for="agentEmail">Agent Email:</label>
     <input id="agentEmail" formControlName="email" type="email" required>
@@ -9,7 +9,7 @@
     <button type="submit">Submit</button>
 </form>
 
-<form [formGroup]="postManagerForm" (ngSubmit)="postManager(postManagerForm.value.email)">
+<form [formGroup]="managerForm" (ngSubmit)="submitManagerForm(managerForm.value.email)">
     <h3>Add Manager</h3>
     <label for="managerEmail">Manager Email:</label>
     <input id="managerEmail" formControlName="email" type="email" required>

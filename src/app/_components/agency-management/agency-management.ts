@@ -12,15 +12,15 @@ import { User } from '../../_types/user';
 export class AgencyManagement {
   protected client = inject(BackendClientService);
 
-  protected postAgentForm = new FormGroup({
+  protected agentForm = new FormGroup({
     email: new FormControl(''),
   });
 
-  protected postManagerForm = new FormGroup({
+  protected managerForm = new FormGroup({
     email: new FormControl(''),
   });
 
-  protected postAgent(email: string | null | undefined) {
+  protected submitAgentForm(email: string | null | undefined) {
     if (!email) {
       console.error('Invalid email');
       return;
@@ -35,12 +35,18 @@ export class AgencyManagement {
     });
   }
 
-  protected postManager(email: string | null | undefined) {
+  protected submitManagerForm(email: string | null | undefined) {
     if (!email) {
       console.error('Invalid email');
       return;
     }
-    //TODO: implement once userServiceClient has a postManager method
-    console.log("nothing yet");
+    this.client.postManager(new User(email)).subscribe({
+      next: (response) => {
+        console.log('Manager created:', response);
+      },
+      error: (error) => {
+        console.error('Error creating manager:', error);
+      }
+    });
   }
 }
