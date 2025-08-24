@@ -1,14 +1,15 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
 import { OidcSecurityService, UserDataResult } from 'angular-auth-oidc-client';
 import { User } from '../_dto/user';
+import { ROLE } from '../_dto/roles';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   public readonly isAuthenticated = computed(() => this.isAuthenticatedSignal());
-  public readonly isManager = computed(() => this.roleSignal() === "AGENCY_MANAGER");
-  public readonly isAgent = computed(() => this.roleSignal() === "AGENCY_MANAGER" || this.roleSignal() === "AGENT");
+  public readonly isManager = computed(() => this.roleSignal() === ROLE.MANAGER);
+  public readonly isAgent = computed(() => this.roleSignal() === ROLE.MANAGER || this.roleSignal() === ROLE.AGENT);
 
   public readonly user = computed(() => this.authenticatedUser());
   public readonly roleSignal = signal<string | null>(null);

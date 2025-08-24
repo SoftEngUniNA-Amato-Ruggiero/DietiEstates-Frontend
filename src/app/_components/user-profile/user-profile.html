@@ -1,6 +1,8 @@
 <p>Is Authenticated: {{ authService.isAuthenticated() }}</p>
 <br />
 @if (authService.isAuthenticated()) {
+<h2>User Role</h2>
+<pre>{{ authService.roleSignal() }}</pre>
 <h2>User Data</h2>
 <pre>{{ authService.userData$ | async | json }}</pre>
 } @else {

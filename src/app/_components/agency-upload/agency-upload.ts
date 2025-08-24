@@ -3,6 +3,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UserServiceClient } from '../../_services/clients/user-service-client';
 import { Agency } from '../../_dto/agency';
 import { AuthService } from '../../_services/auth-service';
+import { ROLE } from '../../_dto/roles';
 
 @Component({
   selector: 'app-agency-upload',
@@ -26,7 +27,7 @@ export class AgencyUpload {
       this.client.postAgency(agency).subscribe({
         next: (response) => {
           console.log('Agency created:', response);
-          this.authService.roleSignal.set("AGENCY_MANAGER");
+          this.authService.roleSignal.set(ROLE.MANAGER);
         },
         error: (error) => {
           console.error('Error uploading agency:', error);
