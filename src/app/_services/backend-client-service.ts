@@ -2,13 +2,14 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { User } from '../_types/user';
 import { Agency } from '../_types/agency';
+import { backend } from '../_config/backend.config';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BackendClientService {
   private readonly http = inject(HttpClient);
-  private readonly url = 'http://localhost:8081/api';
+  private readonly url = `${backend.domain}:${backend.port}/api`;
 
   private readonly httpOptions = {
     headers: new HttpHeaders({
