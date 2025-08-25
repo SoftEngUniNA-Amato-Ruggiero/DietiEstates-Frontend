@@ -9,7 +9,7 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
   if (urlsToIntercept.some(url => req.url.includes(url))) {
 
-    oidcSecurityService.getAccessToken().subscribe({
+    oidcSecurityService.getIdToken().subscribe({
       next: (token) => {
         req = req.clone({
           setHeaders: {
