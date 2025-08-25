@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { User } from '../_types/user';
 import { Agency } from '../_types/agency';
 import { backend } from '../_config/backend.config';
+import { UserAgencyRole } from '../_types/user-agency-role';
 
 @Injectable({
   providedIn: 'root'
@@ -26,7 +27,7 @@ export class BackendClientService {
   }
 
   public getRole() {
-    return this.http.get<{ user: User, agency: Agency, role: string }>(`${this.url}/users/role`, this.httpOptions);
+    return this.http.get<UserAgencyRole>(`${this.url}/users/role`, this.httpOptions);
   }
 
   public getAgencies() {
@@ -38,7 +39,7 @@ export class BackendClientService {
   }
 
   public postAgency(agency: Agency) {
-    return this.http.post<{ user: User, agency: Agency, role: string }>(`${this.url}/agencies`, agency, this.httpOptions);
+    return this.http.post<UserAgencyRole>(`${this.url}/agencies`, agency, this.httpOptions);
   }
 
   public postAgent(user: User) {

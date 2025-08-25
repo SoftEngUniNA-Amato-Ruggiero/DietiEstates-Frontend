@@ -2,7 +2,7 @@
 
 <br />
 
-@if (authService.isAuthenticated() && !authService.isManager()){
+@if (authService.isAuthenticated() && !userStateService.isManager()){
 <p>Are you the manager of a real estate agency?</p>
 <app-agency-upload></app-agency-upload>
 }

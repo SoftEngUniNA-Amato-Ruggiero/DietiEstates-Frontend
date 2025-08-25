@@ -1,5 +1,6 @@
 <h2>Your Agency</h2>
-<p>Agency info will be displayed here</p>
+<p>Name: {{userStateService.agency()?.name}}</p>
+<p>IBAN: {{userStateService.agency()?.iban}}</p>
 
 <form [formGroup]="agentForm" (ngSubmit)="submitAgentForm(agentForm.value.email)">
     <h3>Add Agent</h3>

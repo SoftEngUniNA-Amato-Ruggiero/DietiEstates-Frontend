@@ -1,8 +1,7 @@
 import { Injectable, computed, effect, inject, signal } from '@angular/core';
-import { OidcSecurityService, UserDataResult } from 'angular-auth-oidc-client';
-import { User } from '../_types/user';
-import { ROLE } from '../_types/roles';
+import { OidcSecurityService } from 'angular-auth-oidc-client';
 import { BackendClientService } from './backend-client-service';
+import { UserStateService } from './user-state-service';
 
 @Injectable({
   providedIn: 'root'
@@ -10,18 +9,13 @@ import { BackendClientService } from './backend-client-service';
 export class AuthService {
   private readonly oidcSecurityService = inject(OidcSecurityService);
   private readonly client = inject(BackendClientService);
+  private readonly userStateService = inject(UserStateService);
 
   private readonly isAuthenticatedSignal = signal(false);
   public readonly isAuthenticated = computed(() => this.isAuthenticatedSignal());
 
-  public readonly roleSignal = signal<string | null>(null);
-  public readonly isManager = computed(() => this.roleSignal() === ROLE.MANAGER);
-  public readonly isAgent = computed(() => this.roleSignal() === ROLE.MANAGER || this.roleSignal() === ROLE.AGENT);
-
-  private readonly authenticatedUser = signal<User | null>(null);
-  public readonly user = computed(() => this.authenticatedUser());
-
   public readonly userData$ = this.oidcSecurityService.userData$;
+
   private readonly configuration$ = this.oidcSecurityService.getConfiguration();
 
   constructor() {
@@ -30,42 +24,34 @@ export class AuthService {
     this.oidcSecurityService.isAuthenticated$.subscribe(
       ({ isAuthenticated }) => {
         this.isAuthenticatedSignal.set(isAuthenticated);
-        console.info('authenticated: ', isAuthenticated);
       }
     );
 
-    // Subscribe to user data from OIDC when authenticated
+    // Subscribe to get user data (given name, family name etc.) from OIDC after authentication
     effect(() => {
       if (!this.isAuthenticated()) {
         return;
       }
       this.userData$.subscribe({
         next: (userData) => {
-          this.initializeAuthenticatedUser(userData);
+          this.userStateService.userDataSignal.set(userData);
         }
       });
     });
 
-    // Subscribe to user role from backend when authenticated
+    // Subscribe to user, agency and role from backend after authentication
     effect(() => {
       if (!this.isAuthenticated()) {
         return;
       }
       this.client.getRole().subscribe({
         next: (response) => {
-          this.roleSignal.set(response.role);
+          this.userStateService.userAgencyAndRoleSignal.set(response);
         },
         error: (error) => {
           console.error('Error fetching user role:', error);
         }
       });
-    });
-
-    // Log role when it is updated 
-    effect(() => {
-      if (this.roleSignal()) {
-        console.info('Role signal updated:', this.roleSignal());
-      }
     });
   }
 
@@ -79,26 +65,5 @@ export class AuthService {
     }
 
     window.location.href = "https://eu-west-3tkwuxva4t.auth.eu-west-3.amazoncognito.com/logout?client_id=5qdd485015k9doea0l14jcv5k0&logout_uri=http://localhost:4200";
-  }
-
-  private initializeAuthenticatedUser(userData: UserDataResult) {
-    if (userData?.userData) {
-      const email: string | undefined = userData.userData.email;
-      const cognitoSub: string | undefined = userData.userData.sub;
-
-      const firstName: string | undefined = userData.userData.given_name;
-      const lastName: string | undefined = userData.userData.family_name;
-
-      const groups: string[] = userData.userData['cognito:groups'] ?? [];
-
-      if (!email || !cognitoSub || !firstName || !lastName) {
-        throw new Error('Missing user data: email, cognitoSub, firstName, or lastName is undefined. But isAuthenticated is true.');
-      }
-
-      this.authenticatedUser.set(new User(email));
-
-      console.info("User data:", this.user());
-      console.info("User groups:", groups);
-    }
   }
 }

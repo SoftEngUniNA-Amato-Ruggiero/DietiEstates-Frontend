@@ -2,8 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BackendClientService } from '../../_services/backend-client-service';
 import { Agency } from '../../_types/agency';
-import { AuthService } from '../../_services/auth-service';
-import { ROLE } from '../../_types/roles';
+import { UserStateService } from '../../_services/user-state-service';
 
 @Component({
   selector: 'app-agency-upload',
@@ -13,7 +12,7 @@ import { ROLE } from '../../_types/roles';
 })
 export class AgencyUpload {
   private readonly client = inject(BackendClientService);
-  private readonly authService = inject(AuthService);
+  private readonly userStateService = inject(UserStateService);
 
   protected agencyUploadForm = new FormGroup({
     agencyName: new FormControl(''),
@@ -27,7 +26,7 @@ export class AgencyUpload {
       this.client.postAgency(agency).subscribe({
         next: (response) => {
           console.log('Agency created:', response);
-          this.authService.roleSignal.set(ROLE.MANAGER);
+          this.userStateService.userAgencyAndRoleSignal.set(response);
         },
         error: (error) => {
           console.error('Error uploading agency:', error);

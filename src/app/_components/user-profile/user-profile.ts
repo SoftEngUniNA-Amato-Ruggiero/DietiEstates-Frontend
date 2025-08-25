@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { AsyncPipe, JsonPipe } from '@angular/common';
 import { AuthService } from '../../_services/auth-service';
+import { UserStateService } from '../../_services/user-state-service';
 
 @Component({
   selector: 'app-user-profile',
@@ -10,4 +11,5 @@ import { AuthService } from '../../_services/auth-service';
 })
 export class UserProfile {
   protected readonly authService = inject(AuthService);
+  protected readonly userStateService = inject(UserStateService);
 }

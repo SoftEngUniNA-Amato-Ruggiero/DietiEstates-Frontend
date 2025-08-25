@@ -6,7 +6,7 @@
         } @else {
         <li><a routerLink="/profile" routerLinkActive="active">Profile</a></li>
 
-        @if (authService.isManager()){
+        @if (userStateService.isManager()){
         <li><a routerLink="/agency" routerLinkActive="active">Agency Management</a></li>
         }
 
