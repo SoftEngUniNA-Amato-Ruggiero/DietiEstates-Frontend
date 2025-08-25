@@ -26,7 +26,7 @@ export class BackendClientService {
   }
 
   public getRole() {
-    return this.http.get<{ user: User, role: string }>(`${this.url}/users/role`, this.httpOptions);
+    return this.http.get<{ user: User, agency: Agency, role: string }>(`${this.url}/users/role`, this.httpOptions);
   }
 
   public getAgencies() {
@@ -38,7 +38,7 @@ export class BackendClientService {
   }
 
   public postAgency(agency: Agency) {
-    return this.http.post<{ agency: Agency, manager: User, role: string }>(`${this.url}/agencies`, agency, this.httpOptions);
+    return this.http.post<{ user: User, agency: Agency, role: string }>(`${this.url}/agencies`, agency, this.httpOptions);
   }
 
   public postAgent(user: User) {
