@@ -1,7 +1,5 @@
-import { Injectable, computed, effect, signal } from '@angular/core';
+import { Injectable, computed, signal } from '@angular/core';
 import { ROLE } from '../_types/roles';
-import { Agency } from '../_types/agency';
-import { User } from '../_types/user';
 import { UserAgencyRole } from '../_types/user-agency-role';
 import { UserDataResult } from 'angular-auth-oidc-client';
 
