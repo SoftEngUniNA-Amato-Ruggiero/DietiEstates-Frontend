@@ -4,6 +4,7 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { User } from '../../_types/user';
 import { AuthService } from '../../_services/auth-service';
 import { UserStateService } from '../../_services/user-state-service';
+import { ROLE } from '../../_types/roles';
 
 @Component({
   selector: 'app-agency-management',
@@ -29,7 +30,7 @@ export class AgencyManagement {
       console.error('Invalid email');
       return;
     }
-    this.client.postAgent(new User(email)).subscribe({
+    this.client.postAgent(new User(email, ROLE.AGENT)).subscribe({
       next: (response) => {
         console.log('Agent created:', response);
       },
@@ -44,7 +45,7 @@ export class AgencyManagement {
       console.error('Invalid email');
       return;
     }
-    this.client.postManager(new User(email)).subscribe({
+    this.client.postManager(new User(email, ROLE.MANAGER)).subscribe({
       next: (response) => {
         console.log('Manager created:', response);
       },

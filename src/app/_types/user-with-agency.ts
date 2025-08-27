@@ -1,8 +1,7 @@
 import { User } from "./user";
 import { Agency } from "./agency";
 
-export interface UserAgencyRole {
+export interface UserWithAgency {
     user: User;
     agency: Agency | null;
-    role: string;
 }

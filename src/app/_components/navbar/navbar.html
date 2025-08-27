@@ -6,6 +6,8 @@
         <li><a routerLink="/login" routerLinkActive="active">Log in / Sign up</a></li>
         } @else {
 
+        <li><a routerLink="/profile" routerLinkActive="active">Profile</a></li>
+
         @if (userStateService.isAgent()){
         <li><a routerLink="/dashboard" routerLinkActive="active">Agent Dashboard</a></li>
         }
@@ -13,8 +15,6 @@
         @if (userStateService.isManager()){
         <li><a routerLink="/agency" routerLinkActive="active">Agency Management</a></li>
         }
-
-        <li><a routerLink="/profile" routerLinkActive="active">Profile</a></li>
 
         <li><a routerLink="/logout" routerLinkActive="active">Logout</a></li>
         }

@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+import { UserStateService } from '../../_services/user-state-service';
 
 @Component({
   selector: 'app-agent-dashboard',
@@ -7,5 +8,5 @@ import { Component } from '@angular/core';
   styleUrl: './agent-dashboard.scss'
 })
 export class AgentDashboard {
-
+  readonly userStateService = inject(UserStateService);
 }

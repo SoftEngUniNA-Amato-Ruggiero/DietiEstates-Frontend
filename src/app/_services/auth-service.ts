@@ -39,14 +39,14 @@ export class AuthService {
       });
     });
 
-    // Subscribe to user, agency and role from backend after authentication
+    // Subscribe to get user (and role) from backend after authentication
     effect(() => {
       if (!this.isAuthenticated()) {
         return;
       }
-      this.client.getRole().subscribe({
+      this.client.getMyRole().subscribe({
         next: (response) => {
-          this.userStateService.userAgencyAndRoleSignal.set(response);
+          this.userStateService.userSignal.set(response);
         },
         error: (error) => {
           console.error('Error fetching user role:', error);

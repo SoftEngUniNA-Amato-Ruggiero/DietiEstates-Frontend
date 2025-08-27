@@ -3,7 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { backend } from '../_config/backend.config';
 import { User } from '../_types/user';
 import { Agency } from '../_types/agency';
-import { UserAgencyRole } from '../_types/user-agency-role';
+import { UserWithAgency } from '../_types/user-with-agency';
 
 @Injectable({
   providedIn: 'root'
@@ -18,12 +18,16 @@ export class BackendClientService {
     })
   };
 
-  public getUserByUsername(username: string) {
-    return this.http.get<User>(`${this.url}/users?username=${username}`, this.httpOptions);
+  public getMyRole() {
+    return this.http.get<User>(`${this.url}/me/role`, this.httpOptions);
   }
 
-  public getRole() {
-    return this.http.get<UserAgencyRole>(`${this.url}/users/role`, this.httpOptions);
+  public getMyAgency() {
+    return this.http.get<Agency>(`${this.url}/me/agency`, this.httpOptions);
+  }
+
+  public getUserByUsername(username: string) {
+    return this.http.get<User>(`${this.url}/users?username=${username}`, this.httpOptions);
   }
 
   public getAgencies() {
@@ -31,7 +35,7 @@ export class BackendClientService {
   }
 
   public postAgency(agency: Agency) {
-    return this.http.post<UserAgencyRole>(`${this.url}/agencies`, agency, this.httpOptions);
+    return this.http.post<UserWithAgency>(`${this.url}/agencies`, agency, this.httpOptions);
   }
 
   public postAgent(user: User) {
