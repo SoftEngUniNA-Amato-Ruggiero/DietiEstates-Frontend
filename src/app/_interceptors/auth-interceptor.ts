@@ -1,30 +1,26 @@
 import { HttpInterceptorFn } from '@angular/common/http';
 import { inject } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
+import { backend } from '../_config/backend.config';
 
 export const authInterceptor: HttpInterceptorFn = (req, next) => {
   const oidcSecurityService = inject(OidcSecurityService);
-  const backendUrlList = ['http://localhost'];
+  const urlsToIntercept = [backend.domain];
 
-  if (backendUrlList.some(url => req.url.includes(url))) {
-    let token: string | null = null;
+  if (urlsToIntercept.some(url => req.url.includes(url))) {
 
-    oidcSecurityService.getAccessToken().subscribe({
-      next: (accessToken) => {
-        token = accessToken;
+    oidcSecurityService.getIdToken().subscribe({
+      next: (token) => {
+        req = req.clone({
+          setHeaders: {
+            Authorization: 'Bearer ' + token
+          }
+        });
       },
       error: (err) => {
-        console.error('Error fetching Access token', err);
+        console.error('Error fetching token', err);
       }
     });
-
-    if (token) {
-      req = req.clone({
-        setHeaders: {
-          Authorization: 'Bearer ' + token
-        }
-      });
-    }
   }
 
   return next(req);

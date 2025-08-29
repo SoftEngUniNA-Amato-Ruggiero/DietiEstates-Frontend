@@ -1,8 +1,0 @@
-<p>Is Authenticated: {{ authService.isAuthenticated() }}</p>
-<br />
-@if (authService.isAuthenticated()) {
-<h2>User Data</h2>
-<pre>{{ authService.userData$ | async | json }}</pre>
-} @else {
-<h2>No User Data Available</h2>
-}

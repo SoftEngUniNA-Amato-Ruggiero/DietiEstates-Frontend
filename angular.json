@@ -7,6 +7,7 @@
       "projectType": "application",
       "schematics": {
         "@schematics/angular:component": {
+          "path": "src/app/_components",
           "style": "scss"
         },
         "@schematics/angular:service": {
@@ -28,7 +29,8 @@
           "options": {
             "browser": "src/main.ts",
             "polyfills": [
-              "zone.js"
+              "zone.js",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.app.json",
             "inlineStyleLanguage": "scss",
@@ -45,7 +47,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "./node_modules/leaflet/dist/leaflet.css"
+              "./node_modules/leaflet/dist/leaflet.css",
+              "./node_modules/@geoapify/leaflet-address-search-plugin/dist/L.Control.GeoapifyAddressSearch.min.css"
             ]
           },
           "configurations": {
@@ -92,7 +95,8 @@
           "options": {
             "polyfills": [
               "zone.js",
-              "zone.js/testing"
+              "zone.js/testing",
+              "@angular/localize/init"
             ],
             "tsConfig": "tsconfig.spec.json",
             "inlineStyleLanguage": "scss",
@@ -104,7 +108,8 @@
             ],
             "styles": [
               "src/styles.scss",
-              "./node_modules/leaflet/dist/leaflet.css"
+              "./node_modules/leaflet/dist/leaflet.css",
+              "./node_modules/@geoapify/leaflet-address-search-plugin/dist/L.Control.GeoapifyAddressSearch.min.css"
             ]
           }
         }

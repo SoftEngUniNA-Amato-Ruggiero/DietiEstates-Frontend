@@ -1,0 +1,18 @@
+ul {
+    list-style: none;
+    display: flex;
+    flex-grow: space-between;
+
+    li {
+        margin-top: 1rem;
+        margin-inline: 4rem;
+
+        a {
+            color: blue;
+        }
+
+        a.active {
+            color: black;
+        }
+    }
+}

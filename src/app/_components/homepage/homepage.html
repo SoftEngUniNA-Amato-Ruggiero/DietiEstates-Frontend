@@ -1,0 +1,8 @@
+<app-map-component></app-map-component>
+
+<br />
+
+@if (authService.isAuthenticated() && !userStateService.isAgent()){
+<p>Are you the manager of a real estate agency?</p>
+<app-agency-upload></app-agency-upload>
+}
