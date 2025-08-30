@@ -1,15 +1,11 @@
-import { Injectable, computed, effect, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { OidcSecurityService } from 'angular-auth-oidc-client';
-import { BackendClientService } from './backend-client-service';
-import { UserStateService } from './user-state-service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
   private readonly oidcSecurityService = inject(OidcSecurityService);
-  private readonly client = inject(BackendClientService);
-  private readonly userStateService = inject(UserStateService);
 
   private readonly isAuthenticatedSignal = signal(false);
   public readonly isAuthenticated = computed(() => this.isAuthenticatedSignal());
@@ -26,33 +22,6 @@ export class AuthService {
         this.isAuthenticatedSignal.set(isAuthenticated);
       }
     );
-
-    // Subscribe to get user data (given name, family name etc.) from OIDC after authentication
-    effect(() => {
-      if (!this.isAuthenticated()) {
-        return;
-      }
-      this.userData$.subscribe({
-        next: (userData) => {
-          this.userStateService.userDataSignal.set(userData);
-        }
-      });
-    });
-
-    // Subscribe to get user (and role) from backend after authentication
-    effect(() => {
-      if (!this.isAuthenticated()) {
-        return;
-      }
-      this.client.getMyRole().subscribe({
-        next: (response) => {
-          this.userStateService.userSignal.set(response);
-        },
-        error: (error) => {
-          console.error('Error fetching user role:', error);
-        }
-      });
-    });
   }
 
   public login(): void {

@@ -26,8 +26,7 @@ export class AgencyUpload {
       this.client.postAgency(agency).subscribe({
         next: (response) => {
           console.log('Agency created:', response);
-          this.userStateService.userSignal.set(response.user);
-          this.userStateService.agencySignal.set(response.agency);
+          this.userStateService.uploadAgencyResponseSignal.set(response);
         },
         error: (error) => {
           console.error('Error uploading agency:', error);

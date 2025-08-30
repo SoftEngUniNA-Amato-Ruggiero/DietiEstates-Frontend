@@ -1,9 +1,9 @@
 export class User {
+    id: number | null;
     username: string;
-    role: string | null;
 
-    constructor(username: string, role: string | null) {
+    constructor(username: string, id: number | null = null) {
         this.username = username;
-        this.role = role;
+        this.id = id;
     }
 }

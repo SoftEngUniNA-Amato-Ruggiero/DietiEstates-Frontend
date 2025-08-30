@@ -30,7 +30,7 @@ export class AgencyManagement {
       console.error('Invalid email');
       return;
     }
-    this.client.postAgent(new User(email, ROLE.AGENT)).subscribe({
+    this.client.postAgent(new User(email)).subscribe({
       next: (response) => {
         console.log('Agent created:', response);
       },
@@ -45,7 +45,7 @@ export class AgencyManagement {
       console.error('Invalid email');
       return;
     }
-    this.client.postManager(new User(email, ROLE.MANAGER)).subscribe({
+    this.client.postManager(new User(email)).subscribe({
       next: (response) => {
         console.log('Manager created:', response);
       },

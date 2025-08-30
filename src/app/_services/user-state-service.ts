@@ -4,20 +4,26 @@ import { ROLE } from '../_types/roles';
 import { User } from '../_types/user';
 import { UserDataResult } from 'angular-auth-oidc-client';
 import { BackendClientService } from './backend-client-service';
+import { AuthService } from './auth-service';
+import { UserWithAgency } from '../_types/user-with-agency';
 
 @Injectable({
   providedIn: 'root'
 })
 export class UserStateService {
   private readonly client = inject(BackendClientService);
+  private readonly authService = inject(AuthService);
 
-  public readonly userSignal = signal<User | null>(null);
-  public readonly userDataSignal = signal<UserDataResult | null>(null);
-  public readonly agencySignal = signal<Agency | null>(null);
+  private readonly userDataSignal = signal<UserDataResult | null>(null);
+  private readonly userSignal = signal<User | null>(null);
+  private readonly agencySignal = signal<Agency | null>(null);
+  private readonly roleSignal = signal<string | null>(null);
+
+  public readonly uploadAgencyResponseSignal = signal<UserWithAgency | null>(null);
 
   public readonly user = computed(() => this.userSignal() ?? null);
   public readonly agency = computed(() => this.agencySignal() ?? null);
-  public readonly role = computed(() => this.userSignal()?.role ?? null);
+  public readonly role = computed(() => this.roleSignal() ?? null);
 
   public readonly givenName = computed(() => this.userDataSignal()?.userData().given_name ?? null);
   public readonly familyName = computed(() => this.userDataSignal()?.userData().family_name ?? null);
@@ -26,18 +32,39 @@ export class UserStateService {
   public readonly isAgent = computed(() => this.role() === ROLE.MANAGER || this.role() === ROLE.AGENT);
 
   constructor() {
-    // Subscribe to get user's agency from backend after the role is fetched, if the user is affiliated to one
+    // Subscribe to get user data (given name, family name etc.) from OIDC after authentication
     effect(() => {
-      if (this.isAgent() && !this.agency()) {
+      if (this.authService.isAuthenticated()) {
+        this.authService.userData$.subscribe(
+          userData => {
+            this.userDataSignal.set(userData);
+          }
+        );
+      }
+    });
+
+    // Subscribe to get user's agency and role from backend after authentication
+    effect(() => {
+      if (this.authService.isAuthenticated()) {
         this.client.getMyAgency().subscribe({
-          next: (agency) => {
-            this.agencySignal.set(agency);
+          next: userWithAgency => {
+            this.userSignal.set(userWithAgency.user);
+            this.agencySignal.set(userWithAgency.agency);
+            this.roleSignal.set(userWithAgency.role);
           },
-          error: (error) => {
-            console.error('Could not fetch agency:', error);
+          error: err => {
+            // do nothing
           }
         });
       }
     });
+
+    // Update user, agency and role signals when a new agency is uploaded succesfully by the user
+    effect(() => {
+      if (this.uploadAgencyResponseSignal()) {
+        this.agencySignal.set(this.uploadAgencyResponseSignal()!.agency);
+        this.roleSignal.set(this.uploadAgencyResponseSignal()!.role);
+      }
+    })
   }
 }

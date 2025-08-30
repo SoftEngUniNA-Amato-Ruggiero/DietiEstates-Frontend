@@ -18,12 +18,8 @@ export class BackendClientService {
     })
   };
 
-  public getMyRole() {
-    return this.http.get<User>(`${this.url}/me/role`, this.httpOptions);
-  }
-
   public getMyAgency() {
-    return this.http.get<Agency>(`${this.url}/me/agency`, this.httpOptions);
+    return this.http.get<UserWithAgency>(`${this.url}/me/agency`, this.httpOptions);
   }
 
   public getUserByUsername(username: string) {
