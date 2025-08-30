@@ -1,9 +1,10 @@
-import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { backend } from '../_config/backend.config';
 import { User } from '../_types/user';
 import { Agency } from '../_types/agency';
 import { UserWithAgency } from '../_types/user-with-agency';
+import { Page } from '../_types/page';
 
 @Injectable({
   providedIn: 'root'
@@ -26,8 +27,18 @@ export class BackendClientService {
     return this.http.get<User>(`${this.url}/users?username=${username}`, this.httpOptions);
   }
 
-  public getAgencies() {
-    return this.http.get<Agency[]>(`${this.url}/agencies`, this.httpOptions);
+  public getAgencies(page = 0, pageSize = 10) {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+    return this.http.get<Page<Agency>>(`${this.url}/agencies`, { ...this.httpOptions, params });
+  }
+
+  public getAgentsWorkingForAgency(agencyId: number, page = 0, pageSize = 10) {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+    return this.http.get<Page<UserWithAgency>>(`${this.url}/agencies/${agencyId}/agents`, { ...this.httpOptions, params });
   }
 
   public postAgency(agency: Agency) {
@@ -35,10 +46,10 @@ export class BackendClientService {
   }
 
   public postAgent(user: User) {
-    return this.http.post<User>(`${this.url}/agents`, user, this.httpOptions);
+    return this.http.post<UserWithAgency>(`${this.url}/agents`, user, this.httpOptions);
   }
 
   public postManager(user: User) {
-    return this.http.post<User>(`${this.url}/managers`, user, this.httpOptions);
+    return this.http.post<UserWithAgency>(`${this.url}/managers`, user, this.httpOptions);
   }
 }

@@ -2,6 +2,8 @@
 <p>Name: {{userStateService.agency()?.name}}</p>
 <p>IBAN: {{userStateService.agency()?.iban}}</p>
 
+<app-agents-list></app-agents-list>
+
 <form [formGroup]="agentForm" (ngSubmit)="submitAgentForm(agentForm.value.email)">
     <h3>Add Agent</h3>
     <label for="agentEmail">Agent Email:</label>

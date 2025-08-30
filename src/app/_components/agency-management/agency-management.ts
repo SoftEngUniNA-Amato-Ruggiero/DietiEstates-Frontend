@@ -4,11 +4,11 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { User } from '../../_types/user';
 import { AuthService } from '../../_services/auth-service';
 import { UserStateService } from '../../_services/user-state-service';
-import { ROLE } from '../../_types/roles';
+import { AgentsList } from '../agents-list/agents-list';
 
 @Component({
   selector: 'app-agency-management',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, AgentsList],
   templateUrl: './agency-management.html',
   styleUrl: './agency-management.scss'
 })
