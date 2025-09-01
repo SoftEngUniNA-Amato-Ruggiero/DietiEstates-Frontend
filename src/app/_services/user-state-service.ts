@@ -17,19 +17,19 @@ export class UserStateService {
   private readonly userDataSignal = signal<UserDataResult | null>(null);
   private readonly userSignal = signal<User | null>(null);
   private readonly agencySignal = signal<Agency | null>(null);
-  private readonly roleSignal = signal<string | null>(null);
+  private readonly rolesSignal = signal<string[] | null>(null);
 
   public readonly uploadAgencyResponseSignal = signal<UserWithAgency | null>(null);
 
   public readonly user = computed(() => this.userSignal() ?? null);
   public readonly agency = computed(() => this.agencySignal() ?? null);
-  public readonly role = computed(() => this.roleSignal() ?? null);
+  public readonly roles = computed(() => this.rolesSignal() ?? null);
 
   public readonly givenName = computed(() => this.userDataSignal()?.userData().given_name ?? null);
   public readonly familyName = computed(() => this.userDataSignal()?.userData().family_name ?? null);
 
-  public readonly isManager = computed(() => this.role() === ROLE.MANAGER);
-  public readonly isAgent = computed(() => this.role() === ROLE.MANAGER || this.role() === ROLE.AGENT);
+  public readonly isManager = computed(() => this.roles()?.includes(ROLE.MANAGER));
+  public readonly isAgent = computed(() => this.roles()?.includes(ROLE.AGENT));
 
   constructor() {
     // Subscribe to get user data (given name, family name etc.) from OIDC after authentication
@@ -50,7 +50,7 @@ export class UserStateService {
           next: userWithAgency => {
             this.userSignal.set(userWithAgency.user);
             this.agencySignal.set(userWithAgency.agency);
-            this.roleSignal.set(userWithAgency.role);
+            this.rolesSignal.set(userWithAgency.roles);
           },
           error: err => {
             // do nothing
@@ -63,7 +63,7 @@ export class UserStateService {
     effect(() => {
       if (this.uploadAgencyResponseSignal()) {
         this.agencySignal.set(this.uploadAgencyResponseSignal()!.agency);
-        this.roleSignal.set(this.uploadAgencyResponseSignal()!.role);
+        this.rolesSignal.set(this.uploadAgencyResponseSignal()!.roles);
       }
     })
   }

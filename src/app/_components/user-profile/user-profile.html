@@ -1,7 +1,7 @@
 <p>Is Authenticated: {{ authService.isAuthenticated() }}</p>
 <br />
 @if (authService.isAuthenticated()) {
-<p>Role: {{ userStateService.role() }}</p>
+<p>Role: {{ userStateService.roles() }}</p>
 <h2>User Data</h2>
 <pre>{{ authService.userData$ | async | json }}</pre>
 } @else {
