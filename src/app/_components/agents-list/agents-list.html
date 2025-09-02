@@ -1,16 +1,16 @@
 <h2>Agents list</h2>
-@for (agent of agents(); track agent.user.id) {
-<div>
-    <p>Id: {{ agent.user.id }}</p>
-    <p>Email: {{ agent.user.username }}</p>
-    @if (agent.user.id === userState.user()?.id) {
-    <p>(You)</p>
-    }
+
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <th>ID</th>
+        <th>Email</th>
+        @for (agent of agents; track agent.user.id) {
+        <tr>
+            <td>{{ agent.user.id }}</td>
+            <td>{{ agent.user.username }}</td>
+        </tr>
+        }
+    </table>
 </div>
-<br />
-}
-<button (click)="getAgentsPage(pageNumber() - 1, pageSize())" [disabled]="pageNumber() === 0">Previous</button>
-<p>Page {{ pageNumber() + 1 }}</p>
-<button (click)="getAgentsPage(pageNumber() + 1, pageSize())"
-    [disabled]="pageNumber() + 1 >= totalPages()">Next</button>
-<br />
+<ngb-pagination [(page)]="pageNumber" [pageSize]="pageSize" [collectionSize]="agents.length"
+    (pageChange)="getAgentsPage($event - 1, pageSize)" />

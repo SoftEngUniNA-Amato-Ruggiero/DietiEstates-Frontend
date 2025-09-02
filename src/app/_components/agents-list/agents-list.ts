@@ -1,38 +1,38 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject } from '@angular/core';
 import { BackendClientService } from '../../_services/backend-client-service';
 import { UserStateService } from '../../_services/user-state-service';
 import { UserWithAgency } from '../../_types/user-with-agency';
+import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-agents-list',
-  imports: [],
+  imports: [NgbPaginationModule],
   templateUrl: './agents-list.html',
   styleUrl: './agents-list.scss'
 })
 export class AgentsList {
-  readonly client = inject(BackendClientService);
-  readonly userState = inject(UserStateService);
+  protected readonly client = inject(BackendClientService);
+  protected readonly userState = inject(UserStateService);
 
-  readonly agents = signal<UserWithAgency[]>([]);
-  readonly pageNumber = signal<number>(0);
-  readonly pageSize = signal<number>(10);
-  readonly totalPages = signal<number>(0);
+  protected agents = new Array<UserWithAgency>();
+  protected pageNumber = 0;
+  protected pageSize = 10;
+  protected totalPages = 0;
 
   constructor() {
     effect(() => {
       if (this.userState.agency()) {
-        this.getAgentsPage(this.pageNumber(), this.pageSize());
+        this.getAgentsPage(this.pageNumber, this.pageSize);
       }
     });
   }
 
-  getAgentsPage(pageNumber = 0, pageSize = 10) {
+  protected getAgentsPage(pageNumber = 0, pageSize = 10) {
     this.client.getAgentsWorkingForAgency(this.userState.agency()?.id!, pageNumber, pageSize).subscribe(
       response => {
-        this.agents.set(response.content ?? []);
-        this.pageNumber.set(response.page.number);
-        this.pageSize.set(response.page.size);
-        this.totalPages.set(response.page.totalPages);
+        this.agents = response.content ?? [];
+        this.pageSize = response.page.size;
+        this.totalPages = response.page.totalPages;
       }
     );
   }

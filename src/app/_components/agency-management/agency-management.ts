@@ -5,6 +5,7 @@ import { User } from '../../_types/user';
 import { AuthService } from '../../_services/auth-service';
 import { UserStateService } from '../../_services/user-state-service';
 import { AgentsList } from '../agents-list/agents-list';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-agency-management',
@@ -16,6 +17,7 @@ export class AgencyManagement {
   protected client = inject(BackendClientService);
   protected authService = inject(AuthService);
   protected userStateService = inject(UserStateService);
+  protected toastr = inject(ToastrService);
 
   protected agentForm = new FormGroup({
     email: new FormControl(''),
@@ -36,6 +38,7 @@ export class AgencyManagement {
       },
       error: (error) => {
         console.error('Error creating agent:', error);
+        this.toastr.error(error.error.message);
       }
     });
   }
@@ -51,6 +54,7 @@ export class AgencyManagement {
       },
       error: (error) => {
         console.error('Error creating manager:', error);
+        this.toastr.error(error.error.message);
       }
     });
   }

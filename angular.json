@@ -46,9 +46,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss",
-              "./node_modules/leaflet/dist/leaflet.css",
-              "./node_modules/@geoapify/leaflet-address-search-plugin/dist/L.Control.GeoapifyAddressSearch.min.css"
+              "src/styles.scss"
             ]
           },
           "configurations": {
@@ -107,9 +105,7 @@
               }
             ],
             "styles": [
-              "src/styles.scss",
-              "./node_modules/leaflet/dist/leaflet.css",
-              "./node_modules/@geoapify/leaflet-address-search-plugin/dist/L.Control.GeoapifyAddressSearch.min.css"
+              "src/styles.scss"
             ]
           }
         }

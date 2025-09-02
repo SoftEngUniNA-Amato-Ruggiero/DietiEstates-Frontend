@@ -33,7 +33,7 @@ export const routes: Routes = [
     {
         path: 'dashboard',
         component: AgentDashboard,
-        canActivate: [authGuard, agentGuard]
+        canActivate: [authGuard, agentGuard, managerGuard]
     },
     {
         path: 'agency',
