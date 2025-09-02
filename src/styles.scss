@@ -4,6 +4,7 @@
 @use 'bootstrap/scss/bootstrap' as bs with (
     /* Overriding Bootstrap variables */
     $primary: rgb(0, 0, 0),
+    $body-bg: rgb(255, 255, 255),
     $enable-shadows: true,
     $prefix: "mo-"
 );
@@ -11,3 +12,9 @@
 @use 'ngx-toastr/toastr';
 @use 'leaflet/dist/leaflet';
 @use '@geoapify/leaflet-address-search-plugin/dist/L.Control.GeoapifyAddressSearch.min';
+
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+}

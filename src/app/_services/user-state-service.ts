@@ -30,6 +30,7 @@ export class UserStateService {
 
   public readonly isManager = computed(() => this.roles()?.includes(ROLE.MANAGER));
   public readonly isAgent = computed(() => this.roles()?.includes(ROLE.AGENT));
+  public readonly isAffiliatedWithAgency = computed(() => this.agency() !== null);
 
   constructor() {
     // Subscribe to get user data (given name, family name etc.) from OIDC after authentication
