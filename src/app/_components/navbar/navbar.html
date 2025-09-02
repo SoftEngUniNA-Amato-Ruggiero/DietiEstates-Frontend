@@ -1,22 +1,35 @@
-<nav>
-    <ul>
-        <li><a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a></li>
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark" id="mainNavbar">
+    <ul class="navbar-nav container-fluid">
+        <li class="nav-item">
+            <a routerLink="" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }"
+                class="nav-link">Home</a>
+        </li>
 
         @if (!authService.isAuthenticated()) {
-        <li><a routerLink="/login" routerLinkActive="active">Log in / Sign up</a></li>
+        <li class="nav-item">
+            <a routerLink="/login" routerLinkActive="active" class="nav-link">Log in / Sign up</a>
+        </li>
         } @else {
 
-        <li><a routerLink="/profile" routerLinkActive="active">Profile</a></li>
+        <li class="nav-item">
+            <a routerLink="/profile" routerLinkActive="active" class="nav-link">Profile</a>
+        </li>
 
         @if (userStateService.isAgent()){
-        <li><a routerLink="/dashboard" routerLinkActive="active">Agent Dashboard</a></li>
+        <li class="nav-item">
+            <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">Agent Dashboard</a>
+        </li>
         }
 
         @if (userStateService.isManager()){
-        <li><a routerLink="/agency" routerLinkActive="active">Agency Management</a></li>
+        <li class="nav-item">
+            <a routerLink="/agency" routerLinkActive="active" class="nav-link">Agency Management</a>
+        </li>
         }
 
-        <li><a routerLink="/logout" routerLinkActive="active">Logout</a></li>
+        <li class="nav-item">
+            <a routerLink="/logout" routerLinkActive="active" class="nav-link">Logout</a>
+        </li>
         }
     </ul>
 </nav>
