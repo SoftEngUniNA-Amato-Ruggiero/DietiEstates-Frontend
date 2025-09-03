@@ -1,10 +1,12 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { GeoapifyGeocoderAutocompleteModule } from '@geoapify/angular-geocoder-autocomplete';
 import * as L from 'leaflet';
 import { Observable } from 'rxjs';
 import * as MapConstants from '../../_constants/map-component.constants';
 import { test_coords } from '../../_constants/test-coords';
+import { GeoapifyClientService } from '../../_services/geoapify-client-service';
+import { FeatureCollection } from 'geojson';
 
 declare module 'leaflet' {
   namespace control {
@@ -21,8 +23,12 @@ declare module 'leaflet' {
 export class MapComponent {
   // TODO: it might be worth creating 2 separate components for the map used to search and the one used to upload insertions
 
-  @Input() searchResults: any[] = test_coords;
+  @Input() searchResults: L.LatLng[] = test_coords;
   @Output() clickedAt = new EventEmitter<L.LatLng>();
+  @Output() userInput = new EventEmitter<String>();
+  @Output() addressSelected = new EventEmitter<FeatureCollection>();
+
+  protected readonly geoapifyClient = inject(GeoapifyClientService);
 
   protected map: L.Map | undefined;
 
@@ -112,6 +118,15 @@ export class MapComponent {
       console.log("Map clicked at ", clickPos);
       this.clickMarkerLayer.setLatLng(clickPos);
       this.clickedAt.emit(clickPos);
+      this.geoapifyClient.reverseGeocode(clickPos.lat, clickPos.lng).subscribe({
+        next: (result) => {
+          console.log("Reverse geocode result:", result);
+          this.addressSelected.emit(result);
+        },
+        error: (error) => {
+          console.error("Error during reverse geocode:", error);
+        }
+      });
     }
   }
 
@@ -127,11 +142,7 @@ export class MapComponent {
     if (event?.geometry?.coordinates) {
       const [lon, lat] = event.geometry.coordinates;
       const position = L.latLng(lat, lon);
-      this.map!.setView(position, MapConstants.DEFAULT_ZOOM);
+      this.map!.setView(position, 20);
     }
-  }
-
-  protected suggestionsChanged(event: any) {
-    console.log('Suggestions changed:', event);
   }
 }
