@@ -3,19 +3,4 @@
 <p>IBAN: {{userStateService.agency()?.iban}}</p>
 
 <app-agents-list></app-agents-list>
-
-<form [formGroup]="agentForm" (ngSubmit)="submitAgentForm(agentForm.value.email)">
-    <h3>Add Agent</h3>
-    <label for="agentEmail">Agent Email:</label>
-    <input id="agentEmail" formControlName="email" type="email" required>
-
-    <button type="submit">Submit</button>
-</form>
-
-<form [formGroup]="managerForm" (ngSubmit)="submitManagerForm(managerForm.value.email)">
-    <h3>Add Manager</h3>
-    <label for="managerEmail">Manager Email:</label>
-    <input id="managerEmail" formControlName="email" type="email" required>
-
-    <button type="submit">Submit</button>
-</form>
+<app-user-promotion-forms></app-user-promotion-forms>

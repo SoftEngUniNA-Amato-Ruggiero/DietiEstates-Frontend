@@ -4,5 +4,4 @@ import { Agency } from "./agency";
 export interface UserWithAgency {
     user: User;
     agency: Agency | null;
-    roles: string[] | null;
 }

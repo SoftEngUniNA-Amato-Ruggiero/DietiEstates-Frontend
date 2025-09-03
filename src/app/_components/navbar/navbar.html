@@ -17,7 +17,7 @@
                 <a routerLink="/profile" routerLinkActive="active" class="nav-link">Profile</a>
             </li>
 
-            @if (userStateService.isAgent()){
+            @if (userStateService.isAffiliatedWithAgency()){
             <li class="nav-item">
                 <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">Agent Dashboard</a>
             </li>

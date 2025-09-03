@@ -51,7 +51,7 @@ export class UserStateService {
           next: userWithAgency => {
             this.userSignal.set(userWithAgency.user);
             this.agencySignal.set(userWithAgency.agency);
-            this.rolesSignal.set(userWithAgency.roles);
+            this.rolesSignal.set(userWithAgency.user.roles);
           },
           error: err => {
             // do nothing
@@ -64,7 +64,7 @@ export class UserStateService {
     effect(() => {
       if (this.uploadAgencyResponseSignal()) {
         this.agencySignal.set(this.uploadAgencyResponseSignal()!.agency);
-        this.rolesSignal.set(this.uploadAgencyResponseSignal()!.roles);
+        this.rolesSignal.set(this.uploadAgencyResponseSignal()!.user.roles);
       }
     })
   }
