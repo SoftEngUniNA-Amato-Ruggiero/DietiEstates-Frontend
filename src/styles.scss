@@ -11,7 +11,8 @@
 
 @use 'ngx-toastr/toastr';
 @use 'leaflet/dist/leaflet';
-@use '@geoapify/leaflet-address-search-plugin/dist/L.Control.GeoapifyAddressSearch.min';
+@use '@geoapify/geocoder-autocomplete/styles/round-borders';
+
 
 *,
 *::before,

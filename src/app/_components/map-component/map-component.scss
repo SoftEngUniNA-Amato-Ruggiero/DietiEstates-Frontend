@@ -1,4 +1,9 @@
-div {
+.map-wrapper {
+    padding: 5rem;
+}
+
+.map-container {
+    margin-top: 2rem;
     min-height: 40rem;
-    margin: 5em;
+    z-index: 0;
 }

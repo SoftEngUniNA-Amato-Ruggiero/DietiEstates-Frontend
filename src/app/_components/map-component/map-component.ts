@@ -1,10 +1,10 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
+import { GeoapifyGeocoderAutocompleteModule } from '@geoapify/angular-geocoder-autocomplete';
 import * as L from 'leaflet';
-import '@geoapify/leaflet-address-search-plugin';
 import { Observable } from 'rxjs';
-import * as MapConstants from './map-component.constants';
-import { test_coords } from './test-layer';
+import * as MapConstants from '../../_constants/map-component.constants';
+import { test_coords } from '../../_constants/test-coords';
 
 declare module 'leaflet' {
   namespace control {
@@ -14,7 +14,7 @@ declare module 'leaflet' {
 
 @Component({
   selector: 'app-map-component',
-  imports: [LeafletModule],
+  imports: [LeafletModule, GeoapifyGeocoderAutocompleteModule],
   templateUrl: './map-component.html',
   styleUrl: './map-component.scss'
 })
@@ -48,20 +48,6 @@ export class MapComponent {
       return marker;
     })
   );
-
-  protected readonly addressSearchControl = L.control.addressSearch(MapConstants.GEOAPIFY_API_KEY, {
-    position: 'topright',
-    resultCallback: (address: any) => {
-      console.log(address);
-      if (address?.lat && address?.lon) {
-        const latLngPosition = L.latLng(address.lat, address.lon);
-        this.map!.setView(latLngPosition, MapConstants.DEFAULT_ZOOM);
-      }
-    },
-    suggestionsCallback: (suggestions: any) => {
-      console.log(suggestions);
-    }
-  });
 
   protected readonly options = {
     layers: [this.tileLayer],
@@ -106,7 +92,6 @@ export class MapComponent {
 
   protected onMapReady(map: L.Map) {
     this.map = map;
-    map.addControl(this.addressSearchControl);
 
     this.initializeClickMarkerLayer();
     map.addLayer(this.clickMarkerLayer);
@@ -135,5 +120,18 @@ export class MapComponent {
     const center = map.getCenter();
     console.log('Map centered at:', center);
     // TODO: fetch the nearest insertions
+  }
+
+  protected placeSelected(event: any) {
+    console.log("place selected: ", event);
+    if (event?.geometry?.coordinates) {
+      const [lon, lat] = event.geometry.coordinates;
+      const position = L.latLng(lat, lon);
+      this.map!.setView(position, MapConstants.DEFAULT_ZOOM);
+    }
+  }
+
+  protected suggestionsChanged(event: any) {
+    console.log('Suggestions changed:', event);
   }
 }

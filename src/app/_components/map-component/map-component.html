@@ -1,2 +1,7 @@
-<div leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)" (leafletClick)="onClick($event)"
-    (leafletMapMoveEnd)="onMoveEnd($event)"></div>
+<div class="map-wrapper">
+    <geoapify-geocoder-autocomplete (placeSelect)="placeSelected($event)"
+        (suggestionsChange)="suggestionsChanged($event)"></geoapify-geocoder-autocomplete>
+
+    <div leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)" (leafletClick)="onClick($event)"
+        (leafletMapMoveEnd)="onMoveEnd($event)" class="map-container"></div>
+</div>
