@@ -1,10 +1,16 @@
 import { Component, computed, effect, signal } from '@angular/core';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
-import { latLng, tileLayer, LatLng, Marker, marker, Browser, control } from 'leaflet';
-import { Observable } from 'rxjs';
+import * as L from 'leaflet';
 import '@geoapify/leaflet-address-search-plugin';
+import { Observable } from 'rxjs';
 import * as MapConstants from './map-component.constants';
 import { test_layer } from './test-layer';
+
+declare module 'leaflet' {
+  namespace control {
+    function addressSearch(apiKey: string, options?: any): L.Control;
+  }
+}
 
 @Component({
   selector: 'app-map-component',
@@ -18,11 +24,11 @@ export class MapComponent {
 
   protected map: L.Map | undefined;
 
-  protected userMarkerLayer: Array<Marker> = [];
+  protected userMarkerLayer: Array<L.Marker> = [];
 
   protected readonly options = {
     layers: [
-      tileLayer(Browser.retina ? MapConstants.GEOAPIFY_RETINA_URL : MapConstants.GEOAPIFY_TILE_URL, {
+      L.tileLayer(L.Browser.retina ? MapConstants.GEOAPIFY_RETINA_URL : MapConstants.GEOAPIFY_TILE_URL, {
         maxZoom: MapConstants.MAX_ZOOM,
         attribution: MapConstants.GEOAPIFY_COPYRIGHT,
         id: MapConstants.STYLE_ID
@@ -32,12 +38,12 @@ export class MapComponent {
     center: MapConstants.DEFAULT_CENTER
   };
 
-  protected readonly addressSearchControl = (control as any).addressSearch(MapConstants.GEOAPIFY_API_KEY, {
+  protected readonly addressSearchControl = L.control.addressSearch(MapConstants.GEOAPIFY_API_KEY, {
     position: 'topright',
     resultCallback: (address: any) => {
       console.log(address)
       if (address?.lat && address?.lon) {
-        const latLngPosition = latLng(address.lat, address.lon);
+        const latLngPosition = L.latLng(address.lat, address.lon);
         this.map?.setView(latLngPosition, 18);
         this.clickedAtSignal.set(latLngPosition);
       }
@@ -47,12 +53,12 @@ export class MapComponent {
     }
   });
 
-  private readonly clickedAtSignal = signal<LatLng | undefined>(undefined);
+  private readonly clickedAtSignal = signal<L.LatLng | undefined>(undefined);
 
-  private readonly currentPositionObservable = new Observable<LatLng>((subscriber) => {
+  private readonly currentPositionObservable = new Observable<L.LatLng>((subscriber) => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
-        subscriber.next(latLng(position.coords.latitude, position.coords.longitude));
+        subscriber.next(L.latLng(position.coords.latitude, position.coords.longitude));
       },
       (error) => {
         subscriber.error(error);
@@ -64,7 +70,7 @@ export class MapComponent {
     effect(() => {
       const clickPos = this.clickedAt();
       if (clickPos) {
-        this.userMarkerLayer = [marker(clickPos, { icon: MapConstants.MARKER_ICON })];
+        this.userMarkerLayer = [L.marker(clickPos, { icon: MapConstants.MARKER_ICON })];
       }
     });
   }

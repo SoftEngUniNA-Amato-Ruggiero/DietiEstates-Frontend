@@ -1,4 +1,4 @@
-import { latLng, icon, Icon } from 'leaflet';
+import * as L from 'leaflet';
 
 export const GEOAPIFY_API_KEY = '37ceaa481cce4145bf39550639c6f8cc';
 
@@ -12,9 +12,9 @@ export const GEOAPIFY_COPYRIGHT = 'Powered by <a href="https://www.geoapify.com/
 export const OPENSTREETMAP_TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
 export const OPENSTREETMAP_COPYRIGHT = '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>';
 
-export const DEFAULT_CENTER = latLng(40.828172, 14.190613); //Via Claudio, Napoli
-export const MARKER_ICON = icon({
-    ...Icon.Default.prototype.options,
+export const DEFAULT_CENTER = L.latLng(40.828172, 14.190613); //Via Claudio, Napoli
+export const MARKER_ICON = L.icon({
+    ...L.Icon.Default.prototype.options,
     iconUrl: 'assets/marker-icon.png',
     iconRetinaUrl: 'assets/marker-icon-2x.png',
     shadowUrl: 'assets/marker-shadow.png'
