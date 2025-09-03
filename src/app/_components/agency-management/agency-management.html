@@ -2,5 +2,5 @@
 <p>Name: {{userStateService.agency()?.name}}</p>
 <p>IBAN: {{userStateService.agency()?.iban}}</p>
 
-<app-agents-list></app-agents-list>
-<app-user-promotion-forms></app-user-promotion-forms>
+<app-agents-list [updateTrigger]="updateTrigger"></app-agents-list>
+<app-user-promotion-forms (formSubmitted)="onFormSubmitted()"></app-user-promotion-forms>

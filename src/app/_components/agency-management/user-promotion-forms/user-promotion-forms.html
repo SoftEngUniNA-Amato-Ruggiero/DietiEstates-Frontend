@@ -1,15 +1,15 @@
 <form [formGroup]="agentForm" (ngSubmit)="submitAgentForm(agentForm.value.email)">
     <h3>Add Agent</h3>
-    <label for="agentEmail">Agent Email:</label>
-    <input id="agentEmail" formControlName="email" type="email" required>
+    <label for="agentEmail" class="form-label">Agent Email:</label>
+    <input id="agentEmail" formControlName="email" type="email" required class="form-control">
 
-    <button type="submit">Submit</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 
 <form [formGroup]="managerForm" (ngSubmit)="submitManagerForm(managerForm.value.email)">
     <h3>Add Manager</h3>
-    <label for="managerEmail">Manager Email:</label>
-    <input id="managerEmail" formControlName="email" type="email" required>
+    <label for="managerEmail" class="form-label">Manager Email:</label>
+    <input id="managerEmail" formControlName="email" type="email" required class="form-control">
 
-    <button type="submit">Submit</button>
+    <button type="submit" class="btn btn-primary">Submit</button>
 </form>

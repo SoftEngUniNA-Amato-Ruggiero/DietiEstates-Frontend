@@ -11,4 +11,9 @@ import { UserPromotionForms } from './user-promotion-forms/user-promotion-forms'
 })
 export class AgencyManagement {
   protected userStateService = inject(UserStateService);
+  protected updateTrigger = false;
+
+  protected onFormSubmitted() {
+    this.updateTrigger = !this.updateTrigger;
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { BackendClientService } from '../../../_services/backend-client-service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { User } from '../../../_types/user';
@@ -12,6 +12,8 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './user-promotion-forms.scss'
 })
 export class UserPromotionForms {
+  @Output() formSubmitted = new EventEmitter<void>();
+
   protected client = inject(BackendClientService);
   protected authService = inject(AuthService);
   protected toastr = inject(ToastrService);
@@ -33,6 +35,7 @@ export class UserPromotionForms {
       next: (response) => {
         console.log('Agent created:', response);
         this.toastr.success('Agent ' + email + ' now works for the agency.');
+        this.formSubmitted.emit();
       },
       error: (error) => {
         console.error('Error creating agent:', error);
@@ -50,6 +53,7 @@ export class UserPromotionForms {
       next: (response) => {
         console.log('Manager created:', response);
         this.toastr.success('Manager ' + email + ' now works for the agency.');
+        this.formSubmitted.emit();
       },
       error: (error) => {
         console.error('Error creating manager:', error);
