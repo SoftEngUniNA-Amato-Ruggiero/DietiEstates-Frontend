@@ -1,4 +1,8 @@
-<app-map-component></app-map-component>
+<app-map-component (clickedAt)="markerPosition = $event"></app-map-component>
+
+@if (markerPosition) {
+<p>Marker at: {{ markerPosition }}</p>
+}
 
 <br />
 

@@ -4,6 +4,7 @@ export const GEOAPIFY_API_KEY = '37ceaa481cce4145bf39550639c6f8cc';
 
 export const STYLE_ID = 'osm-carto';
 export const MAX_ZOOM = 20; //osm map tiles provided by Geoapify are available up to the 20th zoom level
+export const DEFAULT_ZOOM = 16;
 
 export const GEOAPIFY_TILE_URL = `https://maps.geoapify.com/v1/tile/${STYLE_ID}/{z}/{x}/{y}.png?apiKey=${GEOAPIFY_API_KEY}`;
 export const GEOAPIFY_RETINA_URL = `https://maps.geoapify.com/v1/tile/${STYLE_ID}/{z}/{x}/{y}@2x.png?apiKey=${GEOAPIFY_API_KEY}`;

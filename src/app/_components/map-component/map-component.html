@@ -1,7 +1,2 @@
-<div leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)" [leafletLayers]="userMarkerLayer"></div>
-
-@if (clickedAt() !== undefined) {
-<p>
-    Clicked coordinates: {{ clickedAt() }}
-</p>
-}
+<div leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)" (leafletClick)="onClick($event)"
+    (leafletMapMoveEnd)="onMoveEnd($event)"></div>

@@ -52,4 +52,12 @@ export class BackendClientService {
   public postManager(user: User) {
     return this.http.post<UserWithAgency>(`${this.url}/managers`, user, this.httpOptions);
   }
+
+  public postInsertionForSale(insertion: any) {
+    return this.http.post(`${this.url}/insertions/for-sale`, insertion, this.httpOptions);
+  }
+
+  public postInsertionForRent(insertion: any) {
+    return this.http.post(`${this.url}/insertions/for-rent`, insertion, this.httpOptions);
+  }
 }

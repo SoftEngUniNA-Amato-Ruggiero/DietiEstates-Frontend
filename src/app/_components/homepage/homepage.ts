@@ -13,4 +13,7 @@ import { UserStateService } from '../../_services/user-state-service';
 export class Homepage {
   readonly authService = inject(AuthService);
   readonly userStateService = inject(UserStateService);
+
+  protected markerPosition: L.LatLng | undefined;
+
 }

@@ -1,10 +1,10 @@
-import { Component, computed, effect, signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import * as L from 'leaflet';
 import '@geoapify/leaflet-address-search-plugin';
 import { Observable } from 'rxjs';
 import * as MapConstants from './map-component.constants';
-import { test_layer } from './test-layer';
+import { test_coords } from './test-layer';
 
 declare module 'leaflet' {
   namespace control {
@@ -19,33 +19,43 @@ declare module 'leaflet' {
   styleUrl: './map-component.scss'
 })
 export class MapComponent {
+  // TODO: it might be worth creating 2 separate components for the map used to search and the one used to upload insertions
 
-  public readonly clickedAt = computed(() => this.clickedAtSignal());
+  @Input() searchResults: any[] = test_coords;
+  @Output() clickedAt = new EventEmitter<L.LatLng>();
 
   protected map: L.Map | undefined;
 
-  protected userMarkerLayer: Array<L.Marker> = [];
+  protected readonly tileLayer = L.tileLayer(L.Browser.retina ? MapConstants.GEOAPIFY_RETINA_URL : MapConstants.GEOAPIFY_TILE_URL, {
+    maxZoom: MapConstants.MAX_ZOOM,
+    attribution: MapConstants.GEOAPIFY_COPYRIGHT,
+    id: MapConstants.STYLE_ID
+  })
 
-  protected readonly options = {
-    layers: [
-      L.tileLayer(L.Browser.retina ? MapConstants.GEOAPIFY_RETINA_URL : MapConstants.GEOAPIFY_TILE_URL, {
-        maxZoom: MapConstants.MAX_ZOOM,
-        attribution: MapConstants.GEOAPIFY_COPYRIGHT,
-        id: MapConstants.STYLE_ID
-      })
-    ],
-    zoom: 16,
-    center: MapConstants.DEFAULT_CENTER
-  };
+  protected readonly clickMarkerLayer = L.marker(MapConstants.DEFAULT_CENTER, {
+    icon: MapConstants.MARKER_ICON,
+    draggable: true,
+    autoPan: true,
+    riseOnHover: true
+  });
+
+  protected readonly searchResultsLayer = L.layerGroup(
+    this.searchResults.map((coord) => {
+      const marker = L.marker(coord, { icon: MapConstants.MARKER_ICON });
+      marker.on('click', () => {
+        alert(`Marker clicked at ${coord}`);
+      });
+      return marker;
+    })
+  );
 
   protected readonly addressSearchControl = L.control.addressSearch(MapConstants.GEOAPIFY_API_KEY, {
     position: 'topright',
     resultCallback: (address: any) => {
-      console.log(address)
+      console.log(address);
       if (address?.lat && address?.lon) {
         const latLngPosition = L.latLng(address.lat, address.lon);
-        this.map?.setView(latLngPosition, 18);
-        this.clickedAtSignal.set(latLngPosition);
+        this.map!.setView(latLngPosition, MapConstants.DEFAULT_ZOOM);
       }
     },
     suggestionsCallback: (suggestions: any) => {
@@ -53,9 +63,13 @@ export class MapComponent {
     }
   });
 
-  private readonly clickedAtSignal = signal<L.LatLng | undefined>(undefined);
+  protected readonly options = {
+    layers: [this.tileLayer],
+    zoom: MapConstants.DEFAULT_ZOOM,
+    center: MapConstants.DEFAULT_CENTER
+  };
 
-  private readonly currentPositionObservable = new Observable<L.LatLng>((subscriber) => {
+  private readonly currentPosition$ = new Observable<L.LatLng>((subscriber) => {
     navigator.geolocation.getCurrentPosition(
       (position) => {
         subscriber.next(L.latLng(position.coords.latitude, position.coords.longitude));
@@ -66,27 +80,60 @@ export class MapComponent {
     );
   });
 
-  constructor() {
-    effect(() => {
-      const clickPos = this.clickedAt();
-      if (clickPos) {
-        this.userMarkerLayer = [L.marker(clickPos, { icon: MapConstants.MARKER_ICON })];
-      }
+  protected initializeClickMarkerLayer() {
+    this.clickMarkerLayer.on('moveend', () => {
+      const position = this.clickMarkerLayer.getLatLng();
+      this.clickedAt.emit(position);
+      console.log("Marker moved to ", position);
+    });
+
+    this.clickMarkerLayer.on('click', () => {
+      console.log("Marker clicked: logging latLng ", this.clickMarkerLayer.getLatLng());
+    });
+
+    this.clickMarkerLayer.on('dblclick', () => {
+      console.log("Marker double-clicked: logging GeoJSON ", this.clickMarkerLayer.toGeoJSON());
+    });
+
+    this.clickMarkerLayer.on('mouseover', () => {
+      this.clickMarkerLayer.setOpacity(0.7);
+    });
+
+    this.clickMarkerLayer.on('mouseout', () => {
+      this.clickMarkerLayer.setOpacity(1);
     });
   }
 
   protected onMapReady(map: L.Map) {
     this.map = map;
     map.addControl(this.addressSearchControl);
-    map.addLayer(test_layer);
 
-    this.currentPositionObservable.subscribe({
-      next: (pos) => { map.setView(pos, 16); },
+    this.initializeClickMarkerLayer();
+    map.addLayer(this.clickMarkerLayer);
+
+    map.addLayer(this.searchResultsLayer);
+
+    this.currentPosition$.subscribe({
+      next: (pos) => {
+        map.setView(pos, MapConstants.DEFAULT_ZOOM);
+      },
       error: (error) => { console.error('Error getting current position:', error); }
     });
+  }
 
-    map.on('click', (e: L.LeafletMouseEvent) => {
-      this.clickedAtSignal.set(e.latlng);
-    });
+  protected onClick(event: L.LeafletMouseEvent) {
+    const clickPos = event.latlng;
+    if (clickPos) {
+      console.log("Map clicked at ", clickPos);
+      this.clickMarkerLayer.setLatLng(clickPos);
+      this.clickedAt.emit(clickPos);
+    }
+  }
+
+  protected onMoveEnd(event: L.LeafletEvent) {
+    const map = event.target;
+    const center = map.getCenter();
+    console.log('Map centered at:', center);
+    // TODO: fetch the nearest insertions
   }
 }
