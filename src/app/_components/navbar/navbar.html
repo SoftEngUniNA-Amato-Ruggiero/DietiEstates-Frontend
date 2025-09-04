@@ -17,11 +17,11 @@
                 <a routerLink="/profile" routerLinkActive="active" class="nav-link">Profile</a>
             </li>
 
-            @if (userStateService.isAffiliatedWithAgency()){
+            <!-- @if (userStateService.isAffiliatedWithAgency()){ -->
             <li class="nav-item">
                 <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">Agent Dashboard</a>
             </li>
-            }
+            <!-- } -->
 
             @if (userStateService.isManager()){
             <li class="nav-item">

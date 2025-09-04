@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Input, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { GeoapifyGeocoderAutocompleteModule } from '@geoapify/angular-geocoder-autocomplete';
 import * as L from 'leaflet';
@@ -12,7 +12,7 @@ import { FeatureCollection } from 'geojson';
   templateUrl: './map-component.html',
   styleUrl: './map-component.scss'
 })
-export class MapComponent {
+export class MapComponent implements OnChanges {
   @Input() inputLayer?: L.Layer;
 
   @Output() mapReady = new EventEmitter<L.Map>();
@@ -49,7 +49,7 @@ export class MapComponent {
     );
   });
 
-  protected ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges) {
     console.log("detected changes:\n", changes);
 
     if (changes['inputLayer']?.previousValue) {

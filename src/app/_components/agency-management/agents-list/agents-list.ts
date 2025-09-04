@@ -1,4 +1,4 @@
-import { Component, effect, inject, Input, SimpleChanges } from '@angular/core';
+import { Component, effect, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BackendClientService } from '../../../_services/backend-client-service';
 import { UserStateService } from '../../../_services/user-state-service';
 import { UserWithAgency } from '../../../_types/user-with-agency';
@@ -10,7 +10,7 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
   templateUrl: './agents-list.html',
   styleUrl: './agents-list.scss'
 })
-export class AgentsList {
+export class AgentsList implements OnChanges {
   @Input() updateTrigger = false;
 
   protected readonly client = inject(BackendClientService);
@@ -29,7 +29,7 @@ export class AgentsList {
     });
   }
 
-  protected ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges) {
     if (changes['updateTrigger']) {
       this.getAgentsPage(0, 10);
     }
