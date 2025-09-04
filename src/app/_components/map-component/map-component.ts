@@ -1,18 +1,10 @@
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Input, Output, SimpleChanges } from '@angular/core';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { GeoapifyGeocoderAutocompleteModule } from '@geoapify/angular-geocoder-autocomplete';
 import * as L from 'leaflet';
 import { Observable } from 'rxjs';
 import * as MapConstants from '../../_constants/map-component.constants';
-import { test_coords } from '../../_constants/test-coords';
-import { GeoapifyClientService } from '../../_services/geoapify-client-service';
 import { FeatureCollection } from 'geojson';
-
-declare module 'leaflet' {
-  namespace control {
-    function addressSearch(apiKey: string, options?: any): L.Control;
-  }
-}
 
 @Component({
   selector: 'app-map-component',
@@ -21,39 +13,24 @@ declare module 'leaflet' {
   styleUrl: './map-component.scss'
 })
 export class MapComponent {
-  // TODO: it might be worth creating 2 separate components for the map used to search and the one used to upload insertions
+  @Input() inputLayer?: L.Layer;
 
-  @Input() searchResults: L.LatLng[] = test_coords;
+  @Output() mapReady = new EventEmitter<L.Map>();
+  @Output() mapCenter = new EventEmitter<L.LatLng>();
+  @Output() userLocation = new EventEmitter<L.LatLng>();
   @Output() clickedAt = new EventEmitter<L.LatLng>();
-  @Output() userInput = new EventEmitter<String>();
-  @Output() addressSelected = new EventEmitter<FeatureCollection>();
 
-  protected readonly geoapifyClient = inject(GeoapifyClientService);
+  @Output() placeSelected = new EventEmitter<FeatureCollection>();
+  @Output() userInput = new EventEmitter<string>();
 
-  protected map: L.Map | undefined;
+
+  protected map?: L.Map;
 
   protected readonly tileLayer = L.tileLayer(L.Browser.retina ? MapConstants.GEOAPIFY_RETINA_URL : MapConstants.GEOAPIFY_TILE_URL, {
     maxZoom: MapConstants.MAX_ZOOM,
     attribution: MapConstants.GEOAPIFY_COPYRIGHT,
     id: MapConstants.STYLE_ID
   })
-
-  protected readonly clickMarkerLayer = L.marker(MapConstants.DEFAULT_CENTER, {
-    icon: MapConstants.MARKER_ICON,
-    draggable: true,
-    autoPan: true,
-    riseOnHover: true
-  });
-
-  protected readonly searchResultsLayer = L.layerGroup(
-    this.searchResults.map((coord) => {
-      const marker = L.marker(coord, { icon: MapConstants.MARKER_ICON });
-      marker.on('click', () => {
-        alert(`Marker clicked at ${coord}`);
-      });
-      return marker;
-    })
-  );
 
   protected readonly options = {
     layers: [this.tileLayer],
@@ -72,73 +49,47 @@ export class MapComponent {
     );
   });
 
-  protected initializeClickMarkerLayer() {
-    this.clickMarkerLayer.on('moveend', () => {
-      const position = this.clickMarkerLayer.getLatLng();
-      this.clickedAt.emit(position);
-      console.log("Marker moved to ", position);
-    });
+  protected ngOnChanges(changes: SimpleChanges) {
+    console.log("detected changes:\n", changes);
 
-    this.clickMarkerLayer.on('click', () => {
-      console.log("Marker clicked: logging latLng ", this.clickMarkerLayer.getLatLng());
-    });
-
-    this.clickMarkerLayer.on('dblclick', () => {
-      console.log("Marker double-clicked: logging GeoJSON ", this.clickMarkerLayer.toGeoJSON());
-    });
-
-    this.clickMarkerLayer.on('mouseover', () => {
-      this.clickMarkerLayer.setOpacity(0.7);
-    });
-
-    this.clickMarkerLayer.on('mouseout', () => {
-      this.clickMarkerLayer.setOpacity(1);
-    });
+    if (changes['inputLayer']?.previousValue) {
+      this.map?.removeLayer(changes['inputLayer'].previousValue);
+    }
+    if (changes['inputLayer']?.currentValue) {
+      this.map?.addLayer(changes['inputLayer'].currentValue);
+    }
   }
 
   protected onMapReady(map: L.Map) {
     this.map = map;
-
-    this.initializeClickMarkerLayer();
-    map.addLayer(this.clickMarkerLayer);
-
-    map.addLayer(this.searchResultsLayer);
+    this.mapReady.emit(map);
 
     this.currentPosition$.subscribe({
       next: (pos) => {
-        map.setView(pos, MapConstants.DEFAULT_ZOOM);
+        map.setView(pos, MapConstants.DEFAULT_ZOOM); //calls onMoveEnd automatically
+        this.userLocation.emit(pos);
       },
       error: (error) => { console.error('Error getting current position:', error); }
     });
   }
 
-  protected onClick(event: L.LeafletMouseEvent) {
-    const clickPos = event.latlng;
-    if (clickPos) {
-      console.log("Map clicked at ", clickPos);
-      this.clickMarkerLayer.setLatLng(clickPos);
-      this.clickedAt.emit(clickPos);
-      this.geoapifyClient.reverseGeocode(clickPos.lat, clickPos.lng).subscribe({
-        next: (result) => {
-          console.log("Reverse geocode result:", result);
-          this.addressSelected.emit(result);
-        },
-        error: (error) => {
-          console.error("Error during reverse geocode:", error);
-        }
-      });
-    }
-  }
-
   protected onMoveEnd(event: L.LeafletEvent) {
     const map = event.target;
     const center = map.getCenter();
-    console.log('Map centered at:', center);
-    // TODO: fetch the nearest insertions
+    this.mapCenter.emit(center);
   }
 
-  protected placeSelected(event: any) {
+  protected onClick(event: L.LeafletMouseEvent) {
+    const clickPos = event.latlng;
+    if (!clickPos) return;
+
+    console.log("Map clicked at ", clickPos);
+    this.clickedAt.emit(clickPos);
+  }
+
+  protected onPlaceSelected(event: any) {
     console.log("place selected: ", event);
+    this.placeSelected.emit(event);
     if (event?.geometry?.coordinates) {
       const [lon, lat] = event.geometry.coordinates;
       const position = L.latLng(lat, lon);

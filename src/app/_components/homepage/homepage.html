@@ -1,8 +1,4 @@
-<app-map-component (clickedAt)="markerPosition = $event"></app-map-component>
-
-@if (markerPosition) {
-<p>Marker at: {{ markerPosition }}</p>
-}
+<app-map-component [inputLayer]="searchResultsLayerGroup" (mapCenter)="mapCenter.set($event)"></app-map-component>
 
 <br />
 

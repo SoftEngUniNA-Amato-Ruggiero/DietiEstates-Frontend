@@ -5,6 +5,7 @@ import { User } from '../_types/user';
 import { Agency } from '../_types/agency';
 import { UserWithAgency } from '../_types/user-with-agency';
 import { Page } from '../_types/page';
+import { Insertion } from '../_types/insertion';
 
 @Injectable({
   providedIn: 'root'
@@ -53,11 +54,19 @@ export class BackendClientService {
     return this.http.post<UserWithAgency>(`${this.url}/managers`, user, this.httpOptions);
   }
 
-  public postInsertionForSale(insertion: any) {
+  public getInsertions(center: L.LatLng, radius: number) {
+    const params = new HttpParams()
+      .set('lat', center.lat.toString())
+      .set('lng', center.lng.toString())
+      .set('radius', radius.toString());
+    return this.http.get<Insertion[]>(`${this.url}/insertions`, { ...this.httpOptions, params });
+  }
+
+  public postInsertionForSale(insertion: Insertion) {
     return this.http.post(`${this.url}/insertions/for-sale`, insertion, this.httpOptions);
   }
 
-  public postInsertionForRent(insertion: any) {
+  public postInsertionForRent(insertion: Insertion) {
     return this.http.post(`${this.url}/insertions/for-rent`, insertion, this.httpOptions);
   }
 }

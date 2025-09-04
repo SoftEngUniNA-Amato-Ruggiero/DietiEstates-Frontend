@@ -1,5 +1,5 @@
 <div class="map-wrapper">
-    <geoapify-geocoder-autocomplete (placeSelect)="placeSelected($event)"
+    <geoapify-geocoder-autocomplete (placeSelect)="onPlaceSelected($event)"
         (userInput)="userInput.emit($event)"></geoapify-geocoder-autocomplete>
 
     <div leaflet [leafletOptions]="options" (leafletMapReady)="onMapReady($event)" (leafletClick)="onClick($event)"

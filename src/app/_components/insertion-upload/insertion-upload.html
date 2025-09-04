@@ -1,2 +1,3 @@
 <p>insertion-upload works!</p>
-<app-map-component></app-map-component>
+<app-map-component [inputLayer]="clickMarkerLayer" (placeSelected)="onPlaceSelected($event)"
+    (clickedAt)="onMapClicked($event)"></app-map-component>
