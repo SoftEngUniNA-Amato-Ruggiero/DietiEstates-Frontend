@@ -10,6 +10,7 @@ import { provideAnimations } from '@angular/platform-browser/animations';
 import { provideToastr } from 'ngx-toastr';
 import { GeoapifyGeocoderAutocompleteModule } from '@geoapify/angular-geocoder-autocomplete';
 import * as MapConstants from './_constants/map-component.constants';
+import { provideQuillConfig } from 'ngx-quill';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -23,6 +24,7 @@ export const appConfig: ApplicationConfig = {
     ),
     provideAnimations(), // required animations providers
     provideToastr(), // Toastr providers
+    provideQuillConfig({}),
     importProvidersFrom(GeoapifyGeocoderAutocompleteModule.withConfig(MapConstants.GEOAPIFY_API_KEY))
   ]
 };

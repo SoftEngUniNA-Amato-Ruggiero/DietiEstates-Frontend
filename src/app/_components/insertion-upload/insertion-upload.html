@@ -1,3 +1,16 @@
-<p>insertion-upload works!</p>
+<h2>Upload Insertion</h2>
+
+<form [formGroup]="insertionForm" (ngSubmit)="onSubmit()">
+    <input id="address" type="hidden" formControlName="address" />
+
+    <label for="description" class="form-label">Description:</label>
+    <quill-editor id="description" formControlName="description" class="form-control"></quill-editor>
+</form>
+
 <app-map-component [inputLayer]="clickMarkerLayer" (placeSelected)="onPlaceSelected($event)"
     (clickedAt)="onMapClicked($event)"></app-map-component>
+
+<p>Testing Insertion Upload</p>
+<p>Address: {{insertionForm.get('address')?.value}}</p>
+<p>Location: {{insertionForm.get('location')?.value}}</p>
+<p>Description:</p> <quill-view [content]="insertionForm.get('description')?.value"></quill-view>

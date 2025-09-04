@@ -1,5 +1,10 @@
-<h2>Your Agency</h2>
-<p>Name: {{userStateService.agency()?.name}}</p>
-<p>IBAN: {{userStateService.agency()?.iban}}</p>
+<table class="table">
+    <tr class="table-row">
+        <td class="table-cell">Agency:</td>
+        <td class="table-cell">{{userStateService.agency()?.name}}</td>
+    </tr>
+</table>
+
+<br />
 
 <app-insertion-upload></app-insertion-upload>

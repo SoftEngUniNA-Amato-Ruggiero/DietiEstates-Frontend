@@ -6,10 +6,11 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BackendClientService } from '../../_services/backend-client-service';
 import { GeoapifyClientService } from '../../_services/geoapify-client-service';
 import { FeatureCollection } from 'geojson';
+import { QuillModule } from 'ngx-quill';
 
 @Component({
   selector: 'app-insertion-upload',
-  imports: [MapComponent, ReactiveFormsModule],
+  imports: [MapComponent, ReactiveFormsModule, QuillModule],
   templateUrl: './insertion-upload.html',
   styleUrl: './insertion-upload.scss'
 })
@@ -64,9 +65,11 @@ export class InsertionUpload {
     });
   }
 
-  protected onPlaceSelected($event: FeatureCollection) {
-    this.insertionForm.value.address = $event.features[0].properties!['formatted'];
-    this.insertionForm.value.location = JSON.stringify($event.features[0].geometry);
+  protected onPlaceSelected($event: any) {
+    this.insertionForm.patchValue({
+      address: $event.properties!['formatted'],
+      location: JSON.stringify($event.geometry.coordinates)
+    });
   }
 
   protected onMapClicked($event: L.LatLng) {
