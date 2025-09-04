@@ -1,12 +1,13 @@
 import { Component, inject } from '@angular/core';
+import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { QuillModule } from 'ngx-quill';
 import * as L from 'leaflet';
 import * as MapConstants from '../../_constants/map-component.constants';
 import { MapComponent } from '../map-component/map-component';
-import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BackendClientService } from '../../_services/backend-client-service';
 import { GeoapifyClientService } from '../../_services/geoapify-client-service';
-import { FeatureCollection } from 'geojson';
-import { QuillModule } from 'ngx-quill';
+import { Insertion } from '../../_types/insertion';
+import { UserStateService } from '../../_services/user-state-service';
 
 @Component({
   selector: 'app-insertion-upload',
@@ -15,8 +16,9 @@ import { QuillModule } from 'ngx-quill';
   styleUrl: './insertion-upload.scss'
 })
 export class InsertionUpload {
-  protected client = inject(BackendClientService);
+  protected readonly client = inject(BackendClientService);
   protected readonly geoapifyClient = inject(GeoapifyClientService);
+  protected readonly userService = inject(UserStateService);
 
   protected insertionForm = new FormGroup({
     address: new FormControl(''),
@@ -82,7 +84,18 @@ export class InsertionUpload {
 
   protected onSubmit() {
     if (this.insertionForm.valid) {
-      this.client.postInsertionForSale((this.insertionForm as any).value).subscribe({
+      const insertion = new Insertion(
+        this.insertionForm.value.address!,
+        this.insertionForm.value.location!,
+        {
+          description: this.insertionForm.value.description!
+        }
+      );
+      insertion.uploader = this.userService.user();
+      insertion.agency = this.userService.agency();
+      insertion.price = Number(this.insertionForm.value.price!);
+
+      this.client.postInsertionForSale(insertion).subscribe({
         next: (response) => {
           console.log('Insertion uploaded successfully:', response);
         },
