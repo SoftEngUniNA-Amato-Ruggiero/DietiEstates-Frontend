@@ -44,11 +44,11 @@ export class Homepage {
     });
   }
 
-  private initializeMarkerForInsertion(insertion: Insertion) {
-    const marker = L.marker(insertion.address.location, { icon: MapConstants.MARKER_ICON });
-    marker.on('click', () => {
-      alert(`Marker clicked at ${insertion.address.location}`);
-    });
-    return marker;
-  }
+  // private initializeMarkerForInsertion(insertion: Insertion) {
+  //   const marker = L.marker(insertion.address.location, { icon: MapConstants.MARKER_ICON });
+  //   marker.on('click', () => {
+  //     alert(`Marker clicked at ${insertion.address.location}`);
+  //   });
+  //   return marker;
+  // }
 }
