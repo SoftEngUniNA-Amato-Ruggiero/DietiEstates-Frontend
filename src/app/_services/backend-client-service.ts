@@ -63,10 +63,12 @@ export class BackendClientService {
   }
 
   public postInsertionForSale(insertion: Insertion) {
+    console.log(insertion);
     return this.http.post(`${this.url}/insertions/for-sale`, insertion, this.httpOptions);
   }
 
   public postInsertionForRent(insertion: Insertion) {
+    console.log(insertion);
     return this.http.post(`${this.url}/insertions/for-rent`, insertion, this.httpOptions);
   }
 }

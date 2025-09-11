@@ -1,14 +1,18 @@
-<h2>Upload Insertion</h2>
+<h2>Upload Insertion For Sale</h2>
 
 <form [formGroup]="insertionForm" (ngSubmit)="onSubmit()">
     <input id="address" type="hidden" formControlName="address" />
 
+
+    <app-map-component [inputLayer]="clickMarkerLayer" (placeSelected)="onPlaceSelected($event)"
+        (clickedAt)="onMapClicked($event)"></app-map-component>
+
     <label for="description" class="form-label">Description:</label>
     <quill-editor id="description" formControlName="description" class="form-control"></quill-editor>
+
+    <button type="submit" class="btn btn-primary">Upload</button>
 </form>
 
-<app-map-component [inputLayer]="clickMarkerLayer" (placeSelected)="onPlaceSelected($event)"
-    (clickedAt)="onMapClicked($event)"></app-map-component>
 
 <p>Testing Insertion Upload</p>
 <p>Address: {{insertionForm.get('address')?.value}}</p>

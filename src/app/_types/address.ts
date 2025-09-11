@@ -1,23 +1,14 @@
-import * as L from 'leaflet';
+import { Point } from 'geojson';
 
 export class Address {
-    street: string;
-    houseNumber: number;
-    city: string;
-    postalCode: string;
-    location: L.LatLngExpression;
+    address: string;
+    location: Point;
 
     constructor(
-        street: string,
-        houseNumber: number,
-        city: string,
-        postalCode: string,
-        location: L.LatLngExpression
+        address: string,
+        location: Point
     ) {
-        this.street = street;
-        this.houseNumber = houseNumber;
-        this.city = city;
-        this.postalCode = postalCode;
+        this.address = address;
         this.location = location;
     }
 }
