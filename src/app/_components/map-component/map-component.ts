@@ -30,7 +30,7 @@ export class MapComponent implements OnChanges {
     maxZoom: MapConstants.MAX_ZOOM,
     attribution: MapConstants.GEOAPIFY_COPYRIGHT,
     id: MapConstants.STYLE_ID
-  })
+  });
 
   protected readonly options = {
     layers: [this.tileLayer],
