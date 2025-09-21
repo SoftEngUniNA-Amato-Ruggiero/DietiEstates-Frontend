@@ -21,7 +21,7 @@ export class BackendClientService {
   };
 
   public getMyAgency() {
-    return this.http.get<UserWithAgency>(`${this.url}/me/agency`, this.httpOptions);
+    return this.http.get<UserWithAgency>(`${this.url}/me`, this.httpOptions);
   }
 
   public getUserByUsername(username: string) {
