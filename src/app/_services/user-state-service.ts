@@ -1,11 +1,11 @@
 import { Injectable, inject, computed, effect, signal } from '@angular/core';
 import { Agency } from '../_types/agency';
 import { ROLE } from '../_types/roles';
-import { User } from '../_types/user';
+import { User } from '../_types/users/user';
 import { UserDataResult } from 'angular-auth-oidc-client';
 import { BackendClientService } from './backend-client-service';
 import { AuthService } from './auth-service';
-import { UserWithAgency } from '../_types/user-with-agency';
+import { UserWithAgency } from '../_types/users/user-with-agency';
 
 @Injectable({
   providedIn: 'root'

@@ -7,10 +7,10 @@ import * as MapConstants from '../../_constants/map-component.constants';
 import { MapComponent } from '../map-component/map-component';
 import { BackendClientService } from '../../_services/backend-client-service';
 import { GeoapifyClientService } from '../../_services/geoapify-client-service';
-import { Insertion } from '../../_types/insertion';
+import { Insertion } from '../../_types/insertions/insertion';
 import { UserStateService } from '../../_services/user-state-service';
-import { Address } from '../../_types/address';
 import { ToastrService } from 'ngx-toastr';
+import { InsertionDetails } from '../../_types/insertions/insertion-details';
 
 @Component({
   selector: 'app-insertion-upload',
@@ -19,72 +19,39 @@ import { ToastrService } from 'ngx-toastr';
   styleUrl: './insertion-upload.scss'
 })
 export class InsertionUpload {
+
   protected readonly client = inject(BackendClientService);
   protected readonly geoapifyClient = inject(GeoapifyClientService);
   protected readonly userService = inject(UserStateService);
   protected readonly toastr = inject(ToastrService);
 
+  protected clickMarkerLayer?: L.Marker;
 
   protected insertionForm = new FormGroup({
 
-    address: new FormControl(''),
-    location: new FormControl(''),
-    description: new FormControl(''),
-    price: new FormControl('')
+    address: new FormControl(),
+    location: new FormControl(),
+    description: new FormControl<string>(''),
+    price: new FormControl<number>(0)
 
   });
-
-
-  protected clickMarkerLayer?: L.Marker;
-
-
-  protected onPlaceSelected($event: any) {
-
-    this.insertionForm.patchValue({
-      address: $event.properties!['formatted'],
-      location: JSON.stringify($event.geometry.coordinates)
-    });
-
-  }
-
-
-  protected onMapClicked($event: L.LatLng) {
-
-    if (!this.clickMarkerLayer) {
-      this.initializeClickMarkerLayer($event);
-    } else {
-      this.clickMarkerLayer.setLatLng($event);
-    }
-
-  }
 
 
   protected onSubmit() {
 
     if (!this.insertionForm.valid) return;
 
-    const coords = JSON.parse(this.insertionForm.value.location!);
-    const location: Point = {
-      type: "Point",
-      coordinates: [coords.lng, coords.lat]
-    };
-
-    const address = new Address(
-      this.insertionForm.value.address!,
-      location
-    );
-
-    const details = {
-      tags: [],
-      description: this.insertionForm.value.description!
-    };
-
+    const location = this.insertionForm.value.location;
+    const address = this.insertionForm.value.address;
+    const details = new InsertionDetails([], this.insertionForm.value.description);
     const insertion = new Insertion(
-      address,
+      { address, location },
       details,
       this.userService.user(),
       this.userService.agency()
     );
+
+    console.log("Submitting insertion:\n", insertion);
 
     this.client.postInsertionForSale(insertion).subscribe({
       next: (response) => {
@@ -99,6 +66,28 @@ export class InsertionUpload {
 
   }
 
+
+  protected onPlaceSelected($event: any) {
+
+    this.insertionForm.patchValue({
+      address: $event.properties,
+      location: $event.geometry.coordinates
+    });
+
+    console.log("Updated form value:\n", this.insertionForm.value);
+
+  }
+
+
+  protected onMapClicked($event: L.LatLng) {
+
+    if (!this.clickMarkerLayer) {
+      this.initializeClickMarkerLayer($event);
+    } else {
+      this.clickMarkerLayer.setLatLng($event);
+    }
+
+  }
 
   private initializeClickMarkerLayer(clickPos: L.LatLng) {
 

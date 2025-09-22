@@ -1,7 +1,7 @@
 import { Component, effect, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BackendClientService } from '../../../_services/backend-client-service';
 import { UserStateService } from '../../../_services/user-state-service';
-import { UserWithAgency } from '../../../_types/user-with-agency';
+import { UserWithAgency } from '../../../_types/users/user-with-agency';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({

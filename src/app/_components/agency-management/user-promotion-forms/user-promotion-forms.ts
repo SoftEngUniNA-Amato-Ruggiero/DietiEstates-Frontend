@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { BackendClientService } from '../../../_services/backend-client-service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { User } from '../../../_types/user';
+import { User } from '../../../_types/users/user';
 import { AuthService } from '../../../_services/auth-service';
 import { ToastrService } from 'ngx-toastr';
 

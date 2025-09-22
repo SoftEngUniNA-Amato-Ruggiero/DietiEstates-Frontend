@@ -6,7 +6,7 @@ import { AgencyUpload } from '../agency-upload/agency-upload';
 import { AuthService } from '../../_services/auth-service';
 import { UserStateService } from '../../_services/user-state-service';
 import { BackendClientService } from '../../_services/backend-client-service';
-import { Insertion } from '../../_types/insertion';
+import { Insertion } from '../../_types/insertions/insertion';
 import { test_coords } from '../../_constants/test-coords';
 
 @Component({

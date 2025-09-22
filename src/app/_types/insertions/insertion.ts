@@ -1,23 +1,18 @@
-import { Address } from "./address";
-import { Agency } from "./agency";
-import { User } from "./user";
+import { Address } from "../address";
+import { Agency } from "../agency";
+import { User } from "../users/user";
+import { InsertionDetails } from "./insertion-details";
 
 export class Insertion {
     id: number | null = null;
-    address: Address;
-    details: {
-        tags: string[];
-        description: string | null;
-    };
+    address: any;
+    details: InsertionDetails;
     uploader: User | null = null;
     agency: Agency | null = null;
 
     constructor(
-        address: Address,
-        details: {
-            tags: string[];
-            description: string | null;
-        },
+        address: any,
+        details: InsertionDetails,
         uploader: User | null,
         agency: Agency | null
     ) {

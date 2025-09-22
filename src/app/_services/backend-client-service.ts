@@ -1,11 +1,11 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { backend } from '../_config/backend.config';
-import { User } from '../_types/user';
+import { User } from '../_types/users/user';
 import { Agency } from '../_types/agency';
-import { UserWithAgency } from '../_types/user-with-agency';
+import { UserWithAgency } from '../_types/users/user-with-agency';
 import { Page } from '../_types/page';
-import { Insertion } from '../_types/insertion';
+import { Insertion } from '../_types/insertions/insertion';
 
 @Injectable({
   providedIn: 'root'

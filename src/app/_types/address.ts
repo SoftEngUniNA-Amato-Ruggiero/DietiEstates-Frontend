@@ -1,14 +1,23 @@
 import { Point } from 'geojson';
 
 export class Address {
-    address: string;
+    city: string | null;
+    province: string | null;
+    postalCode: string | null;
+    street: string;
     location: Point;
 
     constructor(
-        address: string,
+        city: string | null,
+        province: string | null,
+        postalCode: string | null,
+        street: string,
         location: Point
     ) {
-        this.address = address;
+        this.city = city;
+        this.province = province;
+        this.postalCode = postalCode;
+        this.street = street;
         this.location = location;
     }
 }
