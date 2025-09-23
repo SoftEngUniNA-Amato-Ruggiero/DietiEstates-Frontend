@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
+import { JsonPipe } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { QuillModule } from 'ngx-quill';
-import { Point } from 'geojson';
+import { FeatureCollection } from 'geojson';
 import * as L from 'leaflet';
 import * as MapConstants from '../../_constants/map-component.constants';
 import { MapComponent } from '../map-component/map-component';
@@ -14,7 +15,7 @@ import { InsertionDetails } from '../../_types/insertions/insertion-details';
 
 @Component({
   selector: 'app-insertion-upload',
-  imports: [MapComponent, ReactiveFormsModule, QuillModule],
+  imports: [MapComponent, ReactiveFormsModule, QuillModule, JsonPipe],
   templateUrl: './insertion-upload.html',
   styleUrl: './insertion-upload.scss'
 })
@@ -29,8 +30,7 @@ export class InsertionUpload {
 
   protected insertionForm = new FormGroup({
 
-    address: new FormControl(),
-    location: new FormControl(),
+    address: new FormControl<FeatureCollection | null>(null),
     description: new FormControl<string>(''),
     price: new FormControl<number>(0)
 
@@ -41,11 +41,10 @@ export class InsertionUpload {
 
     if (!this.insertionForm.valid) return;
 
-    const location = this.insertionForm.value.location;
     const address = this.insertionForm.value.address;
     const details = new InsertionDetails([], this.insertionForm.value.description);
     const insertion = new Insertion(
-      { address, location },
+      address!,
       details,
       this.userService.user(),
       this.userService.agency()
@@ -67,18 +66,6 @@ export class InsertionUpload {
   }
 
 
-  protected onPlaceSelected($event: any) {
-
-    this.insertionForm.patchValue({
-      address: $event.properties,
-      location: $event.geometry.coordinates
-    });
-
-    console.log("Updated form value:\n", this.insertionForm.value);
-
-  }
-
-
   protected onMapClicked($event: L.LatLng) {
 
     if (!this.clickMarkerLayer) {
@@ -87,7 +74,19 @@ export class InsertionUpload {
       this.clickMarkerLayer.setLatLng($event);
     }
 
+    this.geoapifyClient.reverseGeocode($event.lat, $event.lng).subscribe({
+      next: (result) => {
+        console.log("Reverse geocode result:", result);
+        this.insertionForm.patchValue({
+          address: result
+        });
+      },
+      error: (error) => {
+        console.error("Error during reverse geocode:", error);
+      }
+    });
   }
+
 
   private initializeClickMarkerLayer(clickPos: L.LatLng) {
 

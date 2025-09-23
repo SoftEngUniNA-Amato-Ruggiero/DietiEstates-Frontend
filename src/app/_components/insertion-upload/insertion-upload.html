@@ -4,8 +4,7 @@
     <input id="address" type="hidden" formControlName="address" />
 
 
-    <app-map-component [inputLayer]="clickMarkerLayer" (placeSelected)="onPlaceSelected($event)"
-        (clickedAt)="onMapClicked($event)"></app-map-component>
+    <app-map-component [inputLayer]="clickMarkerLayer" (clickedAt)="onMapClicked($event)"></app-map-component>
 
     <label for="description" class="form-label">Description:</label>
     <quill-editor id="description" formControlName="description" class="form-control"></quill-editor>
@@ -15,6 +14,5 @@
 
 
 <p>Testing Insertion Upload</p>
-<p>Address: {{insertionForm.get('address')?.value}}</p>
-<p>Location: {{insertionForm.get('location')?.value}}</p>
+<p>Address: {{insertionForm.get('address')?.value | json}}</p>
 <p>Description:</p> <quill-view [content]="insertionForm.get('description')?.value"></quill-view>
