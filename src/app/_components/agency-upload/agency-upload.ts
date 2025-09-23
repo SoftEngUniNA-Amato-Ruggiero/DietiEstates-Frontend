@@ -15,13 +15,15 @@ export class AgencyUpload {
   private readonly userStateService = inject(UserStateService);
 
   protected agencyUploadForm = new FormGroup({
-    agencyName: new FormControl(''),
     agencyIban: new FormControl(''),
+    agencyName: new FormControl(''),
   });
 
   protected onSubmit() {
     if (this.agencyUploadForm.valid && this.agencyUploadForm.value?.agencyIban && this.agencyUploadForm.value?.agencyName) {
       const agency = new Agency(this.agencyUploadForm.value.agencyIban, this.agencyUploadForm.value.agencyName);
+
+      console.log("submitted agency:\n", agency);
 
       this.client.postAgency(agency).subscribe({
         next: (response) => {
