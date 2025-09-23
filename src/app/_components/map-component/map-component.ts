@@ -89,11 +89,12 @@ export class MapComponent implements OnChanges {
 
   protected onPlaceSelected(event: any) {
     console.log("place selected: ", event);
-    this.placeSelected.emit(event);
     if (event?.geometry?.coordinates) {
       const [lon, lat] = event.geometry.coordinates;
       const position = L.latLng(lat, lon);
       this.map!.setView(position, 20);
     }
+
+    this.placeSelected.emit(event);
   }
 }
