@@ -1,8 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BackendClientService } from '../../_services/backend-client-service';
-import { Agency } from '../../_types/agency';
 import { UserStateService } from '../../_services/user-state-service';
+import { RealEstateAgencyRequestDTO } from '../../_types/dtos';
 
 @Component({
   selector: 'app-agency-upload',
@@ -21,7 +21,7 @@ export class AgencyUpload {
 
   protected onSubmit() {
     if (this.agencyUploadForm.valid && this.agencyUploadForm.value?.agencyIban && this.agencyUploadForm.value?.agencyName) {
-      const agency = new Agency(this.agencyUploadForm.value.agencyIban, this.agencyUploadForm.value.agencyName);
+      const agency = new RealEstateAgencyRequestDTO(this.agencyUploadForm.value.agencyIban, this.agencyUploadForm.value.agencyName);
 
       console.log("submitted agency:\n", agency);
 

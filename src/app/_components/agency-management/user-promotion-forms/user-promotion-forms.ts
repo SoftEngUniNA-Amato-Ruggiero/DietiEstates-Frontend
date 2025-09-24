@@ -1,9 +1,9 @@
 import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { BackendClientService } from '../../../_services/backend-client-service';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { User } from '../../../_types/users/user';
 import { AuthService } from '../../../_services/auth-service';
 import { ToastrService } from 'ngx-toastr';
+import { UserRequestDTO } from '../../../_types/dtos';
 
 @Component({
   selector: 'app-user-promotion-forms',
@@ -31,7 +31,7 @@ export class UserPromotionForms {
       console.error('Invalid email');
       return;
     }
-    this.client.postAgent(new User(email)).subscribe({
+    this.client.postAgent(new UserRequestDTO(email)).subscribe({
       next: (response) => {
         console.log('Agent created:', response);
         this.toastr.success('Agent ' + email + ' now works for the agency.');
@@ -49,7 +49,7 @@ export class UserPromotionForms {
       console.error('Invalid email');
       return;
     }
-    this.client.postManager(new User(email)).subscribe({
+    this.client.postManager(new UserRequestDTO(email)).subscribe({
       next: (response) => {
         console.log('Manager created:', response);
         this.toastr.success('Manager ' + email + ' now works for the agency.');

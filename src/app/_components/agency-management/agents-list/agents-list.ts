@@ -1,8 +1,8 @@
 import { Component, effect, inject, Input, OnChanges, SimpleChanges } from '@angular/core';
 import { BackendClientService } from '../../../_services/backend-client-service';
 import { UserStateService } from '../../../_services/user-state-service';
-import { UserWithAgency } from '../../../_types/users/user-with-agency';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { UserResponseDTO } from '../../../_types/dtos';
 
 @Component({
   selector: 'app-agents-list',
@@ -16,7 +16,7 @@ export class AgentsList implements OnChanges {
   protected readonly client = inject(BackendClientService);
   protected readonly userState = inject(UserStateService);
 
-  protected agents = new Array<UserWithAgency>();
+  protected agents = new Array<UserResponseDTO>();
   protected pageNumber = 0;
   protected pageSize = 10;
   protected totalPages = 0;
@@ -39,8 +39,8 @@ export class AgentsList implements OnChanges {
     this.client.getAgentsWorkingForAgency(this.userState.agency()?.id!, pageNumber, pageSize).subscribe(
       response => {
         this.agents = response.content ?? [];
-        this.pageSize = response.page.size;
-        this.totalPages = response.page.totalPages;
+        this.pageSize = response.page?.size ?? pageSize;
+        this.totalPages = response.page?.totalPages ?? 0;
       }
     );
   }

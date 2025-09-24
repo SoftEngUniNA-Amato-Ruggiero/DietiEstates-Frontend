@@ -9,10 +9,10 @@
             </tr>
         </thead>
         <tbody>
-            @for (agent of agents; track agent.user.id) {
+            @for (agent of agents; track agent.id) {
             <tr>
-                <td>{{ agent.user.id }}</td>
-                <td>{{ agent.user.username }}</td>
+                <td>{{ agent.id }}</td>
+                <td>{{ agent.username }}</td>
             </tr>
             }
         </tbody>

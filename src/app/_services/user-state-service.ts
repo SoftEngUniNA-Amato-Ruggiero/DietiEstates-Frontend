@@ -1,11 +1,9 @@
 import { Injectable, inject, computed, effect, signal } from '@angular/core';
-import { Agency } from '../_types/agency';
 import { ROLE } from '../_types/roles';
-import { User } from '../_types/users/user';
 import { UserDataResult } from 'angular-auth-oidc-client';
 import { BackendClientService } from './backend-client-service';
 import { AuthService } from './auth-service';
-import { UserWithAgency } from '../_types/users/user-with-agency';
+import { BusinessUserResponseDTO, RealEstateAgencyResponseDTO, UserResponseDTO } from '../_types/dtos';
 
 @Injectable({
   providedIn: 'root'
@@ -15,11 +13,11 @@ export class UserStateService {
   private readonly authService = inject(AuthService);
 
   private readonly userDataSignal = signal<UserDataResult | null>(null);
-  private readonly userSignal = signal<User | null>(null);
-  private readonly agencySignal = signal<Agency | null>(null);
+  private readonly userSignal = signal<UserResponseDTO | null>(null);
+  private readonly agencySignal = signal<RealEstateAgencyResponseDTO | null>(null);
   private readonly rolesSignal = signal<string[] | null>(null);
 
-  public readonly uploadAgencyResponseSignal = signal<UserWithAgency | null>(null);
+  public readonly uploadAgencyResponseSignal = signal<BusinessUserResponseDTO | null>(null);
 
   public readonly user = computed(() => this.userSignal() ?? null);
   public readonly agency = computed(() => this.agencySignal() ?? null);
@@ -47,7 +45,7 @@ export class UserStateService {
     // Subscribe to get user's agency and role from backend after authentication
     effect(() => {
       if (this.authService.isAuthenticated()) {
-        this.client.getMyAgency().subscribe({
+        this.client.getMe().subscribe({
           next: userWithAgency => {
             this.userSignal.set(userWithAgency.user);
             this.agencySignal.set(userWithAgency.agency);

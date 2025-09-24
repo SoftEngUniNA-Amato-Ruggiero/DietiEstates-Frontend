@@ -46,8 +46,8 @@ export class InsertionUpload {
     const insertion = new Insertion(
       address!,
       details,
-      this.userService.user(),
-      this.userService.agency()
+      40000.0,
+      null
     );
 
     console.log("Submitting insertion:\n", insertion);
