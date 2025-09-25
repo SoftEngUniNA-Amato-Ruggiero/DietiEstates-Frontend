@@ -3,7 +3,9 @@ import { ROLE } from '../_types/roles';
 import { UserDataResult } from 'angular-auth-oidc-client';
 import { BackendClientService } from './backend-client-service';
 import { AuthService } from './auth-service';
-import { BusinessUserResponseDTO, RealEstateAgencyResponseDTO, UserResponseDTO } from '../_types/dtos';
+import { RealEstateAgencyResponseDTO } from "../_types/RealEstateAgencyResponseDTO";
+import { BusinessUserResponseDTO } from "../_types/users/BusinessUserResponseDTO";
+import { UserResponseDTO } from "../_types/users/UserResponseDTO";
 
 @Injectable({
   providedIn: 'root'

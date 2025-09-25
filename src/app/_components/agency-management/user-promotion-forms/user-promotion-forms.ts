@@ -3,7 +3,7 @@ import { BackendClientService } from '../../../_services/backend-client-service'
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../_services/auth-service';
 import { ToastrService } from 'ngx-toastr';
-import { UserRequestDTO } from '../../../_types/dtos';
+import { UserRequestDTO } from "../../../_types/users/UserRequestDTO";
 
 @Component({
   selector: 'app-user-promotion-forms',

@@ -1,4 +1,4 @@
-export const ROLE = {
-    AGENT: 'RealEstateAgent',
-    MANAGER: 'RealEstateManager',
+export enum ROLE {
+    AGENT = 'RealEstateAgent',
+    MANAGER = 'RealEstateManager',
 };

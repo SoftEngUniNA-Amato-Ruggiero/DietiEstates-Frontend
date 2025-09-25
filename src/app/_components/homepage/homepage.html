@@ -1,8 +1,11 @@
-<app-map-component [inputLayer]="searchResultsLayerGroup" (mapCenter)="mapCenter.set($event)"></app-map-component>
+<div class="container mt-4">
 
-<br />
+    <app-map-component [inputLayer]="searchResultsLayerGroup" (mapCenter)="mapCenter.set($event)"></app-map-component>
 
-@if (authService.isAuthenticated() && !userStateService.isAffiliatedWithAgency()){
-<h3>Are you the manager of a real estate agency?</h3>
-<app-agency-upload></app-agency-upload>
-}
+    <br />
+
+    @if (authService.isAuthenticated() && !userStateService.isAffiliatedWithAgency()){
+    <h3>Are you the manager of a real estate agency?</h3>
+    <app-agency-upload></app-agency-upload>
+    }
+</div>

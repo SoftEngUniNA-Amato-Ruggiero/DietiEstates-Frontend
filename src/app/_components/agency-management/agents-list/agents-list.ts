@@ -2,7 +2,7 @@ import { Component, effect, inject, Input, OnChanges, SimpleChanges } from '@ang
 import { BackendClientService } from '../../../_services/backend-client-service';
 import { UserStateService } from '../../../_services/user-state-service';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
-import { UserResponseDTO } from '../../../_types/dtos';
+import { UserResponseDTO } from "../../../_types/users/UserResponseDTO";
 
 @Component({
   selector: 'app-agents-list',

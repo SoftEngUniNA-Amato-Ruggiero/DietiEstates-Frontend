@@ -2,8 +2,12 @@ import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { backend } from '../_config/backend.config';
 import { Page } from '../_types/page';
-import { Insertion } from '../_types/insertions/insertion';
-import { BusinessUserResponseDTO, RealEstateAgencyRequestDTO, RealEstateAgencyResponseDTO, UserRequestDTO, UserResponseDTO } from '../_types/dtos';
+import { InsertionForSale } from '../_types/insertions/InsertionForSale';
+import { RealEstateAgencyResponseDTO } from "../_types/RealEstateAgencyResponseDTO";
+import { BusinessUserResponseDTO } from "../_types/users/BusinessUserResponseDTO";
+import { UserRequestDTO } from "../_types/users/UserRequestDTO";
+import { UserResponseDTO } from "../_types/users/UserResponseDTO";
+import { RealEstateAgencyRequestDTO } from "../_types/RealEstateAgencyRequestDTO";
 
 @Injectable({
   providedIn: 'root'
@@ -57,15 +61,15 @@ export class BackendClientService {
       .set('lat', center.lat.toString())
       .set('lng', center.lng.toString())
       .set('radius', radius.toString());
-    return this.http.get<Insertion[]>(`${this.url}/insertions`, { ...this.httpOptions, params });
+    return this.http.get<InsertionForSale[]>(`${this.url}/insertions`, { ...this.httpOptions, params });
   }
 
-  public postInsertionForSale(insertion: Insertion) {
+  public postInsertionForSale(insertion: InsertionForSale) {
     console.log(insertion);
     return this.http.post(`${this.url}/insertions/for-sale`, insertion, this.httpOptions);
   }
 
-  public postInsertionForRent(insertion: Insertion) {
+  public postInsertionForRent(insertion: InsertionForSale) {
     console.log(insertion);
     return this.http.post(`${this.url}/insertions/for-rent`, insertion, this.httpOptions);
   }

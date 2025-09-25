@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BackendClientService } from '../../_services/backend-client-service';
 import { UserStateService } from '../../_services/user-state-service';
-import { RealEstateAgencyRequestDTO } from '../../_types/dtos';
+import { RealEstateAgencyRequestDTO } from "../../_types/RealEstateAgencyRequestDTO";
 
 @Component({
   selector: 'app-agency-upload',
