@@ -28,8 +28,8 @@ export class Homepage {
       const center = this.mapCenter();
       if (!center) return;
 
-      this.client.getInsertionsByLocation(center, 10).subscribe((insertions) => {
-        console.log("Insertions within 10 degrees:", insertions);
+      this.client.getInsertionsByLocation(center, 2).subscribe((insertions) => {
+        console.log("Insertions within 2 degrees:", insertions);
 
         this.searchResultsLayerGroup = L.layerGroup(
           insertions.content.map((insertion) => this.initializeMarkerForInsertion(insertion))
