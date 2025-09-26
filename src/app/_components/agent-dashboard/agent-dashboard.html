@@ -1,3 +1,5 @@
+<h2 class="mt-4">Agency Information</h2>
+<hr />
 <div class="table-responsive">
     <table class="table table-striped table-bordered">
         <thead>
@@ -12,6 +14,23 @@
         </tbody>
     </table>
 </div>
-<br />
 
-<app-insertion-for-sale-upload></app-insertion-for-sale-upload>
+<h2 class="mt-4">Upload Insertion</h2>
+<hr />
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+    <li [ngbNavItem]="1">
+        <button ngbNavLink>For Sale</button>
+        <ng-template ngbNavContent>
+            <app-insertion-for-sale-upload></app-insertion-for-sale-upload>
+        </ng-template>
+    </li>
+    <li [ngbNavItem]="2">
+        <button ngbNavLink>For Rent</button>
+        <ng-template ngbNavContent>
+            <app-insertion-for-rent-upload></app-insertion-for-rent-upload>
+        </ng-template>
+    </li>
+</ul>
+
+<div [ngbNavOutlet]="nav" class="mt-2"></div>
+<pre>Active: {{ active }}</pre>
