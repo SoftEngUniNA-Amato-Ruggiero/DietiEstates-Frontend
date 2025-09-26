@@ -7,7 +7,6 @@ import { AuthService } from '../../_services/auth-service';
 import { UserStateService } from '../../_services/user-state-service';
 import { BackendClientService } from '../../_services/backend-client-service';
 import { InsertionForSaleResponseDTO } from '../../_types/insertions/InsertionForSaleResponseDTO';
-import { test_coords } from '../../_constants/test-coords';
 
 @Component({
   selector: 'app-homepage',
@@ -28,11 +27,6 @@ export class Homepage {
     effect(() => {
       const center = this.mapCenter();
       if (!center) return;
-
-      // using test coordinates to create layer for now
-      // this.searchResultsLayerGroup = L.layerGroup(
-      //   test_coords.map((coord) => L.marker(coord, { icon: MapConstants.MARKER_ICON }))
-      // );
 
       this.client.getInsertionsForSale().subscribe((insertions) => {
         console.log("Insertions within 100 km:", insertions);
