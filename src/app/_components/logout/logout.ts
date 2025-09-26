@@ -1,9 +1,10 @@
 import { Component, inject } from '@angular/core';
+import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { AuthService } from '../../_services/auth-service';
 
 @Component({
   selector: 'app-logout',
-  imports: [],
+  imports: [MatProgressSpinner],
   templateUrl: './logout.html',
   styleUrl: './logout.scss'
 })
