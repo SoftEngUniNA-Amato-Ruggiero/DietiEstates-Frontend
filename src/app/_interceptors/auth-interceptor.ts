@@ -11,11 +11,13 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
 
     oidcSecurityService.getIdToken().subscribe({
       next: (token) => {
-        req = req.clone({
-          setHeaders: {
-            Authorization: 'Bearer ' + token
-          }
-        });
+        if (token && token.trim().length > 0) {
+          req = req.clone({
+            setHeaders: {
+              Authorization: 'Bearer ' + token
+            }
+          });
+        }
       },
       error: (err) => {
         console.error('Error fetching token', err);
