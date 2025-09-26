@@ -17,7 +17,7 @@
 
 <h2 class="mt-4">Upload Insertion</h2>
 <hr />
-<ul ngbNav #nav="ngbNav" [(activeId)]="active" class="nav-tabs">
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs">
     <li [ngbNavItem]="1">
         <button ngbNavLink>For Sale</button>
         <ng-template ngbNavContent>
