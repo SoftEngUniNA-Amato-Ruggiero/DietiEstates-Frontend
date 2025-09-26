@@ -66,11 +66,11 @@ export class BackendClientService {
     return this.http.get<Page<InsertionForSaleResponseDTO>>(`${this.url}/insertions/for-sale`, { ...this.httpOptions, params });
   }
 
-  public getInsertionsByLocation(center: L.LatLng, radius: number, page = 0, pageSize = 10) {
+  public getInsertionsByLocation(center: L.LatLng, distance: number, page = 0, pageSize = 10) {
     const params = new HttpParams()
       .set('lat', center.lat.toString())
       .set('lng', center.lng.toString())
-      .set('radius', radius.toString())
+      .set('distance', distance.toString())
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
     return this.http.get<Page<InsertionForSaleResponseDTO>>(`${this.url}/insertions`, { ...this.httpOptions, params });
