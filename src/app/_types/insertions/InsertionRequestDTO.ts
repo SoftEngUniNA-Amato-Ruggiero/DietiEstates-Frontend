@@ -1,6 +1,6 @@
 import { FeatureCollection } from "geojson";
 
-export abstract class InsertionRequestDTO {
+export class InsertionRequestDTO {
     tags: string[];
     description: string;
     address: FeatureCollection;

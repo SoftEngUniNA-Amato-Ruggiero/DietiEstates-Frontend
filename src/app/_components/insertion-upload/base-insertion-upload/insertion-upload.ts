@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, Component, inject, signal } from '@angular/core';
+import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { MatButtonModule } from '@angular/material/button';
@@ -6,15 +6,12 @@ import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { QuillModule } from 'ngx-quill';
-import { ToastrService } from 'ngx-toastr';
 import { FeatureCollection } from 'geojson';
 import * as L from 'leaflet';
-import * as MapConstants from '../../_constants/map-component.constants';
-import { MapComponent } from '../map-component/map-component';
-import { BackendClientService } from '../../_services/backend-client-service';
-import { GeoapifyClientService } from '../../_services/geoapify-client-service';
-import { UserStateService } from '../../_services/user-state-service';
-import { InsertionForSaleRequestDTO } from '../../_types/insertions/InsertionForSaleRequestDTO';
+import * as MapConstants from '../../../_constants/map-component.constants';
+import { MapComponent } from '../../map-component/map-component';
+import { GeoapifyClientService } from '../../../_services/geoapify-client-service';
+import { InsertionRequestDTO } from '../../../_types/insertions/InsertionRequestDTO';
 
 @Component({
   selector: 'app-insertion-upload',
@@ -31,24 +28,37 @@ import { InsertionForSaleRequestDTO } from '../../_types/insertions/InsertionFor
   styleUrl: './insertion-upload.scss'
 })
 export class InsertionUpload {
+  @Output() insertionData = new EventEmitter<InsertionRequestDTO>()
 
-  protected readonly client = inject(BackendClientService);
   protected readonly geoapifyClient = inject(GeoapifyClientService);
-  protected readonly userService = inject(UserStateService);
-  protected readonly toastr = inject(ToastrService);
   protected readonly announcer = inject(LiveAnnouncer);
 
   protected readonly reactiveKeywords = signal<string[]>([]);
   protected clickMarkerLayer?: L.Marker;
 
-  protected insertionForm = new FormGroup({
 
+  protected insertionForm = new FormGroup({
     address: new FormControl<FeatureCollection | null>(null),
     description: new FormControl<string>(''),
     tags: new FormControl<string[]>([]),
     price: new FormControl<number>(0)
-
   });
+
+
+  constructor() {
+    this.insertionForm.valueChanges.subscribe(() => this.onFormChange());
+  }
+
+
+  protected onFormChange() {
+    if (!this.insertionForm.valid) return;
+    const insertion = new InsertionRequestDTO(
+      this.insertionForm.value.tags || [],
+      this.insertionForm.value.description || "",
+      this.insertionForm.value.address!
+    );
+    this.insertionData.emit(insertion);
+  }
 
 
   protected addReactiveKeyword(event: MatChipInputEvent): void {
@@ -65,7 +75,7 @@ export class InsertionUpload {
   }
 
 
-  removeReactiveKeyword(keyword: string) {
+  protected removeReactiveKeyword(keyword: string) {
     this.reactiveKeywords.update(keywords => {
       const index = keywords.indexOf(keyword);
       if (index < 0) {
@@ -79,35 +89,7 @@ export class InsertionUpload {
   }
 
 
-  protected onSubmit() {
-
-    if (!this.insertionForm.valid) return;
-
-    const address = this.insertionForm.value.address!;
-    const tags = this.insertionForm.value.tags!;
-    const descr = this.insertionForm.value.description!;
-    const price = this.insertionForm.value.price!;
-
-    const insertion = new InsertionForSaleRequestDTO(tags, descr, address, price);
-
-    console.log("Submitting insertion:\n", insertion);
-
-    this.client.postInsertionForSale(insertion).subscribe({
-      next: (response) => {
-        console.log('Insertion uploaded successfully:', response);
-        this.toastr.success('Insertion uploaded successfully', 'Success');
-      },
-      error: (error) => {
-        console.error('Error uploading insertion:', error);
-        this.toastr.error('Error uploading insertion', 'Error');
-      }
-    });
-
-  }
-
-
   protected onMapClicked($event: L.LatLng) {
-
     if (!this.clickMarkerLayer) {
       this.initializeClickMarkerLayer($event);
     } else {
@@ -129,7 +111,6 @@ export class InsertionUpload {
 
 
   private initializeClickMarkerLayer(clickPos: L.LatLng) {
-
     this.clickMarkerLayer = L.marker(clickPos, {
       icon: MapConstants.MARKER_ICON,
       draggable: true,
