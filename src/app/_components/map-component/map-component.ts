@@ -62,11 +62,13 @@ export class MapComponent implements OnChanges {
 
   protected onMapReady(map: L.Map) {
     this.map = map;
-    this.mapReady.emit(map);
+    setTimeout(() => { this.map!.invalidateSize(); }, 100);
+
+    this.mapReady.emit(this.map);
 
     this.currentPosition$.subscribe({
       next: (pos) => {
-        map.setView(pos, MapConstants.DEFAULT_ZOOM); //calls onMoveEnd automatically
+        this.map!.setView(pos, MapConstants.DEFAULT_ZOOM); //calls onMoveEnd automatically
         this.userLocation.emit(pos);
       },
       error: (error) => { console.error('Error getting current position:', error); }
