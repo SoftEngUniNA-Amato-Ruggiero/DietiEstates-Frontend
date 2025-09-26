@@ -6,7 +6,7 @@ import { AgencyUpload } from '../agency-upload/agency-upload';
 import { AuthService } from '../../_services/auth-service';
 import { UserStateService } from '../../_services/user-state-service';
 import { BackendClientService } from '../../_services/backend-client-service';
-import { InsertionForSale } from '../../_types/insertions/InsertionForSale';
+import { InsertionForSaleResponseDTO } from '../../_types/insertions/InsertionForSaleResponseDTO';
 import { test_coords } from '../../_constants/test-coords';
 
 @Component({
@@ -30,25 +30,28 @@ export class Homepage {
       if (!center) return;
 
       // using test coordinates to create layer for now
-      this.searchResultsLayerGroup = L.layerGroup(
-        test_coords.map((coord) => L.marker(coord, { icon: MapConstants.MARKER_ICON }))
-      );
+      // this.searchResultsLayerGroup = L.layerGroup(
+      //   test_coords.map((coord) => L.marker(coord, { icon: MapConstants.MARKER_ICON }))
+      // );
 
-      // this.client.getInsertions(center, 100).subscribe((insertions) => {
-      //   console.log("Insertions within 100 km:", insertions);
+      this.client.getInsertionsForSale().subscribe((insertions) => {
+        console.log("Insertions within 100 km:", insertions);
 
-      //   this.searchResultsLayerGroup = L.layerGroup(
-      //     insertions.map((insertion) => this.initializeMarkerForInsertion(insertion))
-      //   );
-      // });
+        this.searchResultsLayerGroup = L.layerGroup(
+          insertions.content.map((insertion) => this.initializeMarkerForInsertion(insertion))
+        );
+      });
     });
   }
 
-  // private initializeMarkerForInsertion(insertion: Insertion) {
-  //   const marker = L.marker(insertion.address.location, { icon: MapConstants.MARKER_ICON });
-  //   marker.on('click', () => {
-  //     alert(`Marker clicked at ${insertion.address.location}`);
-  //   });
-  //   return marker;
-  // }
+  private initializeMarkerForInsertion(insertion: InsertionForSaleResponseDTO) {
+    const location = insertion.address.location;
+    const coords = location.coordinates;
+    const coordsLatLng = new L.LatLng(coords[1], coords[0]);
+    const marker = L.marker(coordsLatLng, { icon: MapConstants.MARKER_ICON });
+    marker.on('click', () => {
+      alert(`Marker clicked at ${coordsLatLng}`);
+    });
+    return marker;
+  }
 }

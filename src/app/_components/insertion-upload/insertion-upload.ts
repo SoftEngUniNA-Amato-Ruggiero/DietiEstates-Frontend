@@ -14,8 +14,7 @@ import { MapComponent } from '../map-component/map-component';
 import { BackendClientService } from '../../_services/backend-client-service';
 import { GeoapifyClientService } from '../../_services/geoapify-client-service';
 import { UserStateService } from '../../_services/user-state-service';
-import { InsertionForSale } from '../../_types/insertions/InsertionForSale';
-import { InsertionDetails } from '../../_types/insertions/InsertionDetails';
+import { InsertionForSaleRequestDTO } from '../../_types/insertions/InsertionForSaleRequestDTO';
 
 @Component({
   selector: 'app-insertion-upload',
@@ -85,10 +84,11 @@ export class InsertionUpload {
     if (!this.insertionForm.valid) return;
 
     const address = this.insertionForm.value.address!;
-    const details = new InsertionDetails(this.insertionForm.value.tags!, this.insertionForm.value.description!);
+    const tags = this.insertionForm.value.tags!;
+    const descr = this.insertionForm.value.description!;
     const price = this.insertionForm.value.price!;
 
-    const insertion = new InsertionForSale(address, details, price);
+    const insertion = new InsertionForSaleRequestDTO(tags, descr, address, price);
 
     console.log("Submitting insertion:\n", insertion);
 
