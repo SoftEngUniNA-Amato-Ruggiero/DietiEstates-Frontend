@@ -2,8 +2,10 @@
     <div>
         <label for="address" class="form-label">Address:</label>
         <input id="address" type="hidden" formControlName="address" />
+        <p>{{ insertionForm.controls.address.value | json }}</p>
 
-        <app-map-component [inputLayer]="clickMarkerLayer" (clickedAt)="onMapClicked($event)"></app-map-component>
+        <app-map-component [inputLayer]="clickMarkerLayer" (placeSelected)="onPlaceSelected($event)"
+            (clickedAt)="onMapClicked($event)"></app-map-component>
     </div>
 
     <div>

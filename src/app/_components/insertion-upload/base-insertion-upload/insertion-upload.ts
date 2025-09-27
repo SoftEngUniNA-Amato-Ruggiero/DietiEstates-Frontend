@@ -12,6 +12,7 @@ import * as MapConstants from '../../../_constants/map-component.constants';
 import { MapComponent } from '../../map-component/map-component';
 import { GeoapifyClientService } from '../../../_services/geoapify-client-service';
 import { InsertionRequestDTO } from '../../../_types/insertions/InsertionRequestDTO';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-insertion-upload',
@@ -22,7 +23,8 @@ import { InsertionRequestDTO } from '../../../_types/insertions/InsertionRequest
     MatButtonModule,
     MatFormFieldModule,
     MatChipsModule,
-    MatIconModule
+    MatIconModule,
+    JsonPipe
   ],
   templateUrl: './insertion-upload.html',
   styleUrl: './insertion-upload.scss'
@@ -89,12 +91,30 @@ export class InsertionUpload {
   }
 
 
-  protected onMapClicked($event: L.LatLng) {
-    if (!this.clickMarkerLayer) {
-      this.initializeClickMarkerLayer($event);
+  protected onPlaceSelected(event: FeatureCollection) {
+    console.log("place selected: ", event);
+
+    const place = event as any;
+
+    if (place.geometry?.type === 'Point') {
+      const coords = place.geometry.coordinates;
+
+      this.setMarker(L.latLng(coords[1], coords[0]));
+      this.insertionForm.patchValue({
+        address: event
+      });
+
     } else {
-      this.clickMarkerLayer.setLatLng($event);
+      console.warn("Selected place is not a Point geometry, removing marker.");
+
+      this.clickMarkerLayer?.remove();
+      this.clickMarkerLayer = undefined;
     }
+  }
+
+
+  protected onMapClicked($event: L.LatLng) {
+    this.setMarker($event);
 
     this.geoapifyClient.reverseGeocode($event.lat, $event.lng).subscribe({
       next: (result) => {
@@ -107,6 +127,15 @@ export class InsertionUpload {
         console.error("Error during reverse geocode:", error);
       }
     });
+  }
+
+
+  private setMarker(pos: L.LatLng) {
+    if (!this.clickMarkerLayer) {
+      this.initializeClickMarkerLayer(pos);
+    } else {
+      this.clickMarkerLayer.setLatLng(pos);
+    }
   }
 
 
