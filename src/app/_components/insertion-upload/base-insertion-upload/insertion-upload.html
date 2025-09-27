@@ -1,11 +1,19 @@
 <form [formGroup]="insertionForm" class="d-flex flex-column gap-3">
     <div>
-        <label for="address" class="form-label">Address:</label>
-        <input id="address" type="hidden" formControlName="address" />
-        <p>{{ insertionForm.controls.address.value | json }}</p>
-
+        <p>Select a location on the map:</p>
         <app-map-component [inputLayer]="clickMarkerLayer" (placeSelected)="onPlaceSelected($event)"
             (clickedAt)="onMapClicked($event)"></app-map-component>
+
+        <br />
+
+        <label for="address" class="form-label">Address:</label>
+        @if(insertionForm.controls.address.value) {
+        <div class="container border">
+            <quill-view
+                [content]="insertionForm.controls.address.value.features[0].properties!['formatted'] ?? 'ADDRESS NOT AVAILABLE'"></quill-view>
+        </div>
+        <br />
+        }
     </div>
 
     <div>

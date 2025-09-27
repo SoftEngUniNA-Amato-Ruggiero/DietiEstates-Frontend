@@ -20,7 +20,7 @@ export class MapComponent implements OnChanges {
   @Output() userLocation = new EventEmitter<L.LatLng>();
   @Output() clickedAt = new EventEmitter<L.LatLng>();
 
-  @Output() placeSelected = new EventEmitter<FeatureCollection>();
+  @Output() placeSelected = new EventEmitter<L.LatLng>();
   @Output() userInput = new EventEmitter<string>();
 
 
@@ -91,12 +91,14 @@ export class MapComponent implements OnChanges {
 
   protected onPlaceSelected(event: any) {
     console.log("place selected: ", event);
+
     if (event?.geometry?.coordinates) {
       const [lon, lat] = event.geometry.coordinates;
       const position = L.latLng(lat, lon);
       this.map!.setView(position, 20);
+
+      this.placeSelected.emit(position);
     }
 
-    this.placeSelected.emit(event);
   }
 }

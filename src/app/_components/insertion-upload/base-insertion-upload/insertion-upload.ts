@@ -12,7 +12,6 @@ import * as MapConstants from '../../../_constants/map-component.constants';
 import { MapComponent } from '../../map-component/map-component';
 import { GeoapifyClientService } from '../../../_services/geoapify-client-service';
 import { InsertionRequestDTO } from '../../../_types/insertions/InsertionRequestDTO';
-import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-insertion-upload',
@@ -23,8 +22,7 @@ import { JsonPipe } from '@angular/common';
     MatButtonModule,
     MatFormFieldModule,
     MatChipsModule,
-    MatIconModule,
-    JsonPipe
+    MatIconModule
   ],
   templateUrl: './insertion-upload.html',
   styleUrl: './insertion-upload.scss'
@@ -35,8 +33,10 @@ export class InsertionUpload {
   protected readonly geoapifyClient = inject(GeoapifyClientService);
   protected readonly announcer = inject(LiveAnnouncer);
 
+
   protected readonly reactiveKeywords = signal<string[]>([]);
   protected clickMarkerLayer?: L.Marker;
+  protected formattedAddress = signal<string>("No address selected");
 
 
   protected insertionForm = new FormGroup({
@@ -66,13 +66,11 @@ export class InsertionUpload {
   protected addReactiveKeyword(event: MatChipInputEvent): void {
     const value = (event.value || '').trim();
 
-    // Add our keyword
     if (value) {
       this.reactiveKeywords.update(keywords => [...keywords, value]);
       this.announcer.announce(`added ${value} to reactive form`);
     }
 
-    // Clear the input value
     event.chipInput!.clear();
   }
 
@@ -91,25 +89,8 @@ export class InsertionUpload {
   }
 
 
-  protected onPlaceSelected(event: FeatureCollection) {
-    console.log("place selected: ", event);
-
-    const place = event as any;
-
-    if (place.geometry?.type === 'Point') {
-      const coords = place.geometry.coordinates;
-
-      this.setMarker(L.latLng(coords[1], coords[0]));
-      this.insertionForm.patchValue({
-        address: event
-      });
-
-    } else {
-      console.warn("Selected place is not a Point geometry, removing marker.");
-
-      this.clickMarkerLayer?.remove();
-      this.clickMarkerLayer = undefined;
-    }
+  protected onPlaceSelected(event: L.LatLng) {
+    this.onMapClicked(event);
   }
 
 
@@ -119,6 +100,7 @@ export class InsertionUpload {
     this.geoapifyClient.reverseGeocode($event.lat, $event.lng).subscribe({
       next: (result) => {
         console.log("Reverse geocode result:", result);
+
         this.insertionForm.patchValue({
           address: result
         });
@@ -148,28 +130,19 @@ export class InsertionUpload {
     });
 
     this.clickMarkerLayer.on('click', () => {
-      console.log("Marker clicked: logging latLng ", this.clickMarkerLayer!.getLatLng());
-    });
-
-    this.clickMarkerLayer.on('dblclick', () => {
-      console.log("Marker double-clicked: logging GeoJSON ", this.clickMarkerLayer!.toGeoJSON());
-
-      this.geoapifyClient.reverseGeocode(clickPos.lat, clickPos.lng).subscribe({
-        next: (result) => {
-          console.log("Reverse geocode result:", result);
-        },
-        error: (error) => {
-          console.error("Error during reverse geocode:", error);
-        }
+      this.clickMarkerLayer!.remove();
+      this.clickMarkerLayer = undefined;
+      this.insertionForm.patchValue({
+        address: null
       });
     });
 
     this.clickMarkerLayer.on('moveend', () => {
-      console.log("Marker moved to ", this.clickMarkerLayer!.getLatLng());
+      this.onMapClicked(this.clickMarkerLayer!.getLatLng());
     });
 
     this.clickMarkerLayer.on('mouseover', () => {
-      this.clickMarkerLayer!.setOpacity(0.7);
+      this.clickMarkerLayer!.setOpacity(0.8);
     });
 
     this.clickMarkerLayer.on('mouseout', () => {
