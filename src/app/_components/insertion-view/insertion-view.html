@@ -1,0 +1,22 @@
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <th scope="row">Address</th>
+                <td>{{ insertion.address | json }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Tags</th>
+                <td>{{ insertion.tags.join(', ') }}</td>
+            </tr>
+            <tr>
+                <th scope="row">Description</th>
+                <td><quill-view [content]="insertion.description"></quill-view></td>
+            </tr>
+        </tbody>
+    </table>
+</div>

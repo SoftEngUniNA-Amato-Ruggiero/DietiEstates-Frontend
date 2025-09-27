@@ -7,10 +7,12 @@ import { AuthService } from '../../_services/auth-service';
 import { UserStateService } from '../../_services/user-state-service';
 import { BackendClientService } from '../../_services/backend-client-service';
 import { InsertionForSaleResponseDTO } from '../../_types/insertions/InsertionForSaleResponseDTO';
+import { InsertionView } from "../insertion-view/insertion-view";
+import { InsertionResponseDTO } from '../../_types/insertions/InsertionResponseDTO';
 
 @Component({
   selector: 'app-homepage',
-  imports: [MapComponent, AgencyUpload],
+  imports: [MapComponent, AgencyUpload, InsertionView],
   templateUrl: './homepage.html',
   styleUrl: './homepage.scss'
 })
@@ -21,6 +23,7 @@ export class Homepage {
 
   protected mapCenter = signal<L.LatLng | undefined>(undefined);
   protected searchResultsLayerGroup?: L.LayerGroup;
+  protected selectedInsertion = signal<InsertionResponseDTO | null>(null);
 
   constructor() {
     // Get insertions from backend every time the map center changes
@@ -44,7 +47,12 @@ export class Homepage {
     const coordsLatLng = new L.LatLng(coords[1], coords[0]);
     const marker = L.marker(coordsLatLng, { icon: MapConstants.MARKER_ICON });
     marker.on('click', () => {
-      alert(`Marker clicked at ${coordsLatLng}`);
+      if (this.selectedInsertion() !== insertion) {
+        this.selectedInsertion.set(insertion);
+      } else {
+        this.selectedInsertion.set(null);
+      }
+
     });
     return marker;
   }

@@ -1,7 +1,9 @@
 <div class="container mt-4">
 
     <app-map-component [inputLayer]="searchResultsLayerGroup" (mapCenter)="mapCenter.set($event)"></app-map-component>
-
+    @if(selectedInsertion()){
+    <app-insertion-view [insertion]="selectedInsertion()!"></app-insertion-view>
+    }
     <br />
 
     @if (authService.isAuthenticated() && !userStateService.isAffiliatedWithAgency()){
