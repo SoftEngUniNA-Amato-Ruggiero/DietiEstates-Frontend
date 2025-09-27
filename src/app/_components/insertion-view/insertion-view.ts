@@ -1,10 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { InsertionResponseDTO } from '../../_types/insertions/InsertionResponseDTO';
-import { JsonPipe } from '@angular/common';
+import { MatChipsModule } from '@angular/material/chips';
 import { QuillModule } from "ngx-quill";
+import { InsertionResponseDTO } from '../../_types/insertions/InsertionResponseDTO';
+
 @Component({
   selector: 'app-insertion-view',
-  imports: [JsonPipe, QuillModule],
+  imports: [QuillModule, MatChipsModule],
   templateUrl: './insertion-view.html',
   styleUrl: './insertion-view.scss'
 })

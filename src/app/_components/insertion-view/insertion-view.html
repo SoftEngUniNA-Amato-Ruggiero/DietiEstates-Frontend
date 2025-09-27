@@ -7,14 +7,24 @@
         <tbody>
             <tr>
                 <th scope="row">Address</th>
-                <td>{{ insertion.address | json }}</td>
+            </tr>
+            <tr>
+                <td>{{ insertion.address.formatted }}</td>
             </tr>
             <tr>
                 <th scope="row">Tags</th>
-                <td>{{ insertion.tags.join(', ') }}</td>
             </tr>
             <tr>
-                <th scope="row">Description</th>
+                <td>
+                    @for (tag of insertion.tags; track tag) {
+                    <mat-chip class="me-1">{{ tag }}</mat-chip>
+                    }
+                </td>
+            </tr>
+            <tr>
+                <th scope=" row">Description</th>
+            </tr>
+            <tr>
                 <td><quill-view [content]="insertion.description"></quill-view></td>
             </tr>
         </tbody>

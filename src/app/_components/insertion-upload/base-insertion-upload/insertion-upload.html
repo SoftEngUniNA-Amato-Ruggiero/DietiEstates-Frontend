@@ -7,13 +7,16 @@
         <br />
 
         <label for="address" class="form-label">Address:</label>
-        @if(insertionForm.controls.address.value) {
-        <div class="container border">
-            <quill-view
-                [content]="insertionForm.controls.address.value.features[0].properties!['formatted'] ?? 'ADDRESS NOT AVAILABLE'"></quill-view>
+        <div class="container border d-flex align-items-center">
+            @if(insertionForm.controls.address.value) {
+            <span class="m-2">
+                {{ insertionForm.controls.address.value.features[0].properties!['formatted'] ?? 'N/A' }}
+            </span>
+            } @else {
+            <span class="text-muted m-2">No address selected. Please select an address on the map.</span>
+            }
         </div>
         <br />
-        }
     </div>
 
     <div>
