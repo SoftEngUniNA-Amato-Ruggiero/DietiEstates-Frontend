@@ -1,6 +1,5 @@
-<h2>Your Agency</h2>
-<p>Name: {{userStateService.agency()?.name}}</p>
-<p>IBAN: {{userStateService.agency()?.iban}}</p>
-
-<app-agents-list [updateTrigger]="updateTrigger"></app-agents-list>
-<app-user-promotion-forms (formSubmitted)="onFormSubmitted()"></app-user-promotion-forms>
+<app-agency-info></app-agency-info>
+<br />
+<app-agents-list [updateTrigger]="updateTrigger" class="mt-4"></app-agents-list>
+<br />
+<app-user-promotion-forms (formSubmitted)="onFormSubmitted()" class="container mt-4"></app-user-promotion-forms>

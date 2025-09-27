@@ -4,15 +4,18 @@ import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { AuthService } from '../../../_services/auth-service';
 import { ToastrService } from 'ngx-toastr';
 import { UserRequestDTO } from "../../../_types/users/UserRequestDTO";
+import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-user-promotion-forms',
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, NgbNavModule],
   templateUrl: './user-promotion-forms.html',
   styleUrl: './user-promotion-forms.scss'
 })
 export class UserPromotionForms {
   @Output() formSubmitted = new EventEmitter<void>();
+
+  active = 1;
 
   protected client = inject(BackendClientService);
   protected authService = inject(AuthService);
