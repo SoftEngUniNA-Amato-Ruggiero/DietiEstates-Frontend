@@ -34,23 +34,27 @@ export class UserStateService {
   public readonly isAffiliatedWithAgency = computed(() => this.agency() !== null);
 
   public isManager$ = new Observable<boolean>(subscriber => {
-    this.isManager() !== null && this.isManager() !== undefined ?
-      subscriber.next(this.isManager()!) :
+    if (this.isManager() !== null && this.isManager() !== undefined) {
+      subscriber.next(this.isManager()!)
+    } else {
       this.client.getMe().subscribe({
         next: userWithAgency => {
           subscriber.next(userWithAgency.user.roles?.map(r => r.name).includes(ROLE.MANAGER) ?? false);
         }
       });
+    }
   });
 
   public isAgent$ = new Observable<boolean>(subscriber => {
-    this.isAgent() !== null && this.isAgent() !== undefined ?
-      subscriber.next(this.isAgent()!) :
+    if (this.isAgent() !== null && this.isAgent() !== undefined) {
+      subscriber.next(this.isAgent()!)
+    } else {
       this.client.getMe().subscribe({
         next: userWithAgency => {
           subscriber.next(userWithAgency.user.roles?.map(r => r.name).includes(ROLE.AGENT) ?? false);
         }
       });
+    }
   });
 
   constructor() {
