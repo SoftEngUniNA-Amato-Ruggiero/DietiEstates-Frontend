@@ -15,13 +15,15 @@ export class AuthService {
   private readonly configuration$ = this.oidcSecurityService.getConfiguration();
 
   constructor() {
-    this.oidcSecurityService.checkAuth().subscribe();
+    this.oidcSecurityService.checkAuth().subscribe((checkAuthResult) => {
 
-    this.oidcSecurityService.isAuthenticated$.subscribe(
-      ({ isAuthenticated }) => {
-        this.isAuthenticatedSignal.set(isAuthenticated);
-      }
-    );
+      this.oidcSecurityService.isAuthenticated$.subscribe(
+        (isAuthResult) => {
+          this.isAuthenticatedSignal.set(isAuthResult.isAuthenticated);
+        }
+      );
+
+    });
   }
 
   public login(): void {

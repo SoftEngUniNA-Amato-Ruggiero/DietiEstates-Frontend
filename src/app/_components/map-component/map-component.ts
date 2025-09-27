@@ -76,8 +76,8 @@ export class MapComponent implements OnChanges {
   }
 
   protected onMoveEnd(event: L.LeafletEvent) {
-    const map = event.target;
-    const center = map.getCenter();
+    this.map = this.map ?? event.target;
+    const center = this.map!.getCenter();
     this.mapCenter.emit(center);
   }
 

@@ -6,6 +6,7 @@ import { AuthService } from './auth-service';
 import { RealEstateAgencyResponseDTO } from "../_types/RealEstateAgencyResponseDTO";
 import { BusinessUserResponseDTO } from "../_types/users/BusinessUserResponseDTO";
 import { UserResponseDTO } from "../_types/users/UserResponseDTO";
+import { Observable } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -31,6 +32,26 @@ export class UserStateService {
   public readonly isManager = computed(() => this.roles()?.includes(ROLE.MANAGER));
   public readonly isAgent = computed(() => this.roles()?.includes(ROLE.AGENT));
   public readonly isAffiliatedWithAgency = computed(() => this.agency() !== null);
+
+  public isManager$ = new Observable<boolean>(subscriber => {
+    this.isManager() !== null && this.isManager() !== undefined ?
+      subscriber.next(this.isManager()!) :
+      this.client.getMe().subscribe({
+        next: userWithAgency => {
+          subscriber.next(userWithAgency.user.roles?.map(r => r.name).includes(ROLE.MANAGER) ?? false);
+        }
+      });
+  });
+
+  public isAgent$ = new Observable<boolean>(subscriber => {
+    this.isAgent() !== null && this.isAgent() !== undefined ?
+      subscriber.next(this.isAgent()!) :
+      this.client.getMe().subscribe({
+        next: userWithAgency => {
+          subscriber.next(userWithAgency.user.roles?.map(r => r.name).includes(ROLE.AGENT) ?? false);
+        }
+      });
+  });
 
   constructor() {
     // Subscribe to get user data (given name, family name etc.) from OIDC after authentication
