@@ -3,12 +3,11 @@ import { BackendClientService } from '../../../_services/backend-client-service'
 import { UserStateService } from '../../../_services/user-state-service';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserResponseDTO } from "../../../_types/users/UserResponseDTO";
-import { JsonPipe } from '@angular/common';
 import { RoleDTO } from '../../../_types/RoleDTO';
 
 @Component({
   selector: 'app-agents-list',
-  imports: [NgbPaginationModule, JsonPipe],
+  imports: [NgbPaginationModule],
   templateUrl: './agents-list.html',
   styleUrl: './agents-list.scss'
 })
