@@ -1,9 +1,5 @@
 <div class="table-responsive">
     <table class="table table-striped table-bordered">
-        <thead>
-            <tr>
-            </tr>
-        </thead>
         <tbody>
             <tr>
                 <th scope="row">Address</th>
@@ -22,10 +18,18 @@
                 </td>
             </tr>
             <tr>
-                <th scope=" row">Description</th>
-            </tr>
-            <tr>
-                <td><quill-view [content]="insertion.description"></quill-view></td>
+                <td ngbAccordion>
+                    <div ngbAccordionItem>
+                        <h2 ngbAccordionHeader>
+                            <button ngbAccordionButton>Description</button>
+                        </h2>
+                        <div ngbAccordionCollapse>
+                            <div ngbAccordionBody>
+                                <ng-template><quill-view [content]="insertion.description"></quill-view></ng-template>
+                            </div>
+                        </div>
+                    </div>
+                </td>
             </tr>
         </tbody>
     </table>
