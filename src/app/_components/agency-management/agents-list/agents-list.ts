@@ -3,10 +3,12 @@ import { BackendClientService } from '../../../_services/backend-client-service'
 import { UserStateService } from '../../../_services/user-state-service';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserResponseDTO } from "../../../_types/users/UserResponseDTO";
+import { JsonPipe } from '@angular/common';
+import { RoleDTO } from '../../../_types/RoleDTO';
 
 @Component({
   selector: 'app-agents-list',
-  imports: [NgbPaginationModule],
+  imports: [NgbPaginationModule, JsonPipe],
   templateUrl: './agents-list.html',
   styleUrl: './agents-list.scss'
 })
@@ -43,5 +45,9 @@ export class AgentsList implements OnChanges {
         this.totalPages = response.page?.totalPages ?? 0;
       }
     );
+  }
+
+  protected getRolesNames(roles: Array<RoleDTO>): Array<string> {
+    return roles.map(r => r.name);
   }
 }
