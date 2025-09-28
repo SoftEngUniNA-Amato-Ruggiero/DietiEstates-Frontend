@@ -37,14 +37,14 @@ export class BackendClientService {
   public getAgencies(page = 0, pageSize = 10) {
     const params = new HttpParams()
       .set('page', page.toString())
-      .set('pageSize', pageSize.toString());
+      .set('size', pageSize.toString());
     return this.http.get<Page<RealEstateAgencyResponseDTO>>(`${this.url}/agencies`, { ...this.httpOptions, params });
   }
 
   public getAgentsWorkingForAgency(agencyId: number, page = 0, pageSize = 10) {
     const params = new HttpParams()
       .set('page', page.toString())
-      .set('pageSize', pageSize.toString());
+      .set('size', pageSize.toString());
     return this.http.get<Page<UserResponseDTO>>(`${this.url}/agencies/${agencyId}/agents`, { ...this.httpOptions, params });
   }
 
@@ -63,7 +63,7 @@ export class BackendClientService {
   public getInsertionsForSale(page = 0, pageSize = 10) {
     const params = new HttpParams()
       .set('page', page.toString())
-      .set('pageSize', pageSize.toString());
+      .set('size', pageSize.toString());
     return this.http.get<Page<InsertionForSaleResponseDTO>>(`${this.url}/insertions/for-sale`, { ...this.httpOptions, params });
   }
 
@@ -73,8 +73,20 @@ export class BackendClientService {
       .set('lng', center.lng.toString())
       .set('distance', distance.toString())
       .set('page', page.toString())
-      .set('pageSize', pageSize.toString());
+      .set('size', pageSize.toString());
     return this.http.get<Page<InsertionResponseDTO>>(`${this.url}/insertions`, { ...this.httpOptions, params });
+  }
+
+  public getInsertionsByLocationAndTags(center: L.LatLng, distance: number, tags: string[] = [], page = 0, pageSize = 10) {
+    let params = new HttpParams()
+      .set('lat', center.lat.toString())
+      .set('lng', center.lng.toString())
+      .set('distance', distance.toString())
+      .set('tags', tags.join(','))
+      .set('page', page.toString())
+      .set('size', pageSize.toString());
+
+    return this.http.get<Page<InsertionResponseDTO>>(`${this.url}/insertions/search`, { ...this.httpOptions, params });
   }
 
   public postInsertionForSale(insertion: InsertionForSaleRequestDTO) {

@@ -3,6 +3,8 @@
     <app-map-component [inputLayer]="searchResultsLayerGroup" (mapCenter)="mapCenter.set($event)"></app-map-component>
     <br />
 
+    <app-tags-field (tags)="reactiveKeywords.set($event)"></app-tags-field>
+
     @if(selectedInsertion()){
     <app-insertion-view [insertion]="selectedInsertion()!"></app-insertion-view>
     <br />

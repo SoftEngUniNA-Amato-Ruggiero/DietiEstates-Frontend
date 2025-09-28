@@ -8,10 +8,18 @@ import { UserStateService } from '../../_services/user-state-service';
 import { BackendClientService } from '../../_services/backend-client-service';
 import { InsertionView } from "../insertion-view/insertion-view";
 import { InsertionResponseDTO } from '../../_types/insertions/InsertionResponseDTO';
+import { ɵInternalFormsSharedModule } from "@angular/forms";
+import { TagsField } from "../tags-field/tags-field";
 
 @Component({
   selector: 'app-homepage',
-  imports: [MapComponent, AgencyUpload, InsertionView],
+  imports: [
+    MapComponent,
+    AgencyUpload,
+    InsertionView,
+    ɵInternalFormsSharedModule,
+    TagsField
+  ],
   templateUrl: './homepage.html',
   styleUrl: './homepage.scss'
 })
@@ -24,13 +32,15 @@ export class Homepage {
   protected searchResultsLayerGroup?: L.LayerGroup;
   protected selectedInsertion = signal<InsertionResponseDTO | null>(null);
 
+  protected reactiveKeywords = signal<string[]>([]);
+
   constructor() {
     // Get insertions from backend every time the map center changes
     effect(() => {
       const center = this.mapCenter();
       if (!center) return;
 
-      this.client.getInsertionsByLocation(center, 2).subscribe((insertions) => {
+      this.client.getInsertionsByLocationAndTags(center, 2, this.reactiveKeywords()).subscribe((insertions) => {
         console.log("Insertions within 2 degrees:", insertions);
 
         this.searchResultsLayerGroup = L.layerGroup(

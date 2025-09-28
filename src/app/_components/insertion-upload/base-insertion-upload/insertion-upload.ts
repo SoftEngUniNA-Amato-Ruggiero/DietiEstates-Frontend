@@ -1,10 +1,5 @@
 import { Component, EventEmitter, inject, Output, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
-import { MatButtonModule } from '@angular/material/button';
-import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatIconModule } from '@angular/material/icon';
 import { QuillModule } from 'ngx-quill';
 import { FeatureCollection } from 'geojson';
 import * as L from 'leaflet';
@@ -12,6 +7,7 @@ import * as MapConstants from '../../../_constants/map-component.constants';
 import { MapComponent } from '../../map-component/map-component';
 import { GeoapifyClientService } from '../../../_services/geoapify-client-service';
 import { InsertionRequestDTO } from '../../../_types/insertions/InsertionRequestDTO';
+import { TagsField } from "../../tags-field/tags-field";
 
 @Component({
   selector: 'app-insertion-upload',
@@ -19,10 +15,7 @@ import { InsertionRequestDTO } from '../../../_types/insertions/InsertionRequest
     MapComponent,
     ReactiveFormsModule,
     QuillModule,
-    MatButtonModule,
-    MatFormFieldModule,
-    MatChipsModule,
-    MatIconModule
+    TagsField
   ],
   templateUrl: './insertion-upload.html',
   styleUrl: './insertion-upload.scss'
@@ -31,10 +24,6 @@ export class InsertionUpload {
   @Output() insertionData = new EventEmitter<InsertionRequestDTO>()
 
   protected readonly geoapifyClient = inject(GeoapifyClientService);
-  protected readonly announcer = inject(LiveAnnouncer);
-
-
-  protected readonly reactiveKeywords = signal<string[]>([]);
   protected clickMarkerLayer?: L.Marker;
   protected formattedAddress = signal<string>("No address selected");
 
@@ -60,32 +49,6 @@ export class InsertionUpload {
       this.insertionForm.value.address!
     );
     this.insertionData.emit(insertion);
-  }
-
-
-  protected addReactiveKeyword(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    if (value) {
-      this.reactiveKeywords.update(keywords => [...keywords, value]);
-      this.announcer.announce(`added ${value} to reactive form`);
-    }
-
-    event.chipInput!.clear();
-  }
-
-
-  protected removeReactiveKeyword(keyword: string) {
-    this.reactiveKeywords.update(keywords => {
-      const index = keywords.indexOf(keyword);
-      if (index < 0) {
-        return keywords;
-      }
-
-      keywords.splice(index, 1);
-      this.announcer.announce(`removed ${keyword} from reactive form`);
-      return [...keywords];
-    });
   }
 
 
