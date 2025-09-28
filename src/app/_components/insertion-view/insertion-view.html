@@ -1,36 +1,47 @@
-<div class="table-responsive">
-    <table class="table table-striped table-bordered">
-        <tbody>
-            <tr>
-                <th scope="row">Address</th>
-            </tr>
-            <tr>
-                <td>{{ insertion.address.formatted }}</td>
-            </tr>
-            <tr>
-                <th scope="row">Tags</th>
-            </tr>
-            <tr>
-                <td>
-                    @for (tag of insertion.tags; track tag) {
-                    <mat-chip class="me-1">{{ tag }}</mat-chip>
-                    }
-                </td>
-            </tr>
-            <tr>
-                <td ngbAccordion>
-                    <div ngbAccordionItem>
-                        <h2 ngbAccordionHeader>
-                            <button ngbAccordionButton>Description</button>
-                        </h2>
-                        <div ngbAccordionCollapse>
-                            <div ngbAccordionBody>
-                                <ng-template><quill-view [content]="insertion.description"></quill-view></ng-template>
-                            </div>
-                        </div>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+<div class="container border d-flex flex-column">
+
+    <div class="container p-3">
+        <h2>Address</h2>
+        <hr />
+        <div>{{ insertion.address.formatted }}</div>
+    </div>
+
+    <br />
+
+    @if (downcastForSale.price) {
+    <app-insertion-for-sale-rows [insertion]="downcastForSale" class="container p-3"></app-insertion-for-sale-rows>
+    }
+    @if (downcastForRent.rent) {
+    <app-insertion-for-rent-rows [insertion]="downcastForRent" class="container p-3"></app-insertion-for-rent-rows>
+    }
+
+    <br />
+
+    <div class="container p-3">
+        <h2>Tags</h2>
+        <hr />
+        <div>
+            @for (tag of insertion.tags; track tag) {
+            <mat-chip class="me-1">{{ tag }}</mat-chip>
+            }
+        </div>
+    </div>
+
+    <br />
+
+    <div ngbAccordion class="container p-3">
+        <h2>Description</h2>
+        <hr />
+        <div ngbAccordionItem>
+            <h2 ngbAccordionHeader>
+                <button ngbAccordionButton>Expand</button>
+            </h2>
+            <div ngbAccordionCollapse>
+                <div ngbAccordionBody>
+                    <ng-template><quill-view [content]="insertion.description"></quill-view></ng-template>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </div>

@@ -6,7 +6,6 @@ import { AgencyUpload } from '../agency-upload/agency-upload';
 import { AuthService } from '../../_services/auth-service';
 import { UserStateService } from '../../_services/user-state-service';
 import { BackendClientService } from '../../_services/backend-client-service';
-import { InsertionForSaleResponseDTO } from '../../_types/insertions/InsertionForSaleResponseDTO';
 import { InsertionView } from "../insertion-view/insertion-view";
 import { InsertionResponseDTO } from '../../_types/insertions/InsertionResponseDTO';
 
@@ -41,7 +40,7 @@ export class Homepage {
     });
   }
 
-  private initializeMarkerForInsertion(insertion: InsertionForSaleResponseDTO) {
+  private initializeMarkerForInsertion(insertion: InsertionResponseDTO) {
     const location = insertion.address.location;
     const coords = location.coordinates;
     const coordsLatLng = new L.LatLng(coords[1], coords[0]);
@@ -52,7 +51,6 @@ export class Homepage {
       } else {
         this.selectedInsertion.set(null);
       }
-
     });
     return marker;
   }

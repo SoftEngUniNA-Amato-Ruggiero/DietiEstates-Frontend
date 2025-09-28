@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { InsertionView } from './insertion-view';
+import { InsertionView } from './base-insertion-view/insertion-view';
 
 describe('InsertionView', () => {
   let component: InsertionView;
@@ -10,7 +10,7 @@ describe('InsertionView', () => {
     await TestBed.configureTestingModule({
       imports: [InsertionView]
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(InsertionView);
     component = fixture.componentInstance;

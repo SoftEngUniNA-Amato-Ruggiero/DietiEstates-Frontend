@@ -11,6 +11,7 @@ import { RealEstateAgencyRequestDTO } from "../_types/RealEstateAgencyRequestDTO
 import { InsertionForRentRequestDTO } from '../_types/insertions/InsertionForRentRequestDTO';
 import { InsertionForSaleRequestDTO } from '../_types/insertions/InsertionForSaleRequestDTO';
 import { InsertionForRentResponseDTO } from '../_types/insertions/InsertionForRentResponseDTO';
+import { InsertionResponseDTO } from '../_types/insertions/InsertionResponseDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -73,7 +74,7 @@ export class BackendClientService {
       .set('distance', distance.toString())
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
-    return this.http.get<Page<InsertionForSaleResponseDTO>>(`${this.url}/insertions`, { ...this.httpOptions, params });
+    return this.http.get<Page<InsertionResponseDTO>>(`${this.url}/insertions`, { ...this.httpOptions, params });
   }
 
   public postInsertionForSale(insertion: InsertionForSaleRequestDTO) {
