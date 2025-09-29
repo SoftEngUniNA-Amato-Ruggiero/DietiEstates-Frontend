@@ -9,4 +9,8 @@ export interface InsertionResponseDTO {
     address: Address;
     uploader: UserResponseDTO;
     agency: RealEstateAgencyResponseDTO;
+    size: number;
+    numberOfRooms: number;
+    floor: number;
+    hasElevator: boolean;
 }
