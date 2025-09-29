@@ -11,6 +11,7 @@ import { TagsField } from '../tags-field/tags-field';
 import { BackendClientService } from '../../_services/backend-client-service';
 import { InsertionView } from "../insertion-view/insertion-view";
 import { JsonPipe } from '@angular/common';
+import { debounceTime } from 'rxjs';
 
 @Component({
   selector: 'app-advanced-search',
@@ -50,8 +51,10 @@ export class AdvancedSearch {
       });
     });
 
-    // Get insertions from backend every time the form changes
-    this.searchForm.valueChanges.subscribe(() => this.onFormChanges());
+    // Get insertions from backend every time the form changes, with 500ms debounce
+    this.searchForm.valueChanges.pipe(
+      debounceTime(500)
+    ).subscribe(() => this.onFormChanges());
   }
 
   private onFormChanges() {
