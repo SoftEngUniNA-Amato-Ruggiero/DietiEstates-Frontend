@@ -1,17 +1,18 @@
+import { JsonPipe } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatLabel } from '@angular/material/form-field';
+import { debounceTime } from 'rxjs';
 import * as L from 'leaflet';
+import 'leaflet.markercluster';
 import * as MapConstants from '../../_constants/map-component.constants';
 import { InsertionResponseDTO } from '../../_types/insertions/InsertionResponseDTO';
 import { MapComponent } from '../map-component/map-component';
 import { TagsField } from '../tags-field/tags-field';
-import { BackendClientService } from '../../_services/backend-client-service';
 import { InsertionView } from "../insertion-view/insertion-view";
-import { JsonPipe } from '@angular/common';
-import { debounceTime } from 'rxjs';
+import { BackendClientService } from '../../_services/backend-client-service';
 
 @Component({
   selector: 'app-advanced-search',
@@ -52,9 +53,9 @@ export class AdvancedSearch {
     });
 
     // Get insertions from backend every time the form changes, with 500ms debounce
-    this.searchForm.valueChanges.pipe(
-      debounceTime(500)
-    ).subscribe(() => this.onFormChanges());
+    this.searchForm.valueChanges
+      .pipe(debounceTime(500))
+      .subscribe(() => this.onFormChanges());
   }
 
   private onFormChanges() {
@@ -67,8 +68,9 @@ export class AdvancedSearch {
     if (!center || !tags || !distance) return;
 
     this.client.getInsertionsByLocationAndTags(center, distance, tags).subscribe((insertions) => {
-      this.searchResultsLayerGroup = L.layerGroup(
-        insertions.content.map((insertion) => this.initializeMarkerForInsertion(insertion))
+      this.searchResultsLayerGroup = L.markerClusterGroup();
+      insertions.content.map((insertion) =>
+        this.searchResultsLayerGroup!.addLayer(this.initializeMarkerForInsertion(insertion))
       );
     });
   }
