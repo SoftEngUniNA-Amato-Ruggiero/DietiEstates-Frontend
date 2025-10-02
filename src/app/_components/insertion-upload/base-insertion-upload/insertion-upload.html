@@ -20,12 +20,27 @@
     </div>
 
     <div>
-        <label for="description" class="form-label">Description:</label>
         <quill-editor id="description" formControlName="description" class="form-control"></quill-editor>
     </div>
 
     <div class="d-flex flex-column">
-        <label for="tags" class="form-label">Tags:</label>
         <app-tags-field (tags)="insertionForm.controls.tags.setValue($event)"></app-tags-field>
     </div>
+
+    <mat-form-field class="container-fluid">
+        <mat-label>Minimum Size (m²)</mat-label>
+        <input matInput type="number" formControlName="minSize" min="0" step="1">
+    </mat-form-field>
+
+    <mat-form-field class="container-fluid">
+        <mat-label>Minimum Number of Rooms</mat-label>
+        <input matInput type="number" formControlName="minNumberOfRooms" min="0" step="1">
+    </mat-form-field>
+
+    <mat-form-field class="container-fluid">
+        <mat-label>Maximum Floor</mat-label>
+        <input matInput type="number" formControlName="maxFloor" min="0" step="1">
+    </mat-form-field>
+
+    <mat-checkbox formControlName="hasElevator">Has Elevator</mat-checkbox>
 </form>

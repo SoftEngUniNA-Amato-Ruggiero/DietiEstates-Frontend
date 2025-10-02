@@ -8,11 +8,15 @@ import { MapComponent } from '../../map-component/map-component';
 import { GeoapifyClientService } from '../../../_services/geoapify-client-service';
 import { InsertionRequestDTO } from '../../../_types/insertions/InsertionRequestDTO';
 import { TagsField } from "../../tags-field/tags-field";
+import { MatInputModule } from '@angular/material/input';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-insertion-upload',
   imports: [
     MapComponent,
+    MatInputModule,
+    MatCheckbox,
     ReactiveFormsModule,
     QuillModule,
     TagsField
@@ -32,7 +36,10 @@ export class InsertionUpload {
     address: new FormControl<FeatureCollection | null>(null),
     description: new FormControl<string>(''),
     tags: new FormControl<string[]>([]),
-    price: new FormControl<number>(0)
+    size: new FormControl<number | undefined>(undefined),
+    minNumberOfRooms: new FormControl<number | undefined>(undefined),
+    maxFloor: new FormControl<number | undefined>(undefined),
+    hasElevator: new FormControl<boolean | undefined>(undefined),
   });
 
 
@@ -46,7 +53,11 @@ export class InsertionUpload {
     const insertion = new InsertionRequestDTO(
       this.insertionForm.value.tags || [],
       this.insertionForm.value.description || "",
-      this.insertionForm.value.address!
+      this.insertionForm.value.address!,
+      this.insertionForm.value.size || undefined,
+      this.insertionForm.value.minNumberOfRooms || undefined,
+      this.insertionForm.value.maxFloor || undefined,
+      this.insertionForm.value.hasElevator || undefined
     );
     this.insertionData.emit(insertion);
   }

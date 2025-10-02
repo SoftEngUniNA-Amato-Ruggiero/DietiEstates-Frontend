@@ -34,13 +34,6 @@ export class BackendClientService {
     return this.http.get<UserResponseDTO>(`${this.url}/users?username=${username}`, this.httpOptions);
   }
 
-  public getAgencies(page = 0, pageSize = 10) {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', pageSize.toString());
-    return this.http.get<Page<RealEstateAgencyResponseDTO>>(`${this.url}/agencies`, { ...this.httpOptions, params });
-  }
-
   public getAgentsWorkingForAgency(agencyId: number, page = 0, pageSize = 10) {
     const params = new HttpParams()
       .set('page', page.toString())
@@ -60,31 +53,26 @@ export class BackendClientService {
     return this.http.post<BusinessUserResponseDTO>(`${this.url}/managers`, user, this.httpOptions);
   }
 
-  public getInsertionsForSale(page = 0, pageSize = 10) {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('size', pageSize.toString());
-    return this.http.get<Page<InsertionForSaleResponseDTO>>(`${this.url}/insertions/for-sale`, { ...this.httpOptions, params });
-  }
-
-  public getInsertionsByLocation(center: L.LatLng, distance: number, page = 0, pageSize = 10) {
-    const params = new HttpParams()
-      .set('lat', center.lat.toString())
-      .set('lng', center.lng.toString())
-      .set('distance', distance.toString())
-      .set('page', page.toString())
-      .set('size', pageSize.toString());
-    return this.http.get<Page<InsertionResponseDTO>>(`${this.url}/insertions`, { ...this.httpOptions, params });
-  }
-
-  public getInsertionsByLocationAndTags(center: L.LatLng, distance: number, tags: string[] = [], page = 0, pageSize = 10) {
+  public searchInsertions(center: L.LatLng,
+    distance: number,
+    tags: string[] = [],
+    minSize: number | undefined = undefined,
+    minNumberOfRooms: number | undefined = undefined,
+    maxFloor: number | undefined = undefined,
+    hasElevator: boolean | undefined = undefined,
+    page = 0,
+    pageSize = 10) {
     let params = new HttpParams()
       .set('lat', center.lat.toString())
       .set('lng', center.lng.toString())
       .set('distance', distance.toString())
       .set('tags', tags.join(','))
+      .set('minSize', minSize?.toString() ?? '')
+      .set('minNumberOfRooms', minNumberOfRooms?.toString() ?? '')
+      .set('maxFloor', maxFloor?.toString() ?? '')
+      .set('hasElevator', hasElevator?.toString() ?? '')
       .set('page', page.toString())
-      .set('size', pageSize.toString());
+      .set('pageSize', pageSize.toString());
 
     return this.http.get<Page<InsertionResponseDTO>>(`${this.url}/insertions/search`, { ...this.httpOptions, params });
   }

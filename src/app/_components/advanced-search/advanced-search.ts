@@ -13,6 +13,8 @@ import { MapComponent } from '../map-component/map-component';
 import { TagsField } from '../tags-field/tags-field';
 import { InsertionView } from "../insertion-view/insertion-view";
 import { BackendClientService } from '../../_services/backend-client-service';
+import { MatCheckbox } from '@angular/material/checkbox';
+import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-advanced-search',
@@ -21,7 +23,9 @@ import { BackendClientService } from '../../_services/backend-client-service';
     MatFormField,
     MatInputModule,
     MatLabel,
+    MatCheckbox,
     MapComponent,
+    NgbAccordionModule,
     TagsField,
     InsertionView,
     JsonPipe
@@ -41,6 +45,10 @@ export class AdvancedSearch {
     center: new FormControl<L.LatLng | undefined>(undefined),
     distance: new FormControl(1),
     tags: new FormControl<string[]>([]),
+    minSize: new FormControl<number | undefined>(undefined),
+    minNumberOfRooms: new FormControl<number | undefined>(undefined),
+    maxFloor: new FormControl<number | undefined>(undefined),
+    hasElevator: new FormControl<boolean | undefined>(undefined),
   });
 
   constructor() {
@@ -58,16 +66,24 @@ export class AdvancedSearch {
       .subscribe(() => this.onFormChanges());
   }
 
+  protected onSaveSearch() {
+    //TODO: request to backend to save search
+  }
+
   private onFormChanges() {
     if (this.searchForm.invalid) return;
 
     const center = this.searchForm.get('center')?.value;
     const tags = this.searchForm.get('tags')?.value;
     const distance = this.searchForm.get('distance')?.value;
+    const minSize = this.searchForm.get('minSize')?.value ?? undefined;
+    const minNumberOfRooms = this.searchForm.get('minNumberOfRooms')?.value ?? undefined;
+    const maxFloor = this.searchForm.get('maxFloor')?.value ?? undefined;
+    const hasElevator = this.searchForm.get('hasElevator')?.value ? true : undefined;
 
     if (!center || !tags || !distance) return;
 
-    this.client.getInsertionsByLocationAndTags(center, distance, tags).subscribe((insertions) => {
+    this.client.searchInsertions(center, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator).subscribe((insertions) => {
       this.searchResultsLayerGroup = L.markerClusterGroup();
       insertions.content.map((insertion) =>
         this.searchResultsLayerGroup!.addLayer(this.initializeMarkerForInsertion(insertion))
