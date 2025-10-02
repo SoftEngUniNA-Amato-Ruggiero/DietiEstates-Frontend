@@ -37,8 +37,8 @@ export class InsertionUpload {
     description: new FormControl<string>(''),
     tags: new FormControl<string[]>([]),
     size: new FormControl<number | undefined>(undefined),
-    minNumberOfRooms: new FormControl<number | undefined>(undefined),
-    maxFloor: new FormControl<number | undefined>(undefined),
+    numberOfRooms: new FormControl<number | undefined>(undefined),
+    floor: new FormControl<number | undefined>(undefined),
     hasElevator: new FormControl<boolean | undefined>(undefined),
   });
 
@@ -55,8 +55,8 @@ export class InsertionUpload {
       this.insertionForm.value.description || "",
       this.insertionForm.value.address!,
       this.insertionForm.value.size || undefined,
-      this.insertionForm.value.minNumberOfRooms || undefined,
-      this.insertionForm.value.maxFloor || undefined,
+      this.insertionForm.value.numberOfRooms || undefined,
+      this.insertionForm.value.floor || undefined,
       this.insertionForm.value.hasElevator || undefined
     );
     this.insertionData.emit(insertion);

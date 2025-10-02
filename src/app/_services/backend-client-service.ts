@@ -3,7 +3,6 @@ import { inject, Injectable } from '@angular/core';
 import { backend } from '../_config/backend.config';
 import { Page } from '../_types/page';
 import { InsertionForSaleResponseDTO } from '../_types/insertions/InsertionForSaleResponseDTO';
-import { RealEstateAgencyResponseDTO } from "../_types/RealEstateAgencyResponseDTO";
 import { BusinessUserResponseDTO } from "../_types/users/BusinessUserResponseDTO";
 import { UserRequestDTO } from "../_types/users/UserRequestDTO";
 import { UserResponseDTO } from "../_types/users/UserResponseDTO";
@@ -75,6 +74,58 @@ export class BackendClientService {
       .set('pageSize', pageSize.toString());
 
     return this.http.get<Page<InsertionResponseDTO>>(`${this.url}/insertions/search`, { ...this.httpOptions, params });
+  }
+
+  public searchInsertionsForSale(center: L.LatLng,
+    distance: number,
+    tags: string[] = [],
+    minSize: number | undefined = undefined,
+    minNumberOfRooms: number | undefined = undefined,
+    maxFloor: number | undefined = undefined,
+    hasElevator: boolean | undefined = undefined,
+    maxPrice: number | undefined = undefined,
+    page = 0,
+    pageSize = 10) {
+    let params = new HttpParams()
+      .set('lat', center.lat.toString())
+      .set('lng', center.lng.toString())
+      .set('distance', distance.toString())
+      .set('tags', tags.join(','))
+      .set('minSize', minSize?.toString() ?? '')
+      .set('minNumberOfRooms', minNumberOfRooms?.toString() ?? '')
+      .set('maxFloor', maxFloor?.toString() ?? '')
+      .set('hasElevator', hasElevator?.toString() ?? '')
+      .set('maxPrice', maxPrice?.toString() ?? '')
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.get<Page<InsertionResponseDTO>>(`${this.url}/insertions/for-sale/search`, { ...this.httpOptions, params });
+  }
+
+  public searchInsertionsForRent(center: L.LatLng,
+    distance: number,
+    tags: string[] = [],
+    minSize: number | undefined = undefined,
+    minNumberOfRooms: number | undefined = undefined,
+    maxFloor: number | undefined = undefined,
+    hasElevator: boolean | undefined = undefined,
+    maxRent: number | undefined = undefined,
+    page = 0,
+    pageSize = 10) {
+    let params = new HttpParams()
+      .set('lat', center.lat.toString())
+      .set('lng', center.lng.toString())
+      .set('distance', distance.toString())
+      .set('tags', tags.join(','))
+      .set('minSize', minSize?.toString() ?? '')
+      .set('minNumberOfRooms', minNumberOfRooms?.toString() ?? '')
+      .set('maxFloor', maxFloor?.toString() ?? '')
+      .set('hasElevator', hasElevator?.toString() ?? '')
+      .set('maxRent', maxRent?.toString() ?? '')
+      .set('page', page.toString())
+      .set('pageSize', pageSize.toString());
+
+    return this.http.get<Page<InsertionResponseDTO>>(`${this.url}/insertions/for-rent/search`, { ...this.httpOptions, params });
   }
 
   public postInsertionForSale(insertion: InsertionForSaleRequestDTO) {
