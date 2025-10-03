@@ -75,7 +75,23 @@ export class AdvancedSearch {
   }
 
   protected onSaveSearch() {
-    //TODO: request to backend to save search
+    const center = this.searchForm.get('center')?.value;
+    const tags = this.searchForm.get('tags')?.value;
+    const distance = this.searchForm.get('distance')?.value;
+    const minSize = this.searchForm.get('minSize')?.value ?? undefined;
+    const minNumberOfRooms = this.searchForm.get('minNumberOfRooms')?.value ?? undefined;
+    const maxFloor = this.searchForm.get('maxFloor')?.value ?? undefined;
+    const hasElevator = this.searchForm.get('hasElevator')?.value ? true : undefined;
+    const insertionType = this.searchForm.get('insertionType')?.value;
+    const maxRent = this.searchForm.get('maxRent')?.value ?? undefined;
+    const maxPrice = this.searchForm.get('maxPrice')?.value ?? undefined;
+
+    if (!center || !tags || !distance) throw new Error('Center and distance are required for search, tags should not be null but an empty array by default');
+
+    this.client.postSavedSearch(center.lat, center.lng, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator).subscribe(
+      (response) => { alert('Search saved successfully: ' + response.id); },
+      (error) => { alert('Error saving search: ' + error.message); }
+    );
   }
 
   private onFormChanges() {

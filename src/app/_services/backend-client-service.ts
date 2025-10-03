@@ -137,4 +137,33 @@ export class BackendClientService {
     console.log(insertion);
     return this.http.post<InsertionForRentResponseDTO>(`${this.url}/insertions/for-rent`, insertion, this.httpOptions);
   }
+
+  public getSavedSearches(page = 0, pageSize = 10) {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', pageSize.toString());
+    return this.http.get<Page<any>>(`${this.url}/saved-searches`, { ...this.httpOptions, params });
+  }
+
+  public postSavedSearch(
+    lat: number,
+    lng: number,
+    distance: number,
+    tags: string[] = [],
+    minSize: number | undefined = undefined,
+    minNumberOfRooms: number | undefined = undefined,
+    maxFloor: number | undefined = undefined,
+    hasElevator: boolean | undefined = undefined,) {
+    const body = {
+      lat,
+      lng,
+      distance,
+      tags: tags.join(','),
+      minSize,
+      minNumberOfRooms,
+      maxFloor,
+      hasElevator
+    };
+    return this.http.post<any>(`${this.url}/saved-searches`, body, this.httpOptions);
+  }
 }
