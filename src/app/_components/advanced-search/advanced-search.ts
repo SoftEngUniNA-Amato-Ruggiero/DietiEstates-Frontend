@@ -10,12 +10,12 @@ import * as MapConstants from '../../_constants/map-component.constants';
 import { InsertionResponseDTO } from '../../_types/insertions/InsertionResponseDTO';
 import { MapComponent } from '../map-component/map-component';
 import { TagsField } from '../tags-field/tags-field';
-import { InsertionView } from "../insertion-view/insertion-view";
 import { BackendClientService } from '../../_services/backend-client-service';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { NgbAccordionModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbAccordionModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MatRadioModule } from '@angular/material/radio';
 import { Page } from '../../_types/page';
+import { InsertionViewModal } from '../insertion-view-modal/insertion-view-modal';
 
 @Component({
   selector: 'app-advanced-search',
@@ -29,14 +29,14 @@ import { Page } from '../../_types/page';
     MapComponent,
     MatRadioModule,
     NgbAccordionModule,
-    TagsField,
-    InsertionView,
+    TagsField
   ],
   templateUrl: './advanced-search.html',
   styleUrl: './advanced-search.scss'
 })
 export class AdvancedSearch {
   protected readonly client = inject(BackendClientService);
+  private modalService = inject(NgbModal);
 
   protected searchResultsLayerGroup?: L.LayerGroup;
 
@@ -70,6 +70,23 @@ export class AdvancedSearch {
     this.searchForm.valueChanges
       .pipe(debounceTime(500))
       .subscribe(() => this.onFormChanges());
+
+    effect(() => {
+      const insertion = this.selectedInsertion();
+      if (insertion) {
+        this.open();
+      }
+    });
+  }
+
+  protected open() {
+    const modalRef = this.modalService.open(InsertionViewModal);
+    modalRef.componentInstance.insertion = this.selectedInsertion();
+    modalRef.result.then(() => {
+      this.selectedInsertion.set(null);
+    }, () => {
+      this.selectedInsertion.set(null);
+    });
   }
 
   protected onSaveSearch() {
@@ -86,10 +103,10 @@ export class AdvancedSearch {
 
     if (!center || !tags || !distance) throw new Error('Center and distance are required for search, tags should not be null but an empty array by default');
 
-    this.client.postSavedSearch(center.lat, center.lng, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator).subscribe(
-      (response) => { alert('Search saved successfully: ' + response.id); },
-      (error) => { alert('Error saving search: ' + error.message); }
-    );
+    this.client.postSavedSearch(center.lat, center.lng, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator).subscribe({
+      next: () => alert('Search saved successfully!'),
+      error: (err) => alert('Error saving search: ' + err.message)
+    });
   }
 
   private onFormChanges() {
