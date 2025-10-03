@@ -1,4 +1,3 @@
-import { JsonPipe } from '@angular/common';
 import { Component, effect, inject, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
@@ -32,7 +31,6 @@ import { Page } from '../../_types/page';
     NgbAccordionModule,
     TagsField,
     InsertionView,
-    JsonPipe
   ],
   templateUrl: './advanced-search.html',
   styleUrl: './advanced-search.scss'
