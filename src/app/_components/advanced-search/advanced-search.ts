@@ -82,6 +82,7 @@ export class AdvancedSearch {
   protected open() {
     const modalRef = this.modalService.open(InsertionViewModal);
     modalRef.componentInstance.insertion = this.selectedInsertion();
+    modalRef.componentInstance.isConfirmationModal = false;
     modalRef.result.then(() => {
       this.selectedInsertion.set(null);
     }, () => {

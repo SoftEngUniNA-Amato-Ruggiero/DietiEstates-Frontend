@@ -1,5 +1,5 @@
 <div class="container mt-4">
-    <form [formGroup]="insertionForRentForm" (ngSubmit)="onSubmit()" class="d-flex flex-column gap-3">
+    <form [formGroup]="insertionForRentForm" (ngSubmit)="openConfirmationModal()" class="d-flex flex-column gap-3">
         <app-insertion-upload (insertionData)="patchInsertionData($event)"></app-insertion-upload>
 
         <div class="form-group">
@@ -7,6 +7,7 @@
             <input type="number" id="rent" formControlName="rent" class="form-control" />
         </div>
 
-        <button type="submit" class="btn btn-primary mb-2">Submit</button>
+        <button type="submit" class="btn btn-primary mb-2"
+            [disabled]="!insertionData || !insertionForRentForm.valid || !insertionForRentForm.get('rent')?.value || !insertionData.address">Submit</button>
     </form>
 </div>

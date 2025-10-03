@@ -1,10 +1,14 @@
 <div class="modal-header">
-    <h4 class="modal-title">Hi there!</h4>
-    <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss('Cross click')"></button>
+    <h4 class="modal-title">Insertion Preview</h4>
+    <button type="button" class="btn-close" aria-label="Close"
+        (click)="activeModal.dismiss('Cross click'); this.closeModal.emit()"></button>
 </div>
 <div class="modal-body">
     <app-insertion-view [insertion]="insertion"></app-insertion-view>
 </div>
+@if (isConfirmationModal) {
 <div class="modal-footer">
-    <button type="button" class="btn btn-outline-secondary" (click)="activeModal.close('Close click')">Close</button>
+    <button type="button" class="btn btn-outline-secondary"
+        (click)="activeModal.close('Save click'); this.closeModal.emit()">Upload</button>
 </div>
+}

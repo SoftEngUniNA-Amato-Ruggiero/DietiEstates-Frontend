@@ -5,6 +5,8 @@ import { InsertionForRentRequestDTO } from '../../../_types/insertions/Insertion
 import { InsertionRequestDTO } from '../../../_types/insertions/InsertionRequestDTO';
 import { BackendClientService } from '../../../_services/backend-client-service';
 import { ToastrService } from 'ngx-toastr';
+import { InsertionPreviewService } from '../../../_services/insertion-preview-service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-insertion-for-rent-upload',
@@ -14,7 +16,10 @@ import { ToastrService } from 'ngx-toastr';
 })
 export class InsertionForRentUpload {
   protected readonly client = inject(BackendClientService);
+  protected readonly previewService = inject(InsertionPreviewService);
   protected readonly toastr = inject(ToastrService);
+  protected readonly router = inject(Router);
+
 
   protected insertionData: InsertionRequestDTO | null = null;
 
@@ -26,20 +31,35 @@ export class InsertionForRentUpload {
     this.insertionData = insertionData;
   }
 
-  protected onSubmit() {
-    if (!this.insertionData || !this.insertionForRentForm.valid) return;
+  protected openConfirmationModal() {
+    if (!this.insertionData || !this.insertionForRentForm.valid || !this.insertionForRentForm.get('rent')?.value) return;
 
     const insertionForRent: InsertionForRentRequestDTO = {
       ...this.insertionData,
       rent: this.insertionForRentForm.get('rent')?.value || 0
     };
 
+    this.previewService.openPreviewModal(insertionForRent).then(
+      (result) => {
+        console.log('Modal closed with result:', result);
+        this.onSubmit(insertionForRent);
+      },
+      (reason) => {
+        console.log('Modal dismissed with reason:', reason);
+      }
+    );
+  }
+
+  protected onSubmit(insertionForRent: InsertionForRentRequestDTO) {
     console.log("Submitting insertion:\n", insertionForRent);
 
     this.client.postInsertionForRent(insertionForRent).subscribe({
       next: (response) => {
         console.log('Insertion uploaded successfully:', response);
         this.toastr.success('Insertion uploaded successfully', 'Success');
+        setTimeout(() => {
+          this.router.navigate(['/']);
+        }, 1500);
       },
       error: (error) => {
         console.error('Error uploading insertion:', error);

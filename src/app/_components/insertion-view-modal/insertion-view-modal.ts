@@ -13,5 +13,6 @@ export class InsertionViewModal {
   activeModal = inject(NgbActiveModal);
 
   @Input() insertion!: InsertionResponseDTO;
+  @Input() isConfirmationModal: boolean = false;
   @Output() closeModal = new EventEmitter<void>();
 }
