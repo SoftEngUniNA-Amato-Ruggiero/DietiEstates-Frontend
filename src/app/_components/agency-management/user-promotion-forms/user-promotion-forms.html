@@ -8,7 +8,7 @@
             <form [formGroup]="agentForm" (ngSubmit)="submitAgentForm(agentForm.value.email)">
                 <label for="agentEmail" class="form-label">Agent Email:</label>
                 <input id="agentEmail" formControlName="email" type="email" required class="form-control">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!agentForm.valid">Submit</button>
             </form>
 
         </ng-template>
@@ -21,7 +21,7 @@
             <form [formGroup]="managerForm" (ngSubmit)="submitManagerForm(managerForm.value.email)">
                 <label for="managerEmail" class="form-label">Manager Email:</label>
                 <input id="managerEmail" formControlName="email" type="email" required class="form-control">
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <button type="submit" class="btn btn-primary" [disabled]="!managerForm.valid">Submit</button>
             </form>
 
         </ng-template>
