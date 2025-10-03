@@ -16,6 +16,7 @@ import { NgbAccordionModule, NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { MatRadioModule } from '@angular/material/radio';
 import { Page } from '../../_types/page';
 import { InsertionViewModal } from '../insertion-view-modal/insertion-view-modal';
+import { AuthService } from '../../_services/auth-service';
 
 @Component({
   selector: 'app-advanced-search',
@@ -36,6 +37,7 @@ import { InsertionViewModal } from '../insertion-view-modal/insertion-view-modal
 })
 export class AdvancedSearch {
   protected readonly client = inject(BackendClientService);
+  protected readonly authService = inject(AuthService);
   private modalService = inject(NgbModal);
 
   protected searchResultsLayerGroup?: L.LayerGroup;

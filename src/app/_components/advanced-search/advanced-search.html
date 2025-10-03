@@ -57,14 +57,17 @@
 
 
                     <br />
-
-                    <button (click)="onSaveSearch()" class="btn btn-primary m-3">Save search</button>
                 </div>
             </div>
         </div>
 
 
     </div>
+
+    @if (authService.isAuthenticated()) {
+    <button (click)="onSaveSearch()" class="btn btn-primary m-3">Save search</button>
+    <br />
+    }
 </form>
 
 <br />
