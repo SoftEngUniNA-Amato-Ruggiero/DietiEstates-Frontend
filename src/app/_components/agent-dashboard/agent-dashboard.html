@@ -2,17 +2,18 @@
 
 <h2 class="mt-4">Upload Insertion</h2>
 <hr />
-<ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" class="nav-tabs">
-    <li [ngbNavItem]="1">
+<ul ngbNav #nav="ngbNav" [(activeId)]="active" [destroyOnHide]="false" (activeIdChange)="onTabChange($event)"
+    class="nav-tabs">
+    <li [ngbNavItem]="1" [destroyOnHide]="false">
         <button ngbNavLink>For Sale</button>
         <ng-template ngbNavContent>
-            <app-insertion-for-sale-upload></app-insertion-for-sale-upload>
+            <app-insertion-for-sale-upload (mapReady)="onMapReady($event)"></app-insertion-for-sale-upload>
         </ng-template>
     </li>
-    <li [ngbNavItem]="2">
+    <li [ngbNavItem]="2" [destroyOnHide]="false">
         <button ngbNavLink>For Rent</button>
         <ng-template ngbNavContent>
-            <app-insertion-for-rent-upload></app-insertion-for-rent-upload>
+            <app-insertion-for-rent-upload (mapReady)="onMapReady($event)"></app-insertion-for-rent-upload>
         </ng-template>
     </li>
 </ul>

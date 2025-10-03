@@ -1,6 +1,7 @@
 <div class="container mt-4">
     <form [formGroup]="insertionForRentForm" (ngSubmit)="openConfirmationModal()" class="d-flex flex-column gap-3">
-        <app-insertion-upload (insertionData)="patchInsertionData($event)"></app-insertion-upload>
+        <app-insertion-upload (insertionData)="patchInsertionData($event)"
+            (mapReady)="map=$event; mapReady.emit($event)"></app-insertion-upload>
 
         <div class="form-group">
             <label for="rent">Rent</label>

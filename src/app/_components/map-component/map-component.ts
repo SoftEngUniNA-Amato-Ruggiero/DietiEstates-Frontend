@@ -62,7 +62,7 @@ export class MapComponent implements OnChanges {
 
   protected onMapReady(map: L.Map) {
     this.map = map;
-    setTimeout(() => { this.map!.invalidateSize(); }, 100);
+    setTimeout(() => { this.map!.invalidateSize(); }, 200);
 
     this.mapReady.emit(this.map);
 

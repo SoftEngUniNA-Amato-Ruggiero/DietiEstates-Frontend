@@ -26,7 +26,9 @@ import { MatCheckbox } from '@angular/material/checkbox';
 })
 export class InsertionUpload {
   @Output() insertionData = new EventEmitter<InsertionRequestDTO>()
+  @Output() mapReady = new EventEmitter<L.Map>();
 
+  protected map: L.Map | null = null;
   protected readonly geoapifyClient = inject(GeoapifyClientService);
   protected clickMarkerLayer?: L.Marker;
   protected formattedAddress = signal<string>("No address selected");

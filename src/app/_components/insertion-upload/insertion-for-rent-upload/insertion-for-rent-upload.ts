@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
 import { InsertionUpload } from "../base-insertion-upload/insertion-upload";
 import { FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { InsertionForRentRequestDTO } from '../../../_types/insertions/InsertionForRentRequestDTO';
@@ -15,12 +15,14 @@ import { Router } from '@angular/router';
   styleUrl: './insertion-for-rent-upload.scss'
 })
 export class InsertionForRentUpload {
+  @Output() mapReady = new EventEmitter<L.Map>()
+
   protected readonly client = inject(BackendClientService);
   protected readonly previewService = inject(InsertionPreviewService);
   protected readonly toastr = inject(ToastrService);
   protected readonly router = inject(Router);
 
-
+  protected map: L.Map | null = null;
   protected insertionData: InsertionRequestDTO | null = null;
 
   protected insertionForRentForm = new FormGroup({
