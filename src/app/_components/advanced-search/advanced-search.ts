@@ -17,6 +17,7 @@ import { MatRadioModule } from '@angular/material/radio';
 import { Page } from '../../_types/page';
 import { InsertionViewModal } from '../insertion-view-modal/insertion-view-modal';
 import { AuthService } from '../../_services/auth-service';
+import { InsertionSearchResultDTO } from '../../_types/insertions/InsertionSearchResultDTO';
 
 @Component({
   selector: 'app-advanced-search',
@@ -43,6 +44,7 @@ export class AdvancedSearch {
   protected searchResultsLayerGroup?: L.LayerGroup;
 
   protected selectedInsertion = signal<InsertionResponseDTO | null>(null);
+  protected selectedInsertionId = signal<number | undefined>(undefined);
   protected reactiveKeywords = signal<string[]>([]);
   protected insertionTypes: string[] = ['Any', 'For Sale', 'For Rent'];
 
@@ -73,6 +75,16 @@ export class AdvancedSearch {
       .pipe(debounceTime(500))
       .subscribe(() => this.onFormChanges());
 
+    // Get insertion details from backend when an insertion is selected on the map
+    effect(() => {
+      const id = this.selectedInsertionId();
+      if (!id) return;
+      this.client.getInsertionById(id).subscribe((insertion) => {
+        this.selectedInsertion.set(insertion);
+      });
+    });
+
+    // Open modal when an insertion is selected
     effect(() => {
       const insertion = this.selectedInsertion();
       if (insertion) {
@@ -116,7 +128,7 @@ export class AdvancedSearch {
     if (this.searchForm.invalid) return;
 
     try {
-      const searchResults$: Observable<Page<InsertionResponseDTO>> = this.getSearchResultsObservable();
+      const searchResults$: Observable<Page<InsertionSearchResultDTO>> = this.getSearchResultsObservable();
 
       searchResults$.subscribe((insertions) => {
         this.searchResultsLayerGroup = L.markerClusterGroup();
@@ -155,16 +167,16 @@ export class AdvancedSearch {
     }
   }
 
-  private initializeMarkerForInsertion(insertion: InsertionResponseDTO) {
-    const location = insertion.address.location;
+  private initializeMarkerForInsertion(insertion: InsertionSearchResultDTO) {
+    const location = insertion.location;
     const coords = location.coordinates;
     const coordsLatLng = new L.LatLng(coords[1], coords[0]);
     const marker = L.marker(coordsLatLng, { icon: MapConstants.MARKER_ICON });
     marker.on('click', () => {
-      if (this.selectedInsertion() !== insertion) {
-        this.selectedInsertion.set(insertion);
+      if (this.selectedInsertionId() !== insertion.id) {
+        this.selectedInsertionId.set(insertion.id);
       } else {
-        this.selectedInsertion.set(null);
+        this.selectedInsertionId.set(undefined);
       }
     });
     return marker;

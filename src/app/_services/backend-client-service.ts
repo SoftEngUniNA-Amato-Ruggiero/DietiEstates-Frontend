@@ -11,6 +11,7 @@ import { InsertionForRentRequestDTO } from '../_types/insertions/InsertionForRen
 import { InsertionForSaleRequestDTO } from '../_types/insertions/InsertionForSaleRequestDTO';
 import { InsertionForRentResponseDTO } from '../_types/insertions/InsertionForRentResponseDTO';
 import { InsertionResponseDTO } from '../_types/insertions/InsertionResponseDTO';
+import { InsertionSearchResultDTO } from '../_types/insertions/InsertionSearchResultDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +53,10 @@ export class BackendClientService {
     return this.http.post<BusinessUserResponseDTO>(`${this.url}/managers`, user, this.httpOptions);
   }
 
+  public getInsertionById(id: number) {
+    return this.http.get<InsertionResponseDTO>(`${this.url}/insertions/${id}`, this.httpOptions);
+  }
+
   public searchInsertions(center: L.LatLng,
     distance: number,
     tags: string[] = [],
@@ -73,7 +78,7 @@ export class BackendClientService {
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
 
-    return this.http.get<Page<InsertionResponseDTO>>(`${this.url}/insertions/search`, { ...this.httpOptions, params });
+    return this.http.get<Page<InsertionSearchResultDTO>>(`${this.url}/insertions/search`, { ...this.httpOptions, params });
   }
 
   public searchInsertionsForSale(center: L.LatLng,
@@ -99,7 +104,7 @@ export class BackendClientService {
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
 
-    return this.http.get<Page<InsertionResponseDTO>>(`${this.url}/insertions/for-sale/search`, { ...this.httpOptions, params });
+    return this.http.get<Page<InsertionSearchResultDTO>>(`${this.url}/insertions/for-sale/search`, { ...this.httpOptions, params });
   }
 
   public searchInsertionsForRent(center: L.LatLng,
@@ -125,7 +130,7 @@ export class BackendClientService {
       .set('page', page.toString())
       .set('pageSize', pageSize.toString());
 
-    return this.http.get<Page<InsertionResponseDTO>>(`${this.url}/insertions/for-rent/search`, { ...this.httpOptions, params });
+    return this.http.get<Page<InsertionSearchResultDTO>>(`${this.url}/insertions/for-rent/search`, { ...this.httpOptions, params });
   }
 
   public postInsertionForSale(insertion: InsertionForSaleRequestDTO) {
