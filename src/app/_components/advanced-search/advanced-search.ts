@@ -47,6 +47,7 @@ export class AdvancedSearch {
 
   protected searchResultsLayerGroup?: L.LayerGroup;
 
+  protected map?: L.Map;
   protected selectedInsertion = signal<InsertionResponseDTO | null>(null);
   protected selectedInsertionId = signal<number | undefined>(undefined);
   protected reactiveKeywords = signal<string[]>([]);
@@ -120,6 +121,10 @@ export class AdvancedSearch {
 
   protected onSaveSearch() {
     const savedSearch$ = this.postSavedSearchObservable();
+    if (!savedSearch$) {
+      this.toastr.error('Error saving search: Missing required fields');
+      return;
+    }
     savedSearch$.subscribe({
       next: () => this.toastr.success('Search saved successfully'),
       error: (err) => this.toastr.error('Error saving search: ' + err.message),
@@ -138,7 +143,12 @@ export class AdvancedSearch {
     const maxRent = this.searchForm.get('maxRent')?.value ?? undefined;
     const maxPrice = this.searchForm.get('maxPrice')?.value ?? undefined;
 
-    if (!center || !tags || !distance) throw new Error('Center and distance are required for search, tags should not be null but an empty array by default');
+    if (!center || !tags || !distance) {
+      if (!center) console.error('Center is required to save search');
+      if (!tags) console.error('Tags are required to save search');
+      if (!distance) console.error('Distance is required to save search');
+      return;
+    }
 
     switch (insertionType) {
       case this.insertionTypes[1]: // For Sale
@@ -154,8 +164,8 @@ export class AdvancedSearch {
     if (this.searchForm.invalid) return;
 
     try {
-      const searchResults$: Observable<Page<InsertionSearchResultDTO>> = this.getSearchResultsObservable();
-
+      const searchResults$ = this.getSearchResultsObservable();
+      if (!searchResults$) return;
       searchResults$.subscribe((insertions) => {
         this.showSearchResults(insertions);
       });
@@ -184,7 +194,12 @@ export class AdvancedSearch {
     const maxRent = this.searchForm.get('maxRent')?.value ?? undefined;
     const maxPrice = this.searchForm.get('maxPrice')?.value ?? undefined;
 
-    if (!center || !tags || !distance) throw new Error('Center and distance are required for search, tags should not be null but an empty array by default');
+    if (!center || !tags || !distance) {
+      if (!center) console.error('Center is required to search');
+      if (!tags) console.error('Tags are required to search');
+      if (!distance) console.error('Distance is required to search');
+      return;
+    }
 
     switch (insertionType) {
       case this.insertionTypes[1]: // For Sale

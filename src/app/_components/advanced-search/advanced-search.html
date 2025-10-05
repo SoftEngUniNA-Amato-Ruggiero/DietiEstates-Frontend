@@ -1,6 +1,7 @@
 <form [formGroup]="searchForm" class="d-flex flex-column gap-3">
 
     <app-map-component [inputLayer]="searchResultsLayerGroup"
+        (mapReady)="map=$event; searchForm.patchValue({ center: map!.getCenter(), distance: 1 })"
         (mapCenter)="searchForm.patchValue({ center: $event })"></app-map-component>
     <br />
 
@@ -55,7 +56,10 @@
 
                     <mat-checkbox formControlName="hasElevator">Has Elevator</mat-checkbox>
 
-
+                    <br />
+                    <button
+                        (click)="searchForm.reset(); searchForm.patchValue({ center: map!.getCenter(), distance: 1, insertionType: 'Any' }); reactiveKeywords.set([])"
+                        class="btn btn-secondary m-3">Clear</button>
                     <br />
                 </div>
             </div>
