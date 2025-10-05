@@ -1,4 +1,4 @@
-import { Component, effect, inject, signal } from '@angular/core';
+import { Component, effect, inject, Input, signal } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -18,6 +18,7 @@ import { Page } from '../../_types/page';
 import { InsertionViewModal } from '../insertion-view-modal/insertion-view-modal';
 import { AuthService } from '../../_services/auth-service';
 import { InsertionSearchResultDTO } from '../../_types/insertions/InsertionSearchResultDTO';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-advanced-search',
@@ -39,7 +40,8 @@ import { InsertionSearchResultDTO } from '../../_types/insertions/InsertionSearc
 export class AdvancedSearch {
   protected readonly client = inject(BackendClientService);
   protected readonly authService = inject(AuthService);
-  private modalService = inject(NgbModal);
+  protected readonly toastr = inject(ToastrService);
+  private readonly modalService = inject(NgbModal);
 
   protected searchResultsLayerGroup?: L.LayerGroup;
 
@@ -105,6 +107,14 @@ export class AdvancedSearch {
   }
 
   protected onSaveSearch() {
+    const savedSearch$ = this.postSavedSearchObservable();
+    savedSearch$.subscribe({
+      next: () => this.toastr.success('Search saved successfully'),
+      error: (err) => this.toastr.error('Error saving search: ' + err.message),
+    });
+  }
+
+  private postSavedSearchObservable() {
     const center = this.searchForm.get('center')?.value;
     const tags = this.searchForm.get('tags')?.value;
     const distance = this.searchForm.get('distance')?.value;
@@ -118,10 +128,14 @@ export class AdvancedSearch {
 
     if (!center || !tags || !distance) throw new Error('Center and distance are required for search, tags should not be null but an empty array by default');
 
-    this.client.postSavedSearch(center.lat, center.lng, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator).subscribe({
-      next: () => alert('Search saved successfully!'),
-      error: (err) => alert('Error saving search: ' + err.message)
-    });
+    switch (insertionType) {
+      case this.insertionTypes[1]: // For Sale
+        return this.client.postSavedSearchForSale(center.lat, center.lng, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator, maxPrice);
+      case this.insertionTypes[2]: // For Rent
+        return this.client.postSavedSearchForRent(center.lat, center.lng, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator, maxRent);
+      default:
+        return this.client.postSavedSearch(center.lat, center.lng, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator);
+    }
   }
 
   private onFormChanges() {

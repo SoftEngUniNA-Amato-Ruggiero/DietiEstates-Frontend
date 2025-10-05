@@ -2,8 +2,14 @@
 
     <app-advanced-search></app-advanced-search>
 
-    @if (authService.isAuthenticated() && !userStateService.isAffiliatedWithAgency()){
+    @if (authService.isAuthenticated()){
+    <app-saved-searches (searchSelected)="onSavedSearchSelected($event)"></app-saved-searches>
+    <br />
+
+    @if (!userStateService.isAffiliatedWithAgency()){
     <h3>Are you the manager of a real estate agency?</h3>
     <app-agency-upload></app-agency-upload>
     }
+    }
+
 </div>

@@ -12,6 +12,7 @@ import { InsertionForSaleRequestDTO } from '../_types/insertions/InsertionForSal
 import { InsertionForRentResponseDTO } from '../_types/insertions/InsertionForRentResponseDTO';
 import { InsertionResponseDTO } from '../_types/insertions/InsertionResponseDTO';
 import { InsertionSearchResultDTO } from '../_types/insertions/InsertionSearchResultDTO';
+import { SavedSearch } from '../_types/searches/SavedSearch';
 
 @Injectable({
   providedIn: 'root'
@@ -147,7 +148,7 @@ export class BackendClientService {
     const params = new HttpParams()
       .set('page', page.toString())
       .set('size', pageSize.toString());
-    return this.http.get<Page<any>>(`${this.url}/saved-searches`, { ...this.httpOptions, params });
+    return this.http.get<Page<SavedSearch>>(`${this.url}/saved-searches`, { ...this.httpOptions, params });
   }
 
   public postSavedSearch(
@@ -170,5 +171,53 @@ export class BackendClientService {
       hasElevator
     };
     return this.http.post<any>(`${this.url}/saved-searches`, body, this.httpOptions);
+  }
+
+  public postSavedSearchForSale(
+    lat: number,
+    lng: number,
+    distance: number,
+    tags: string[] = [],
+    minSize: number | undefined = undefined,
+    minNumberOfRooms: number | undefined = undefined,
+    maxFloor: number | undefined = undefined,
+    hasElevator: boolean | undefined = undefined,
+    maxPrice: number | undefined = undefined) {
+    const body = {
+      lat,
+      lng,
+      distance,
+      tags: tags.join(','),
+      minSize,
+      minNumberOfRooms,
+      maxFloor,
+      hasElevator,
+      maxPrice
+    };
+    return this.http.post<any>(`${this.url}/saved-searches/for-sale`, body, this.httpOptions);
+  }
+
+  public postSavedSearchForRent(
+    lat: number,
+    lng: number,
+    distance: number,
+    tags: string[] = [],
+    minSize: number | undefined = undefined,
+    minNumberOfRooms: number | undefined = undefined,
+    maxFloor: number | undefined = undefined,
+    hasElevator: boolean | undefined = undefined,
+    maxRent: number | undefined = undefined) {
+    const body = {
+      lat,
+      lng,
+      distance,
+      tags: tags.join(','),
+      minSize,
+      minNumberOfRooms,
+      maxFloor,
+      hasElevator,
+      maxRent
+    };
+    return this.http.post<any>(`${this.url}/saved-searches/for-rent`, body, this.httpOptions);
   }
 }
