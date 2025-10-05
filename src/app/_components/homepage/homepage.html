@@ -3,7 +3,7 @@
     <app-advanced-search></app-advanced-search>
 
     @if (authService.isAuthenticated()){
-    <app-saved-searches (searchSelected)="onSavedSearchSelected($event)"></app-saved-searches>
+    <app-saved-searches (savedSearchResults)="onSavedSearchResults($event)"></app-saved-searches>
     <br />
 
     @if (!userStateService.isAffiliatedWithAgency()){

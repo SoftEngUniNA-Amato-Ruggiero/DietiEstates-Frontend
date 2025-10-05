@@ -1,6 +1,7 @@
 import { Point } from "geojson";
 
 export class SavedSearch {
+    id: number;
     geometry: Point;
     distance: number;
     tags: string[] = [];
@@ -9,7 +10,8 @@ export class SavedSearch {
     maxFloor: number | undefined = undefined;
     hasElevator: boolean | undefined = undefined;
 
-    constructor(geometry: Point, distance: number, init?: Partial<SavedSearch>) {
+    constructor(id: number, geometry: Point, distance: number, init?: Partial<SavedSearch>) {
+        this.id = id;
         this.geometry = geometry;
         this.distance = distance;
         Object.assign(this, init);

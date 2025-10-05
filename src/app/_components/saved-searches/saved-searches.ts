@@ -5,6 +5,8 @@ import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { SavedSearch } from '../../_types/searches/SavedSearch';
 import { SavedSearchForRent } from '../../_types/searches/SavedSearchForRent';
 import { SavedSearchForSale } from '../../_types/searches/SavedSearchForSale';
+import { InsertionSearchResultDTO } from '../../_types/insertions/InsertionSearchResultDTO';
+import { Page } from '../../_types/page';
 
 @Component({
   selector: 'app-saved-searches',
@@ -13,8 +15,7 @@ import { SavedSearchForSale } from '../../_types/searches/SavedSearchForSale';
   styleUrl: './saved-searches.scss'
 })
 export class SavedSearches {
-  @Output() searchSelected = new EventEmitter<SavedSearch>();
-
+  @Output() savedSearchResults = new EventEmitter<Page<InsertionSearchResultDTO>>();
   protected readonly client = inject(BackendClientService);
 
   protected savedSearchesPages = new Array<SavedSearch>();
@@ -33,7 +34,10 @@ export class SavedSearches {
   }
 
   executeSearch(search: SavedSearch) {
-    this.searchSelected.emit(search);
+    this.client.executeSavedSearch(search.id).subscribe({
+      next: (response) => { this.savedSearchResults.emit(response); },
+      error: (error) => { alert('Error executing search: ' + error.message) }
+    });
   }
 
   downCastForRent(search: SavedSearch) {

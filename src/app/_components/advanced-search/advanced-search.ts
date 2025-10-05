@@ -19,6 +19,7 @@ import { InsertionViewModal } from '../insertion-view-modal/insertion-view-modal
 import { AuthService } from '../../_services/auth-service';
 import { InsertionSearchResultDTO } from '../../_types/insertions/InsertionSearchResultDTO';
 import { ToastrService } from 'ngx-toastr';
+import { SavedSearchService } from '../../_services/saved-search-service';
 
 @Component({
   selector: 'app-advanced-search',
@@ -42,6 +43,7 @@ export class AdvancedSearch {
   protected readonly authService = inject(AuthService);
   protected readonly toastr = inject(ToastrService);
   private readonly modalService = inject(NgbModal);
+  private readonly savedSearchService = inject(SavedSearchService);
 
   protected searchResultsLayerGroup?: L.LayerGroup;
 
@@ -64,6 +66,7 @@ export class AdvancedSearch {
   });
 
   constructor() {
+
     // Patch form values when signals change
     effect(() => {
       const tags = this.reactiveKeywords();
@@ -91,6 +94,15 @@ export class AdvancedSearch {
       const insertion = this.selectedInsertion();
       if (insertion) {
         this.open();
+      }
+    });
+
+    // Show saved search results when they are set
+    effect(() => {
+      const savedSearchResults = this.savedSearchService.savedSearchResults();
+      if (savedSearchResults) {
+        this.showSearchResults(savedSearchResults);
+        //TODO: also update the form values to reflect the saved search
       }
     });
   }
@@ -145,16 +157,19 @@ export class AdvancedSearch {
       const searchResults$: Observable<Page<InsertionSearchResultDTO>> = this.getSearchResultsObservable();
 
       searchResults$.subscribe((insertions) => {
-        this.searchResultsLayerGroup = L.markerClusterGroup();
-        insertions.content.map((insertion) =>
-          this.searchResultsLayerGroup!.addLayer(this.initializeMarkerForInsertion(insertion))
-        );
+        this.showSearchResults(insertions);
       });
 
     } catch (error) {
       console.error(error);
       return;
     }
+  }
+
+  private showSearchResults(insertions: Page<InsertionSearchResultDTO>) {
+    this.searchResultsLayerGroup = L.markerClusterGroup();
+    insertions.content.map((insertion) => this.searchResultsLayerGroup!.addLayer(this.initializeMarkerForInsertion(insertion))
+    );
   }
 
   private getSearchResultsObservable() {
