@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output, SimpleChanges } from '@angular/core';
+import { Component, effect, EventEmitter, inject, Output, SimpleChanges } from '@angular/core';
 import { BackendClientService } from '../../_services/backend-client-service';
 import { JsonPipe } from '@angular/common';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
@@ -7,6 +7,8 @@ import { SavedSearchForRent } from '../../_types/searches/SavedSearchForRent';
 import { SavedSearchForSale } from '../../_types/searches/SavedSearchForSale';
 import { InsertionSearchResultDTO } from '../../_types/insertions/InsertionSearchResultDTO';
 import { Page } from '../../_types/page';
+import { SavedSearchService } from '../../_services/saved-search-service';
+import { GeoapifyClientService } from '../../_services/geoapify-client-service';
 
 @Component({
   selector: 'app-saved-searches',
@@ -17,14 +19,25 @@ import { Page } from '../../_types/page';
 export class SavedSearches {
   @Output() savedSearchResults = new EventEmitter<Page<InsertionSearchResultDTO>>();
   protected readonly client = inject(BackendClientService);
+  protected readonly savedSearchService = inject(SavedSearchService);
 
   protected savedSearchesPages = new Array<SavedSearch>();
   protected pageNumber = 0;
   protected pageSize = 10;
   protected totalPages = 0;
+  protected totalElements = 0;
 
   constructor() {
     this.getSavedSearchesPage(this.pageNumber, this.pageSize);
+
+    effect(() => {
+      if (this.savedSearchService.reloadSavedSearches()) {
+        setTimeout(() => {
+          this.getSavedSearchesPage(this.pageNumber - 1, this.pageSize)
+        }, 200);
+        this.savedSearchService.reloadSavedSearches.set(false);
+      }
+    });
   }
 
   ngOnChanges(changes: SimpleChanges) {
@@ -50,10 +63,11 @@ export class SavedSearches {
 
   protected getSavedSearchesPage(pageNumber = 0, pageSize = 10) {
     this.client.getSavedSearches(pageNumber, pageSize).subscribe(
-      (searches) => {
+      (searches: Page<SavedSearch>) => {
         this.savedSearchesPages = searches.content ?? [];
-        this.pageSize = searches.page?.size ?? pageSize;
-        this.totalPages = searches.page?.totalPages ?? 0;
+        this.pageSize = searches.pageable?.pageSize ?? pageSize;
+        this.totalPages = searches.totalPages ?? 0;
+        this.totalElements = searches.totalElements ?? 0;
       }
     );
   }

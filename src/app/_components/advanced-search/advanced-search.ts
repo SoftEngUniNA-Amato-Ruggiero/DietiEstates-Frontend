@@ -126,7 +126,10 @@ export class AdvancedSearch {
       return;
     }
     savedSearch$.subscribe({
-      next: () => this.toastr.success('Search saved successfully'),
+      next: () => {
+        this.toastr.success('Search saved successfully');
+        this.savedSearchService.reloadSavedSearches.set(true);
+      },
       error: (err) => this.toastr.error('Error saving search: ' + err.message),
     });
   }

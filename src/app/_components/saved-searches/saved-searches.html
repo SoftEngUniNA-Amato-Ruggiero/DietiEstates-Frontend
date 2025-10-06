@@ -14,7 +14,7 @@
         </tr>
     </thead>
     <tbody>
-        @for (search of savedSearchesPages; track search) {
+        @for (search of savedSearchesPages; track search.id) {
         <tr>
             <td>{{ search.geometry.coordinates | json }}</td>
             <td>{{ search.distance }}</td>
@@ -25,10 +25,10 @@
             <td>{{ search.tags | json }}</td>
             <td>{{ downCastForSale(search).maxPrice || 'N/A' }}</td>
             <td>{{ downCastForRent(search).maxRent || 'N/A' }}</td>
-            <td><button class="btn btn-primary" (click)="executeSearch(search)">Execute</button></td>
+            <td><button class="btn btn-primary" (click)="executeSearch(search)">Search</button></td>
         </tr>
         }
     </tbody>
 </table>
-<ngb-pagination [(page)]="pageNumber" [pageSize]="pageSize" [collectionSize]="savedSearchesPages.length"
+<ngb-pagination [(page)]="pageNumber" [pageSize]="pageSize" [collectionSize]="totalElements"
     (pageChange)="getSavedSearchesPage($event - 1, pageSize)" />

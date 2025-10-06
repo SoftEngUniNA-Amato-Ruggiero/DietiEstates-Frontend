@@ -40,8 +40,8 @@ export class AgentsList implements OnChanges {
     this.client.getAgentsWorkingForAgency(this.userState.agency()?.id!, pageNumber, pageSize).subscribe(
       response => {
         this.agents = response.content ?? [];
-        this.pageSize = response.page?.size ?? pageSize;
-        this.totalPages = response.page?.totalPages ?? 0;
+        this.pageSize = response.pageable?.pageSize ?? pageSize;
+        this.totalPages = response.totalPages ?? 0;
       }
     );
   }

@@ -7,4 +7,5 @@ import { InsertionSearchResultDTO } from '../_types/insertions/InsertionSearchRe
 })
 export class SavedSearchService {
   public savedSearchResults = signal<Page<InsertionSearchResultDTO> | undefined>(undefined);
+  public reloadSavedSearches = signal(false);
 }
