@@ -29,6 +29,32 @@
 
     <br />
 
+    <div class="container p-3">
+        <h2>Details</h2>
+        <hr />
+        <table class="table table-striped table-bordered">
+            <tbody>
+                <tr>
+                    <th>Size</th>
+                    <td>{{ insertion.size }} m²</td>
+                </tr>
+                <tr>
+                    <th>Rooms</th>
+                    <td>{{ insertion.numberOfRooms }}</td>
+                </tr>
+                <tr>
+                    <th>Floor</th>
+                    <td>{{ insertion.floor }}</td>
+                </tr>
+                <tr>
+                    <th>Has Elevator</th>
+                    <td>{{ insertion.hasElevator ? 'Yes' : 'No' }}</td>
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
     <div ngbAccordion class="container p-3">
         <h2>Description</h2>
         <hr />
