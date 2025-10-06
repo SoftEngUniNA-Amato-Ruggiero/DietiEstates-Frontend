@@ -4,6 +4,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatButtonModule } from '@angular/material/button';
 import { MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { SavedSearchService } from '../../_services/saved-search-service';
 
 @Component({
   selector: 'app-tags-field',
@@ -20,12 +21,18 @@ export class TagsField {
   @Output() tags = new EventEmitter<string[]>();
 
   protected readonly announcer = inject(LiveAnnouncer);
+  protected readonly savedSearchService = inject(SavedSearchService);
   protected readonly reactiveKeywords = signal<string[]>([]);
 
   constructor() {
     effect(() => {
       const keywords = this.reactiveKeywords();
       this.tags.emit(keywords);
+    });
+
+    effect(() => {
+      const selectedSavedSearch = this.savedSearchService.selectedSavedSearch();
+      this.reactiveKeywords.set(selectedSavedSearch?.tags || []); // Reset keywords when saved search changes
     });
   }
 

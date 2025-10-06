@@ -47,6 +47,7 @@ export class SavedSearches {
   }
 
   executeSearch(search: SavedSearch) {
+    this.savedSearchService.selectedSavedSearch.set(search);
     this.client.executeSavedSearch(search.id).subscribe({
       next: (response) => { this.savedSearchResults.emit(response); },
       error: (error) => { alert('Error executing search: ' + error.message) }

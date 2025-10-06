@@ -20,6 +20,7 @@ import { AuthService } from '../../_services/auth-service';
 import { InsertionSearchResultDTO } from '../../_types/insertions/InsertionSearchResultDTO';
 import { ToastrService } from 'ngx-toastr';
 import { SavedSearchService } from '../../_services/saved-search-service';
+import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-advanced-search',
@@ -33,7 +34,8 @@ import { SavedSearchService } from '../../_services/saved-search-service';
     MapComponent,
     MatRadioModule,
     NgbAccordionModule,
-    TagsField
+    TagsField,
+    JsonPipe
   ],
   templateUrl: './advanced-search.html',
   styleUrl: './advanced-search.scss'
@@ -103,7 +105,24 @@ export class AdvancedSearch {
       const savedSearchResults = this.savedSearchService.savedSearchResults();
       if (savedSearchResults) {
         this.showSearchResults(savedSearchResults);
-        //TODO: also update the form values to reflect the saved search
+      }
+    });
+
+    // Update form when a saved search is selected
+    effect(() => {
+      const selectedSavedSearch = this.savedSearchService.selectedSavedSearch();
+      if (selectedSavedSearch) {
+        console.log('Patching form with saved search:', selectedSavedSearch);
+        this.searchForm.patchValue({
+          insertionType: (selectedSavedSearch as any).maxPrice ? this.insertionTypes[1] : (selectedSavedSearch as any).maxRent ? this.insertionTypes[2] : this.insertionTypes[0],
+          center: new L.LatLng(selectedSavedSearch.geometry.coordinates[1], selectedSavedSearch.geometry.coordinates[0]),
+          distance: selectedSavedSearch.distance,
+          minSize: selectedSavedSearch.minSize,
+          minNumberOfRooms: selectedSavedSearch.minNumberOfRooms,
+          maxFloor: selectedSavedSearch.maxFloor,
+          hasElevator: selectedSavedSearch.hasElevator
+        }, { emitEvent: false });
+        this.map?.setView(this.searchForm.get('center')?.value || this.map?.getCenter(), 13);
       }
     });
   }
