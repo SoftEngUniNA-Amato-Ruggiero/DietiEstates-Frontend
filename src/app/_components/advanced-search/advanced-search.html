@@ -59,9 +59,7 @@
             </div>
         </div>
 
-        <button
-            (click)="searchForm.reset(); searchForm.patchValue({ center: map!.getCenter(), distance: 1, insertionType: 'Any' }); reactiveKeywords.set([])"
-            class="btn btn-secondary m-3">Clear</button>
+        <button (click)="onClear()" class="btn btn-secondary m-3">Clear</button>
 
         @if (authService.isAuthenticated()) {
         <button (click)="onSaveSearch()" class="btn btn-primary m-3">Save search</button>

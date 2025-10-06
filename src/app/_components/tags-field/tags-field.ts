@@ -22,7 +22,7 @@ export class TagsField {
 
   protected readonly announcer = inject(LiveAnnouncer);
   protected readonly savedSearchService = inject(SavedSearchService);
-  protected readonly reactiveKeywords = signal<string[]>([]);
+  public readonly reactiveKeywords = signal<string[]>([]);
 
   constructor() {
     effect(() => {

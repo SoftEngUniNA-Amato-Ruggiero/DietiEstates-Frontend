@@ -1,4 +1,4 @@
-import { Component, effect, inject, Input, signal } from '@angular/core';
+import { Component, effect, inject, Input, signal, ViewChild } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
@@ -39,6 +39,9 @@ import { SavedSearchService } from '../../_services/saved-search-service';
   styleUrl: './advanced-search.scss'
 })
 export class AdvancedSearch {
+  @ViewChild(TagsField) tagsFieldComponent?: TagsField;
+  @ViewChild(MapComponent) mapComponent?: MapComponent;
+
   protected readonly client = inject(BackendClientService);
   protected readonly authService = inject(AuthService);
   protected readonly toastr = inject(ToastrService);
@@ -123,6 +126,12 @@ export class AdvancedSearch {
         this.map?.setView(this.searchForm.get('center')?.value || this.map?.getCenter(), 13);
       }
     });
+  }
+
+  protected onClear() {
+    this.searchForm.reset();
+    this.searchForm.patchValue({ center: this.map!.getCenter(), distance: 1, insertionType: 'Any' });
+    this.tagsFieldComponent?.reactiveKeywords.set([]);
   }
 
   protected open() {
