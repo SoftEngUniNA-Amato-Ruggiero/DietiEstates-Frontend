@@ -59,10 +59,6 @@
             </div>
         </div>
 
-        <div>
-            <pre>{{ searchForm.value | json }}</pre>
-        </div>
-
         <button
             (click)="searchForm.reset(); searchForm.patchValue({ center: map!.getCenter(), distance: 1, insertionType: 'Any' }); reactiveKeywords.set([])"
             class="btn btn-secondary m-3">Clear</button>

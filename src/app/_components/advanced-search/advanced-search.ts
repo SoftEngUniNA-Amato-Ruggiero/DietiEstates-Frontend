@@ -20,7 +20,6 @@ import { AuthService } from '../../_services/auth-service';
 import { InsertionSearchResultDTO } from '../../_types/insertions/InsertionSearchResultDTO';
 import { ToastrService } from 'ngx-toastr';
 import { SavedSearchService } from '../../_services/saved-search-service';
-import { JsonPipe } from '@angular/common';
 
 @Component({
   selector: 'app-advanced-search',
@@ -34,8 +33,7 @@ import { JsonPipe } from '@angular/common';
     MapComponent,
     MatRadioModule,
     NgbAccordionModule,
-    TagsField,
-    JsonPipe
+    TagsField
   ],
   templateUrl: './advanced-search.html',
   styleUrl: './advanced-search.scss'
