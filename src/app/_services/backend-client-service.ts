@@ -151,6 +151,10 @@ export class BackendClientService {
     return this.http.get<Page<SavedSearch>>(`${this.url}/saved-searches`, { ...this.httpOptions, params });
   }
 
+  public deleteSavedSearch(id: number) {
+    return this.http.delete<any>(`${this.url}/saved-searches/${id}`, this.httpOptions);
+  }
+
   public executeSavedSearch(id: number, page = 0, pageSize = 10) {
     const params = new HttpParams()
       .set('page', page.toString())

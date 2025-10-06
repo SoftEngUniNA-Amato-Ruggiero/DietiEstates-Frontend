@@ -10,7 +10,8 @@
             <th>Tags</th>
             <th>Max Price (€)</th>
             <th>Max Rent (€)</th>
-            <th>Action</th>
+            <th></th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -26,6 +27,7 @@
             <td>{{ downCastForSale(search).maxPrice || 'N/A' }}</td>
             <td>{{ downCastForRent(search).maxRent || 'N/A' }}</td>
             <td><button class="btn btn-primary" (click)="executeSearch(search)">Search</button></td>
+            <td><button class="btn btn-danger" (click)="deleteSearch(search)">Delete</button></td>
         </tr>
         }
     </tbody>

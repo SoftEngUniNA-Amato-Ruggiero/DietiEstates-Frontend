@@ -9,6 +9,7 @@ import { InsertionSearchResultDTO } from '../../_types/insertions/InsertionSearc
 import { Page } from '../../_types/page';
 import { SavedSearchService } from '../../_services/saved-search-service';
 import { GeoapifyClientService } from '../../_services/geoapify-client-service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-saved-searches',
@@ -20,6 +21,7 @@ export class SavedSearches {
   @Output() savedSearchResults = new EventEmitter<Page<InsertionSearchResultDTO>>();
   protected readonly client = inject(BackendClientService);
   protected readonly savedSearchService = inject(SavedSearchService);
+  protected readonly toastr = inject(ToastrService);
 
   protected savedSearchesPages = new Array<SavedSearch>();
   protected pageNumber = 0;
@@ -52,6 +54,20 @@ export class SavedSearches {
       next: (response) => { this.savedSearchResults.emit(response); },
       error: (error) => { alert('Error executing search: ' + error.message) }
     });
+  }
+
+  deleteSearch(search: SavedSearch) {
+    if (confirm(`Are you sure you want to delete the saved search "${search}"?`)) {
+      this.client.deleteSavedSearch(search.id).subscribe({
+        next: () => {
+          this.toastr.success('Saved search deleted successfully.');
+          this.getSavedSearchesPage(this.pageNumber - 1, this.pageSize);
+        },
+        error: (error) => {
+          this.toastr.error('Error deleting saved search: ' + error.message);
+        }
+      });
+    }
   }
 
   downCastForRent(search: SavedSearch) {
