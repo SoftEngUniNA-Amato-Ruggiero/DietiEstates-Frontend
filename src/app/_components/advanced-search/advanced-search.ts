@@ -114,11 +114,15 @@ export class AdvancedSearch {
       const selectedSavedSearch = this.savedSearchService.selectedSavedSearch();
       if (selectedSavedSearch) {
         console.log('Patching form with saved search:', selectedSavedSearch);
+        const maxPrice = (selectedSavedSearch as any).maxPrice;
+        const maxRent = (selectedSavedSearch as any).maxRent;
 
         this.map?.setView(this.searchForm.get('center')?.value || this.map?.getCenter(), 13);
         {
           this.searchForm.patchValue({
-            insertionType: (selectedSavedSearch as any).maxPrice ? this.insertionTypes[1] : (selectedSavedSearch as any).maxRent ? this.insertionTypes[2] : this.insertionTypes[0],
+            insertionType: maxPrice ? this.insertionTypes[1] : maxRent ? this.insertionTypes[2] : this.insertionTypes[0],
+            maxPrice: maxPrice,
+            maxRent: maxRent,
             distance: selectedSavedSearch.distance,
             minSize: selectedSavedSearch.minSize,
             minNumberOfRooms: selectedSavedSearch.minNumberOfRooms,
