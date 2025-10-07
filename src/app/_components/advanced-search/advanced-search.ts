@@ -114,16 +114,22 @@ export class AdvancedSearch {
       const selectedSavedSearch = this.savedSearchService.selectedSavedSearch();
       if (selectedSavedSearch) {
         console.log('Patching form with saved search:', selectedSavedSearch);
-        this.searchForm.patchValue({
-          insertionType: (selectedSavedSearch as any).maxPrice ? this.insertionTypes[1] : (selectedSavedSearch as any).maxRent ? this.insertionTypes[2] : this.insertionTypes[0],
-          center: new L.LatLng(selectedSavedSearch.geometry.coordinates[1], selectedSavedSearch.geometry.coordinates[0]),
-          distance: selectedSavedSearch.distance,
-          minSize: selectedSavedSearch.minSize,
-          minNumberOfRooms: selectedSavedSearch.minNumberOfRooms,
-          maxFloor: selectedSavedSearch.maxFloor,
-          hasElevator: selectedSavedSearch.hasElevator
-        }, { emitEvent: false });
+
         this.map?.setView(this.searchForm.get('center')?.value || this.map?.getCenter(), 13);
+        {
+          this.searchForm.patchValue({
+            insertionType: (selectedSavedSearch as any).maxPrice ? this.insertionTypes[1] : (selectedSavedSearch as any).maxRent ? this.insertionTypes[2] : this.insertionTypes[0],
+            distance: selectedSavedSearch.distance,
+            minSize: selectedSavedSearch.minSize,
+            minNumberOfRooms: selectedSavedSearch.minNumberOfRooms,
+            maxFloor: selectedSavedSearch.maxFloor,
+            hasElevator: selectedSavedSearch.hasElevator
+          }, { emitEvent: false });
+        }
+
+        setTimeout(() => {
+          this.savedSearchService.selectedSavedSearch.set(null);
+        }, 200);
       }
     });
   }

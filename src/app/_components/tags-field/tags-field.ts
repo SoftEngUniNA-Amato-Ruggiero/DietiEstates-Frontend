@@ -30,9 +30,12 @@ export class TagsField {
       this.tags.emit(keywords);
     });
 
+    // Reset keywords when saved search changes
     effect(() => {
       const selectedSavedSearch = this.savedSearchService.selectedSavedSearch();
-      this.reactiveKeywords.set(selectedSavedSearch?.tags || []); // Reset keywords when saved search changes
+      if (selectedSavedSearch) {
+        this.reactiveKeywords.set(selectedSavedSearch.tags ?? []);
+      }
     });
   }
 

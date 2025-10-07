@@ -1,4 +1,23 @@
-<app-navbar></app-navbar>
-<div class="container-fluid">
-    <router-outlet />
+<div class="d-flex flex-column min-vh-100">
+    <app-navbar></app-navbar>
+
+    <div class="container-fluid flex-grow-1">
+        <router-outlet />
+    </div>
+
+    <footer class="footer mt-3 py-3 bg-dark text-light container-fluid">
+        <div class="d-flex justify-content-center text-center">
+            <span class="mx-3">© 2025 DIETI Estates</span>
+            <span class="mx-3">|</span>
+            <span class="mx-3">
+                Made with ❤️ by <a href="{{ githubUrl }}" target="_blank" rel="noopener noreferrer"
+                    class="text-light">SoftEngUniNA-Amato-Ruggiero</a>
+            </span>
+            <span class="mx-3">|</span>
+            <span class="mx-3">
+                Read the <a href="{{ swaggerUrl }}" target="_blank" rel="noopener noreferrer" class="text-light">API
+                    docs</a>
+            </span>
+        </div>
+    </footer>
 </div>
