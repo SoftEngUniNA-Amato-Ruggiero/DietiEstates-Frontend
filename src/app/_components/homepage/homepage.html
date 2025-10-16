@@ -3,6 +3,7 @@
     <app-advanced-search></app-advanced-search>
 
     @if (authService.isAuthenticated()){
+    <h3>Saved searches</h3>
     <app-saved-searches (savedSearchResults)="onSavedSearchResults($event)"></app-saved-searches>
     <br />
 
