@@ -74,9 +74,9 @@ export class UserStateService {
       if (this.authService.isAuthenticated()) {
         this.client.getMe().subscribe({
           next: userWithAgency => {
-            this.userSignal.set(userWithAgency.user);
+            this.userSignal.set(userWithAgency);
             this.agencySignal.set(userWithAgency.agency);
-            this.rolesSignal.set(userWithAgency.user.roles?.map(r => r.name) ?? []);
+            this.rolesSignal.set(userWithAgency.roles?.map(r => r.name) ?? []);
           },
           error: err => {
             // do nothing
