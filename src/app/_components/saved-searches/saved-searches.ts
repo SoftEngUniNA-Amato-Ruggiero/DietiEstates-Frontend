@@ -10,6 +10,7 @@ import { Page } from '../../_types/page';
 import { SavedSearchService } from '../../_services/saved-search-service';
 import { GeoapifyClientService } from '../../_services/geoapify-client-service';
 import { ToastrService } from 'ngx-toastr';
+import { UserStateService } from '../../_services/user-state-service';
 
 @Component({
   selector: 'app-saved-searches',
@@ -20,6 +21,7 @@ import { ToastrService } from 'ngx-toastr';
 export class SavedSearches {
   @Output() savedSearchResults = new EventEmitter<Page<InsertionSearchResultDTO>>();
   protected readonly client = inject(BackendClientService);
+  protected readonly userState = inject(UserStateService);
   protected readonly savedSearchService = inject(SavedSearchService);
   protected readonly toastr = inject(ToastrService);
 
@@ -30,7 +32,10 @@ export class SavedSearches {
   protected totalElements = 0;
 
   constructor() {
-    this.getSavedSearchesPage(this.pageNumber, this.pageSize);
+    effect(() => {
+      if (!this.userState.user()) return;
+      this.getSavedSearchesPage(this.pageNumber, this.pageSize);
+    });
 
     effect(() => {
       if (this.savedSearchService.reloadSavedSearches()) {
