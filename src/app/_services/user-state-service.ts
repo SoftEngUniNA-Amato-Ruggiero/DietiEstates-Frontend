@@ -39,7 +39,7 @@ export class UserStateService {
     } else {
       this.client.getMe().subscribe({
         next: userWithAgency => {
-          subscriber.next(userWithAgency.user.roles?.map(r => r.name).includes(ROLE.MANAGER) ?? false);
+          subscriber.next(userWithAgency.roles?.map(r => r.name).includes(ROLE.MANAGER) ?? false);
         }
       });
     }
@@ -51,7 +51,7 @@ export class UserStateService {
     } else {
       this.client.getMe().subscribe({
         next: userWithAgency => {
-          subscriber.next(userWithAgency.user.roles?.map(r => r.name).includes(ROLE.AGENT) ?? false);
+          subscriber.next(userWithAgency.roles?.map(r => r.name).includes(ROLE.AGENT) ?? false);
         }
       });
     }
@@ -89,7 +89,7 @@ export class UserStateService {
     effect(() => {
       if (this.uploadAgencyResponseSignal()) {
         this.agencySignal.set(this.uploadAgencyResponseSignal()!.agency);
-        this.rolesSignal.set(this.uploadAgencyResponseSignal()!.user.roles?.map(r => r.name) ?? []);
+        this.rolesSignal.set(this.uploadAgencyResponseSignal()!.roles?.map(r => r.name) ?? []);
       }
     })
   }
