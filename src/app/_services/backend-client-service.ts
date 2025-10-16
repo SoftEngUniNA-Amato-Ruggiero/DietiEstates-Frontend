@@ -31,6 +31,10 @@ export class BackendClientService {
     return this.http.get<BusinessUserResponseDTO>(`${this.url}/me`, this.httpOptions);
   }
 
+  public postMe() {
+    return this.http.post<BusinessUserResponseDTO>(`${this.url}/me`, {}, this.httpOptions);
+  }
+
   public getUserByUsername(username: string) {
     return this.http.get<UserResponseDTO>(`${this.url}/users?username=${username}`, this.httpOptions);
   }

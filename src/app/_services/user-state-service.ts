@@ -79,7 +79,12 @@ export class UserStateService {
             this.rolesSignal.set(userWithAgency.roles?.map(r => r.name) ?? []);
           },
           error: err => {
-            // do nothing
+            this.client.postMe().subscribe({
+              next: userWithAgency => {
+                this.userSignal.set(userWithAgency);
+                this.rolesSignal.set(userWithAgency.roles?.map(r => r.name) ?? []);
+              }
+            });
           }
         });
       }
