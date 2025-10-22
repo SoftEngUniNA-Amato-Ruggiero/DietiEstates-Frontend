@@ -9,7 +9,17 @@
 
     @if (!userStateService.isAffiliatedWithAgency()){
     <h3>Are you the manager of a real estate agency?</h3>
-    <app-agency-upload></app-agency-upload>
+    <br />
+    <button class="btn btn-lg btn-outline-primary" (click)="open(content)">Register your agency</button>
+    <ng-template #content let-modal>
+        <div class="modal-header">
+            <h4 class="modal-title" id="modal-basic-title">Register your agency</h4>
+            <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss('Cross click')"></button>
+        </div>
+        <div class="modal-body">
+            <app-agency-upload></app-agency-upload>
+        </div>
+    </ng-template>
     }
     }
 
