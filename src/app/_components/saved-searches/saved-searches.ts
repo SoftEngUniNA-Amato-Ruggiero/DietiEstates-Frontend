@@ -22,13 +22,14 @@ import { AuthService } from '../../_services/auth-service';
 export class SavedSearches {
   @Output() savedSearchResults = new EventEmitter<Page<InsertionSearchResultDTO>>();
   protected readonly client = inject(BackendClientService);
+  protected readonly geoapifyClient = inject(GeoapifyClientService);
   protected readonly userState = inject(UserStateService);
   protected readonly authService = inject(AuthService);
   protected readonly savedSearchService = inject(SavedSearchService);
   protected readonly toastr = inject(ToastrService);
 
   protected savedSearchesPages = new Array<SavedSearch>();
-  protected pageNumber = 0;
+  protected pageNumber = 1;
   protected pageSize = 10;
   protected totalPages = 0;
   protected totalElements = 0;
@@ -86,14 +87,23 @@ export class SavedSearches {
     return (search as SavedSearchForSale);
   }
 
-  protected getSavedSearchesPage(pageNumber = 0, pageSize = 10) {
-    this.client.getSavedSearches(pageNumber, pageSize).subscribe(
+  protected getSavedSearchesPage(pageNumber = 1, pageSize = 10) {
+    this.client.getSavedSearches(pageNumber - 1, pageSize).subscribe(
       (searches: Page<SavedSearch>) => {
         this.savedSearchesPages = searches.content ?? [];
         this.pageSize = searches.pageable?.pageSize ?? pageSize;
         this.totalPages = searches.totalPages ?? 0;
         this.totalElements = searches.totalElements ?? 0;
-      }
-    );
+
+        for (let search of this.savedSearchesPages) {
+          const [lon, lat] = search.geometry.coordinates;
+          this.geoapifyClient.reverseGeocode(lat, lon).subscribe({
+            next: (featureCollection) => {
+              const address = featureCollection.features[0].properties!['formatted'];
+              search.address = address;
+            }
+          });
+        }
+      });
   }
 }

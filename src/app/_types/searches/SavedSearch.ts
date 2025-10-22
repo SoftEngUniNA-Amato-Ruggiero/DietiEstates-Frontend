@@ -9,6 +9,7 @@ export class SavedSearch {
     minNumberOfRooms: number | undefined = undefined;
     maxFloor: number | undefined = undefined;
     hasElevator: boolean | undefined = undefined;
+    address: string | undefined = undefined;
 
     constructor(id: number, geometry: Point, distance: number, init?: Partial<SavedSearch>) {
         this.id = id;

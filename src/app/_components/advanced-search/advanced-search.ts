@@ -101,14 +101,6 @@ export class AdvancedSearch {
       }
     });
 
-    // Show saved search results when they are set
-    effect(() => {
-      const savedSearchResults = this.savedSearchService.savedSearchResults();
-      if (savedSearchResults) {
-        this.showSearchResults(savedSearchResults);
-      }
-    });
-
     // Update form when a saved search is selected
     effect(() => {
       const selectedSavedSearch = this.savedSearchService.selectedSavedSearch();
@@ -117,7 +109,12 @@ export class AdvancedSearch {
         const maxPrice = (selectedSavedSearch as any).maxPrice;
         const maxRent = (selectedSavedSearch as any).maxRent;
 
-        this.map?.setView(this.searchForm.get('center')?.value || this.map?.getCenter(), 13);
+        const latLng = new L.LatLng(
+          selectedSavedSearch.geometry.coordinates[1],
+          selectedSavedSearch.geometry.coordinates[0]
+        );
+
+        this.map?.setView(latLng, 13);
         {
           this.searchForm.patchValue({
             insertionType: maxPrice ? this.insertionTypes[1] : maxRent ? this.insertionTypes[2] : this.insertionTypes[0],

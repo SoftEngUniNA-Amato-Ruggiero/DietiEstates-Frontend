@@ -1,7 +1,7 @@
 <table class="table table-striped table-bordered">
     <thead>
         <tr>
-            <th>Coordinates</th>
+            <th>Address</th>
             <th>Distance (m)</th>
             <th>Min Size (m²)</th>
             <th>Min Rooms</th>
@@ -17,7 +17,7 @@
     <tbody>
         @for (search of savedSearchesPages; track search.id) {
         <tr>
-            <td>{{ search.geometry.coordinates | json }}</td>
+            <td>{{ search.address }}</td>
             <td>{{ search.distance }}</td>
             <td>{{ search.minSize }}</td>
             <td>{{ search.minNumberOfRooms }}</td>
@@ -33,4 +33,4 @@
     </tbody>
 </table>
 <ngb-pagination [(page)]="pageNumber" [pageSize]="pageSize" [collectionSize]="totalElements"
-    (pageChange)="getSavedSearchesPage($event - 1, pageSize)" />
+    (pageChange)="getSavedSearchesPage($event, pageSize)" />
