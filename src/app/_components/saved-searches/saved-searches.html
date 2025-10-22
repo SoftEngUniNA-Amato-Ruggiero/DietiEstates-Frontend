@@ -2,7 +2,7 @@
     <thead>
         <tr>
             <th>Address</th>
-            <th>Distance (m)</th>
+            <th>Distance (km)</th>
             <th>Min Size (m²)</th>
             <th>Min Rooms</th>
             <th>Max Floor</th>
@@ -18,7 +18,7 @@
         @for (search of savedSearchesPages; track search.id) {
         <tr>
             <td>{{ search.address }}</td>
-            <td>{{ search.distance }}</td>
+            <td>{{ (search.distance * 111.32) | number:'1.2-2' }}</td>
             <td>{{ search.minSize }}</td>
             <td>{{ search.minNumberOfRooms }}</td>
             <td>{{ search.maxFloor }}</td>

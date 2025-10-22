@@ -120,7 +120,7 @@ export class AdvancedSearch {
             insertionType: maxPrice ? this.insertionTypes[1] : maxRent ? this.insertionTypes[2] : this.insertionTypes[0],
             maxPrice: maxPrice,
             maxRent: maxRent,
-            distance: selectedSavedSearch.distance,
+            distance: Math.ceil(selectedSavedSearch.distance * 111.32), // Convert back to km
             minSize: selectedSavedSearch.minSize,
             minNumberOfRooms: selectedSavedSearch.minNumberOfRooms,
             maxFloor: selectedSavedSearch.maxFloor,
@@ -186,13 +186,15 @@ export class AdvancedSearch {
       return;
     }
 
+    const distanceInDegrees = distance / 111.32; // Approximate conversion from km to degrees
+
     switch (insertionType) {
       case this.insertionTypes[1]: // For Sale
-        return this.client.postSavedSearchForSale(center.lat, center.lng, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator, maxPrice);
+        return this.client.postSavedSearchForSale(center.lat, center.lng, distanceInDegrees, tags, minSize, minNumberOfRooms, maxFloor, hasElevator, maxPrice);
       case this.insertionTypes[2]: // For Rent
-        return this.client.postSavedSearchForRent(center.lat, center.lng, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator, maxRent);
+        return this.client.postSavedSearchForRent(center.lat, center.lng, distanceInDegrees, tags, minSize, minNumberOfRooms, maxFloor, hasElevator, maxRent);
       default:
-        return this.client.postSavedSearch(center.lat, center.lng, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator);
+        return this.client.postSavedSearch(center.lat, center.lng, distanceInDegrees, tags, minSize, minNumberOfRooms, maxFloor, hasElevator);
     }
   }
 
@@ -237,13 +239,15 @@ export class AdvancedSearch {
       return;
     }
 
+    const distanceInDegrees = distance / 111.32; // Approximate conversion from km to degrees
+
     switch (insertionType) {
       case this.insertionTypes[1]: // For Sale
-        return this.client.searchInsertionsForSale(center, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator, maxPrice);
+        return this.client.searchInsertionsForSale(center, distanceInDegrees, tags, minSize, minNumberOfRooms, maxFloor, hasElevator, maxPrice);
       case this.insertionTypes[2]: // For Rent
-        return this.client.searchInsertionsForRent(center, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator, maxRent);
+        return this.client.searchInsertionsForRent(center, distanceInDegrees, tags, minSize, minNumberOfRooms, maxFloor, hasElevator, maxRent);
       default:
-        return this.client.searchInsertions(center, distance, tags, minSize, minNumberOfRooms, maxFloor, hasElevator);
+        return this.client.searchInsertions(center, distanceInDegrees, tags, minSize, minNumberOfRooms, maxFloor, hasElevator);
     }
   }
 

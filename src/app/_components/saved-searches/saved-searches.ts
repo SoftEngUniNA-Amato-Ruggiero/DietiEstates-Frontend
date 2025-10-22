@@ -1,6 +1,6 @@
 import { Component, effect, EventEmitter, inject, Output, SimpleChanges } from '@angular/core';
 import { BackendClientService } from '../../_services/backend-client-service';
-import { JsonPipe } from '@angular/common';
+import { JsonPipe, DecimalPipe } from '@angular/common';
 import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 import { SavedSearch } from '../../_types/searches/SavedSearch';
 import { SavedSearchForRent } from '../../_types/searches/SavedSearchForRent';
@@ -15,7 +15,7 @@ import { AuthService } from '../../_services/auth-service';
 
 @Component({
   selector: 'app-saved-searches',
-  imports: [JsonPipe, NgbPaginationModule],
+  imports: [JsonPipe, DecimalPipe, NgbPaginationModule],
   templateUrl: './saved-searches.html',
   styleUrl: './saved-searches.scss'
 })
