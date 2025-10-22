@@ -3,7 +3,7 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule } from '@angul
 import { MatFormField } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatLabel } from '@angular/material/form-field';
-import { debounceTime, Observable } from 'rxjs';
+import { debounceTime } from 'rxjs';
 import * as L from 'leaflet';
 import 'leaflet.markercluster';
 import * as MapConstants from '../../_constants/map-component.constants';
@@ -58,7 +58,7 @@ export class AdvancedSearch {
 
   protected searchForm = new FormGroup({
     center: new FormControl<L.LatLng | undefined>(undefined),
-    distance: new FormControl(1),
+    distance: new FormControl(10),
     insertionType: new FormControl<string>('Any'),
     tags: new FormControl<string[]>([]),
     minSize: new FormControl<number | undefined>(undefined),
@@ -137,7 +137,7 @@ export class AdvancedSearch {
 
   protected onClear() {
     this.searchForm.reset();
-    this.searchForm.patchValue({ center: this.map!.getCenter(), distance: 1, insertionType: 'Any' });
+    this.searchForm.patchValue({ center: this.map!.getCenter(), distance: 10, insertionType: 'Any' });
     this.tagsFieldComponent?.reactiveKeywords.set([]);
   }
 

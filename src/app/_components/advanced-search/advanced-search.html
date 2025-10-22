@@ -1,7 +1,7 @@
 <form [formGroup]="searchForm" class="d-flex flex-column gap-3">
 
     <app-map-component [inputLayer]="searchResultsLayerGroup"
-        (mapReady)="map=$event; searchForm.patchValue({ center: map!.getCenter(), distance: 1 })"
+        (mapReady)="map=$event; searchForm.patchValue({ center: map!.getCenter(), distance: 10 })"
         (mapCenter)="searchForm.patchValue({ center: $event })"></app-map-component>
     <br />
 
