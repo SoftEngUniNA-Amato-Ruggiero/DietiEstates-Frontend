@@ -12,6 +12,7 @@ import { GeoapifyClientService } from '../../_services/geoapify-client-service';
 import { ToastrService } from 'ngx-toastr';
 import { UserStateService } from '../../_services/user-state-service';
 import { AuthService } from '../../_services/auth-service';
+import { DistanceConverter } from '../../_services/distance-converter';
 
 @Component({
   selector: 'app-saved-searches',
@@ -27,6 +28,7 @@ export class SavedSearches {
   protected readonly authService = inject(AuthService);
   protected readonly savedSearchService = inject(SavedSearchService);
   protected readonly toastr = inject(ToastrService);
+  protected readonly distanceConverter = inject(DistanceConverter);
 
   protected savedSearchesPages = new Array<SavedSearch>();
   protected pageNumber = 1;

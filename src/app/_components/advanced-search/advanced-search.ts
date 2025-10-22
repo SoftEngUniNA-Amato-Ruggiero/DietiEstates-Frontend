@@ -20,6 +20,7 @@ import { AuthService } from '../../_services/auth-service';
 import { InsertionSearchResultDTO } from '../../_types/insertions/InsertionSearchResultDTO';
 import { ToastrService } from 'ngx-toastr';
 import { SavedSearchService } from '../../_services/saved-search-service';
+import { DistanceConverter } from '../../_services/distance-converter';
 
 @Component({
   selector: 'app-advanced-search',
@@ -47,6 +48,7 @@ export class AdvancedSearch {
   protected readonly toastr = inject(ToastrService);
   private readonly modalService = inject(NgbModal);
   private readonly savedSearchService = inject(SavedSearchService);
+  protected readonly distanceConverter = inject(DistanceConverter);
 
   protected searchResultsLayerGroup?: L.LayerGroup;
 
@@ -120,7 +122,7 @@ export class AdvancedSearch {
             insertionType: maxPrice ? this.insertionTypes[1] : maxRent ? this.insertionTypes[2] : this.insertionTypes[0],
             maxPrice: maxPrice,
             maxRent: maxRent,
-            distance: Math.ceil(selectedSavedSearch.distance * 111.32), // Convert back to km
+            distance: Math.round(this.distanceConverter.degreesToKilometers(selectedSavedSearch.distance) * 100) / 100,
             minSize: selectedSavedSearch.minSize,
             minNumberOfRooms: selectedSavedSearch.minNumberOfRooms,
             maxFloor: selectedSavedSearch.maxFloor,
@@ -186,7 +188,7 @@ export class AdvancedSearch {
       return;
     }
 
-    const distanceInDegrees = distance / 111.32; // Approximate conversion from km to degrees
+    const distanceInDegrees = this.distanceConverter.kilometersToDegrees(distance);
 
     switch (insertionType) {
       case this.insertionTypes[1]: // For Sale
@@ -239,7 +241,7 @@ export class AdvancedSearch {
       return;
     }
 
-    const distanceInDegrees = distance / 111.32; // Approximate conversion from km to degrees
+    const distanceInDegrees = this.distanceConverter.kilometersToDegrees(distance);
 
     switch (insertionType) {
       case this.insertionTypes[1]: // For Sale
