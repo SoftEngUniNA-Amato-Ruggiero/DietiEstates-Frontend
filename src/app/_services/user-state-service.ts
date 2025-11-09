@@ -1,12 +1,13 @@
 import { Injectable, inject, computed, effect, signal } from '@angular/core';
-import { ROLE } from '../_types/roles';
+import { Observable } from 'rxjs';
 import { UserDataResult } from 'angular-auth-oidc-client';
 import { BackendClientService } from './backend-client-service';
 import { AuthService } from './auth-service';
+import { ROLE } from '../_types/roles';
 import { RealEstateAgencyResponseDTO } from "../_types/RealEstateAgencyResponseDTO";
 import { BusinessUserResponseDTO } from "../_types/users/BusinessUserResponseDTO";
 import { UserResponseDTO } from "../_types/users/UserResponseDTO";
-import { Observable } from 'rxjs';
+import { NotificationPreferencesDTO } from '../_types/NotificationPreferencesDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -19,12 +20,14 @@ export class UserStateService {
   private readonly userSignal = signal<UserResponseDTO | null>(null);
   private readonly agencySignal = signal<RealEstateAgencyResponseDTO | null>(null);
   private readonly rolesSignal = signal<string[] | null>(null);
+  private readonly notificationPreferenceSignal = signal<NotificationPreferencesDTO | null>(null);
 
   public readonly uploadAgencyResponseSignal = signal<BusinessUserResponseDTO | null>(null);
 
   public readonly user = computed(() => this.userSignal() ?? null);
   public readonly agency = computed(() => this.agencySignal() ?? null);
   public readonly roles = computed(() => this.rolesSignal() ?? null);
+  public readonly notificationPreferences = computed(() => this.notificationPreferenceSignal() ?? null);
 
   public readonly givenName = computed(() => this.userDataSignal()?.userData().given_name ?? null);
   public readonly familyName = computed(() => this.userDataSignal()?.userData().family_name ?? null);
@@ -69,20 +72,24 @@ export class UserStateService {
       }
     });
 
-    // Subscribe to get user's agency and role from backend after authentication
+    // Subscribe to get user's agency, role and notification preferences from backend after authentication
     effect(() => {
       if (this.authService.isAuthenticated()) {
         this.client.getMe().subscribe({
-          next: userWithAgency => {
-            this.userSignal.set(userWithAgency);
-            this.agencySignal.set(userWithAgency.agency);
-            this.rolesSignal.set(userWithAgency.roles?.map(r => r.name) ?? []);
+          next: me => {
+            this.userSignal.set(me);
+            this.agencySignal.set(me.agency);
+            this.rolesSignal.set(me.roles?.map(r => r.name) ?? []);
+            this.notificationPreferenceSignal.set(me.notificationPreferences ?? null);
+            console.log(me);
           },
           error: err => {
             this.client.postMe().subscribe({
-              next: userWithAgency => {
-                this.userSignal.set(userWithAgency);
-                this.rolesSignal.set(userWithAgency.roles?.map(r => r.name) ?? []);
+              next: me => {
+                this.userSignal.set(me);
+                this.rolesSignal.set(me.roles?.map(r => r.name) ?? []);
+                this.notificationPreferenceSignal.set(me.notificationPreferences ?? null);
+                console.log(me);
               }
             });
           }
