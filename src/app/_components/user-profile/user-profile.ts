@@ -1,11 +1,11 @@
 import { Component, inject } from '@angular/core';
-import { AsyncPipe, JsonPipe } from '@angular/common';
 import { AuthService } from '../../_services/auth-service';
 import { UserStateService } from '../../_services/user-state-service';
+import { NotificationsPreferences } from "../notifications-preferences/notifications-preferences";
 
 @Component({
   selector: 'app-user-profile',
-  imports: [AsyncPipe, JsonPipe],
+  imports: [NotificationsPreferences],
   templateUrl: './user-profile.html',
   styleUrl: './user-profile.scss'
 })

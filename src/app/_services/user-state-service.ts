@@ -29,8 +29,8 @@ export class UserStateService {
   public readonly roles = computed(() => this.rolesSignal() ?? null);
   public readonly notificationPreferences = computed(() => this.notificationPreferenceSignal() ?? null);
 
-  public readonly givenName = computed(() => this.userDataSignal()?.userData().given_name ?? null);
-  public readonly familyName = computed(() => this.userDataSignal()?.userData().family_name ?? null);
+  public readonly givenName = computed(() => this.userDataSignal()?.userData?.given_name ?? null);
+  public readonly familyName = computed(() => this.userDataSignal()?.userData?.family_name ?? null);
 
   public readonly isManager = computed(() => this.roles()?.includes(ROLE.MANAGER));
   public readonly isAgent = computed(() => this.roles()?.includes(ROLE.AGENT));

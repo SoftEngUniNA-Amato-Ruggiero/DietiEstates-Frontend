@@ -1,9 +1,28 @@
-<h2>Is Authenticated: {{ authService.isAuthenticated() }}</h2>
 <br />
-@if (authService.isAuthenticated()) {
-<h2>Roles: {{ userStateService.roles() }}</h2>
-<h2>User Data</h2>
-<pre>{{ authService.userData$ | async | json }}</pre>
-} @else {
-<pre>No User Data Available</pre>
+
+@if (userStateService.givenName() && userStateService.familyName()) {
+<h2>Welcome, {{ userStateService.givenName() }} {{ userStateService.familyName() }}</h2>
+<hr />
+<div class="table-responsive">
+    <table class="table table-striped table-bordered">
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Email</th>
+                <th>Roles</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>{{ userStateService.user()?.id }}</td>
+                <td>{{ userStateService.user()?.username }}</td>
+                <td>{{ userStateService.roles()?.join(', ') }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
 }
+<br />
+
+<app-notifications-preferences></app-notifications-preferences>
+<br />
