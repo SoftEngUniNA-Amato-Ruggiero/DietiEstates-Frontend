@@ -3,6 +3,7 @@ import { inject, Injectable } from '@angular/core';
 import { backend } from '../_config/backend.config';
 import { Page } from '../_types/page';
 import { InsertionForSaleResponseDTO } from '../_types/insertions/InsertionForSaleResponseDTO';
+import { MeResponseDTO } from '../_types/users/MeResponseDTO';
 import { BusinessUserResponseDTO } from "../_types/users/BusinessUserResponseDTO";
 import { UserRequestDTO } from "../_types/users/UserRequestDTO";
 import { UserResponseDTO } from "../_types/users/UserResponseDTO";
@@ -13,6 +14,7 @@ import { InsertionForRentResponseDTO } from '../_types/insertions/InsertionForRe
 import { InsertionResponseDTO } from '../_types/insertions/InsertionResponseDTO';
 import { InsertionSearchResultDTO } from '../_types/insertions/InsertionSearchResultDTO';
 import { SavedSearch } from '../_types/searches/SavedSearch';
+import { NotificationPreferencesDTO } from "../_types/NotificationPreferencesDTO";
 
 @Injectable({
   providedIn: 'root'
@@ -28,11 +30,11 @@ export class BackendClientService {
   };
 
   public getMe() {
-    return this.http.get<BusinessUserResponseDTO>(`${this.url}/me`, this.httpOptions);
+    return this.http.get<MeResponseDTO>(`${this.url}/me`, this.httpOptions);
   }
 
   public postMe() {
-    return this.http.post<BusinessUserResponseDTO>(`${this.url}/me`, {}, this.httpOptions);
+    return this.http.post<MeResponseDTO>(`${this.url}/me`, {}, this.httpOptions);
   }
 
   public getUserByUsername(username: string) {
@@ -234,5 +236,9 @@ export class BackendClientService {
       maxRent
     };
     return this.http.post<any>(`${this.url}/saved-searches/for-rent`, body, this.httpOptions);
+  }
+
+  public putNotificationsPreferences(prefs: NotificationPreferencesDTO) {
+    return this.http.put<NotificationPreferencesDTO>(`${this.url}/notification-preferences`, prefs, this.httpOptions);
   }
 }
