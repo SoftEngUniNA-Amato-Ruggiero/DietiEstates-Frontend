@@ -60,7 +60,7 @@ export class InsertionForSaleUpload {
         console.log('Insertion uploaded successfully:', response);
         this.toastr.success('Insertion uploaded successfully', 'Success');
         setTimeout(() => {
-          this.router.navigate(['/']);
+          // this.router.navigate(['/']);
         }, 1500);
       },
       error: (error) => {
