@@ -8,6 +8,7 @@ import { RealEstateAgencyResponseDTO } from "../_types/RealEstateAgencyResponseD
 import { BusinessUserResponseDTO } from "../_types/users/BusinessUserResponseDTO";
 import { UserResponseDTO } from "../_types/users/UserResponseDTO";
 import { NotificationPreferencesDTO } from '../_types/NotificationPreferencesDTO';
+import { MeResponseDTO } from '../_types/users/MeResponseDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -20,14 +21,14 @@ export class UserStateService {
   private readonly userSignal = signal<UserResponseDTO | null>(null);
   private readonly agencySignal = signal<RealEstateAgencyResponseDTO | null>(null);
   private readonly rolesSignal = signal<string[] | null>(null);
-  private readonly notificationPreferenceSignal = signal<NotificationPreferencesDTO | null>(null);
+  private readonly notificationsPreferenceSignal = signal<NotificationPreferencesDTO | null>(null);
 
   public readonly uploadAgencyResponseSignal = signal<BusinessUserResponseDTO | null>(null);
 
   public readonly user = computed(() => this.userSignal() ?? null);
   public readonly agency = computed(() => this.agencySignal() ?? null);
   public readonly roles = computed(() => this.rolesSignal() ?? null);
-  public readonly notificationPreferences = computed(() => this.notificationPreferenceSignal() ?? null);
+  public readonly notificationsPreferences = computed(() => this.notificationsPreferenceSignal() ?? null);
 
   public readonly givenName = computed(() => this.userDataSignal()?.userData?.given_name ?? null);
   public readonly familyName = computed(() => this.userDataSignal()?.userData?.family_name ?? null);
@@ -77,18 +78,13 @@ export class UserStateService {
       if (this.authService.isAuthenticated()) {
         this.client.getMe().subscribe({
           next: me => {
-            this.userSignal.set(me);
-            this.agencySignal.set(me.agency);
-            this.rolesSignal.set(me.roles?.map(r => r.name) ?? []);
-            this.notificationPreferenceSignal.set(me.notificationPreferences ?? null);
+            this.initializeUserState(me);
             console.log(me);
           },
           error: err => {
             this.client.postMe().subscribe({
               next: me => {
-                this.userSignal.set(me);
-                this.rolesSignal.set(me.roles?.map(r => r.name) ?? []);
-                this.notificationPreferenceSignal.set(me.notificationPreferences ?? null);
+                this.initializeUserState(me);
                 console.log(me);
               }
             });
@@ -104,5 +100,12 @@ export class UserStateService {
         this.rolesSignal.set(this.uploadAgencyResponseSignal()!.roles?.map(r => r.name) ?? []);
       }
     })
+  }
+
+  private initializeUserState(me: MeResponseDTO) {
+    this.userSignal.set(me);
+    this.agencySignal.set(me.agency ?? null);
+    this.rolesSignal.set(me.roles?.map(r => r.name) ?? []);
+    this.notificationsPreferenceSignal.set(me.notificationsPreferences ?? null);
   }
 }
