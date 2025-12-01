@@ -1,10 +1,12 @@
-import { Component, EventEmitter, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
+import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { GeoapifyGeocoderAutocompleteModule } from '@geoapify/angular-geocoder-autocomplete';
 import * as L from 'leaflet';
 import { Observable } from 'rxjs';
 import * as MapConstants from '../../_constants/map-component.constants';
 import { FeatureCollection } from 'geojson';
+import { UserStateService } from '../../_services/user-state-service';
+import { GeoapifyClientService } from '../../_services/geoapify-client-service';
 
 @Component({
   selector: 'app-map-component',
@@ -23,6 +25,8 @@ export class MapComponent implements OnChanges {
   @Output() placeSelected = new EventEmitter<L.LatLng>();
   @Output() userInput = new EventEmitter<string>();
 
+  protected readonly userState = inject(UserStateService);
+  protected readonly geoapify = inject(GeoapifyClientService);
 
   protected map?: L.Map;
 
@@ -69,9 +73,20 @@ export class MapComponent implements OnChanges {
     this.currentPosition$.subscribe({
       next: (pos) => {
         this.map!.setView(pos, MapConstants.DEFAULT_ZOOM); //calls onMoveEnd automatically
+        if (!this.userState.notificationsPreferences()?.city) {
+          this.setTempCityForNotifications(pos);
+        }
         this.userLocation.emit(pos);
       },
       error: (error) => { console.error('Error getting current position:', error); }
+    });
+  }
+
+  private setTempCityForNotifications(pos: L.LatLng) {
+    this.geoapify.reverseGeocode(pos.lat, pos.lng).subscribe({
+      next: (result: FeatureCollection) => {
+        this.userState.tempCityInNotificationPreferences(result.features[0].properties!['city']);
+      }
     });
   }
 
