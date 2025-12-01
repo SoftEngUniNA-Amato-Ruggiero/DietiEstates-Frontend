@@ -9,6 +9,7 @@ import { BusinessUserResponseDTO } from "../_types/users/BusinessUserResponseDTO
 import { UserResponseDTO } from "../_types/users/UserResponseDTO";
 import { NotificationPreferencesDTO } from '../_types/NotificationPreferencesDTO';
 import { MeResponseDTO } from '../_types/users/MeResponseDTO';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,7 @@ import { MeResponseDTO } from '../_types/users/MeResponseDTO';
 export class UserStateService {
   private readonly client = inject(BackendClientService);
   private readonly authService = inject(AuthService);
+  private readonly toastr = inject(ToastrService);
 
   private readonly userDataSignal = signal<UserDataResult | null>(null);
   private readonly userSignal = signal<UserResponseDTO | null>(null);
@@ -100,6 +102,58 @@ export class UserStateService {
         this.rolesSignal.set(this.uploadAgencyResponseSignal()!.roles?.map(r => r.name) ?? []);
       }
     })
+  }
+
+  tempCityInNotificationPreferences(city: string) {
+    let currentPrefs = this.notificationsPreferenceSignal();
+    if (currentPrefs) {
+      currentPrefs.city = city;
+      this.notificationsPreferenceSignal.set(currentPrefs);
+    }
+  }
+
+  changeCityInNotificationPreferences(city: string) {
+    let currentPrefs = this.notificationsPreferenceSignal();
+    if (currentPrefs) {
+      currentPrefs.city = city;
+      this.updateNotificationsPreferences(currentPrefs);
+    }
+  }
+
+  changeEmailNotificationsPreferences(enabled: boolean) {
+    let currentPrefs = this.notificationsPreferenceSignal();
+    if (currentPrefs) {
+      currentPrefs.emailNotificationsEnabled = enabled;
+      this.updateNotificationsPreferences(currentPrefs);
+    }
+  }
+
+  changeNotificationsForSalePreferences(enabled: boolean) {
+    let currentPrefs = this.notificationsPreferenceSignal();
+    if (currentPrefs) {
+      currentPrefs.notificationsForSaleEnabled = enabled;
+      this.updateNotificationsPreferences(currentPrefs);
+    }
+  }
+
+  changeNotificationsForRentPreferences(enabled: boolean) {
+    let currentPrefs = this.notificationsPreferenceSignal();
+    if (currentPrefs) {
+      currentPrefs.notificationsForRentEnabled = enabled;
+      this.updateNotificationsPreferences(currentPrefs);
+    }
+  }
+
+  private updateNotificationsPreferences(updatedPrefs: NotificationPreferencesDTO) {
+    this.client.putNotificationsPreferences(updatedPrefs).subscribe({
+      next: updatedPrefs => {
+        this.notificationsPreferenceSignal.set(updatedPrefs);
+        console.log('Notification preferences updated:', updatedPrefs);
+      },
+      error: err => {
+        this.toastr.error('Error updating notification preferences:', err);
+      }
+    });
   }
 
   private initializeUserState(me: MeResponseDTO) {
