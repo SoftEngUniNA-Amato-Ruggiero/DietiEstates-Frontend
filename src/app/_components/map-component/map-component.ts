@@ -1,12 +1,12 @@
 import { Component, EventEmitter, inject, Input, OnChanges, Output, SimpleChanges } from '@angular/core';
 import { LeafletModule } from '@bluehalo/ngx-leaflet';
 import { GeoapifyGeocoderAutocompleteModule } from '@geoapify/angular-geocoder-autocomplete';
-import * as L from 'leaflet';
 import { Observable } from 'rxjs';
-import * as MapConstants from '../../_constants/map-component.constants';
 import { FeatureCollection } from 'geojson';
-import { UserStateService } from '../../_services/user-state-service';
+import * as L from 'leaflet';
 import { GeoapifyClientService } from '../../_services/geoapify-client-service';
+import { UserStateService } from '../../_services/user-state-service';
+import * as MapConstants from '../../_constants/map-component.constants';
 
 @Component({
   selector: 'app-map-component',
@@ -74,7 +74,7 @@ export class MapComponent implements OnChanges {
       next: (pos) => {
         this.map!.setView(pos, MapConstants.DEFAULT_ZOOM); //calls onMoveEnd automatically
         if (!this.userState.notificationsPreferences()?.city) {
-          this.setTempCityForNotifications(pos);
+          this.setTemporaryCityInNotifications(pos);
         }
         this.userLocation.emit(pos);
       },
@@ -82,10 +82,10 @@ export class MapComponent implements OnChanges {
     });
   }
 
-  private setTempCityForNotifications(pos: L.LatLng) {
+  private setTemporaryCityInNotifications(pos: L.LatLng) {
     this.geoapify.reverseGeocode(pos.lat, pos.lng).subscribe({
       next: (result: FeatureCollection) => {
-        this.userState.tempCityInNotificationPreferences(result.features[0].properties!['city']);
+        this.userState.setTemporaryCityInNotificationPreferences(result.features[0].properties!['city']);
       }
     });
   }

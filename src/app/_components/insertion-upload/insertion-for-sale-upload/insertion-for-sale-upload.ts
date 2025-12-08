@@ -65,7 +65,7 @@ export class InsertionForSaleUpload {
       },
       error: (error) => {
         console.error('Error uploading insertion:', error);
-        this.toastr.error('Error uploading insertion', 'Error');
+        this.toastr.error(error.error.message, 'Error uploading insertion:');
       }
     });
   }

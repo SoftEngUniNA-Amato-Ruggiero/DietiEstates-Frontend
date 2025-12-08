@@ -75,7 +75,7 @@ export class SavedSearches {
           this.getSavedSearchesPage(this.pageNumber - 1, this.pageSize);
         },
         error: (error) => {
-          this.toastr.error('Error deleting saved search: ' + error.message);
+          this.toastr.error(error.error.message, 'Error deleting saved search:');
         }
       });
     }

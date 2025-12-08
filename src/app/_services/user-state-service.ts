@@ -104,7 +104,7 @@ export class UserStateService {
     })
   }
 
-  tempCityInNotificationPreferences(city: string) {
+  setTemporaryCityInNotificationPreferences(city: string) {
     let currentPrefs = this.notificationsPreferenceSignal();
     if (currentPrefs) {
       currentPrefs.city = city;
@@ -112,46 +112,14 @@ export class UserStateService {
     }
   }
 
-  changeCityInNotificationPreferences(city: string) {
-    let currentPrefs = this.notificationsPreferenceSignal();
-    if (currentPrefs) {
-      currentPrefs.city = city;
-      this.updateNotificationsPreferences(currentPrefs);
-    }
-  }
-
-  changeEmailNotificationsPreferences(enabled: boolean) {
-    let currentPrefs = this.notificationsPreferenceSignal();
-    if (currentPrefs) {
-      currentPrefs.emailNotificationsEnabled = enabled;
-      this.updateNotificationsPreferences(currentPrefs);
-    }
-  }
-
-  changeNotificationsForSalePreferences(enabled: boolean) {
-    let currentPrefs = this.notificationsPreferenceSignal();
-    if (currentPrefs) {
-      currentPrefs.notificationsForSaleEnabled = enabled;
-      this.updateNotificationsPreferences(currentPrefs);
-    }
-  }
-
-  changeNotificationsForRentPreferences(enabled: boolean) {
-    let currentPrefs = this.notificationsPreferenceSignal();
-    if (currentPrefs) {
-      currentPrefs.notificationsForRentEnabled = enabled;
-      this.updateNotificationsPreferences(currentPrefs);
-    }
-  }
-
-  private updateNotificationsPreferences(updatedPrefs: NotificationPreferencesDTO) {
-    this.client.putNotificationsPreferences(updatedPrefs).subscribe({
+  public updateNotificationsPreferences(req: NotificationPreferencesDTO) {
+    this.client.putNotificationsPreferences(req).subscribe({
       next: updatedPrefs => {
         this.notificationsPreferenceSignal.set(updatedPrefs);
         console.log('Notification preferences updated:', updatedPrefs);
       },
       error: err => {
-        this.toastr.error('Error updating notification preferences:', err);
+        this.toastr.error(err.error.message, 'Error updating notification preferences:');
       }
     });
   }

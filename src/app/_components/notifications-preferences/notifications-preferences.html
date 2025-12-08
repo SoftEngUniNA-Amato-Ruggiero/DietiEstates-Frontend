@@ -7,7 +7,7 @@
             <tr>
                 <th>Notification type</th>
                 <th>Enabled</th>
-                <th></th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
@@ -29,31 +29,39 @@
     <table class="table table-striped table-bordered">
         <thead>
             <tr>
-                <th>Preference</th>
+                <th>Receive notifications for</th>
                 <th>Value</th>
-                <th></th>
+                <th>Action</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>City</td>
                 <td>{{ userState.notificationsPreferences()?.city }}</td>
+                <td>
+                    <geoapify-geocoder-autocomplete (placeSelect)="onPlaceSelected($event)"
+                        (userInput)="onUserInput($event)"></geoapify-geocoder-autocomplete>
+                    <br />
+                    <button class="btn btn-primary" (click)="updateCityInNotifications()"
+                        [disabled]="!selectedCity()">Update
+                        City</button>
+                </td>
             </tr>
             <tr>
-                <td>For sale</td>
+                <td>Insertions for sale</td>
                 <td>{{ userState.notificationsPreferences()?.notificationsForSaleEnabled }}</td>
                 <td>
-                    <button class="btn btn-primary" (click)="toggleNotificationsForSale()">{{
-                        getButtonText(userState.notificationsPreferences()?.notificationsForSaleEnabled) }}
+                    <button class="btn btn-primary" (click)="toggleNotificationsForSale()">
+                        {{ getButtonText(userState.notificationsPreferences()?.notificationsForSaleEnabled) }}
                     </button>
                 </td>
             </tr>
             <tr>
-                <td>For rent</td>
+                <td>Insertions for rent</td>
                 <td>{{ userState.notificationsPreferences()?.notificationsForRentEnabled }}</td>
                 <td>
-                    <button class="btn btn-primary" (click)="toggleNotificationsForRent()">{{
-                        getButtonText(userState.notificationsPreferences()?.notificationsForRentEnabled) }}
+                    <button class="btn btn-primary" (click)="toggleNotificationsForRent()">
+                        {{ getButtonText(userState.notificationsPreferences()?.notificationsForRentEnabled) }}
                     </button>
                 </td>
             </tr>

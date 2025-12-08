@@ -157,7 +157,7 @@ export class AdvancedSearch {
   protected onSaveSearch() {
     const savedSearch$ = this.postSavedSearchObservable();
     if (!savedSearch$) {
-      this.toastr.error('Error saving search: Missing required fields');
+      this.toastr.error('Missing required fields', 'Error saving search:');
       return;
     }
     savedSearch$.subscribe({
@@ -165,7 +165,7 @@ export class AdvancedSearch {
         this.toastr.success('Search saved successfully');
         this.savedSearchService.reloadSavedSearches.set(true);
       },
-      error: (err) => this.toastr.error('Error saving search: ' + err.message),
+      error: (err) => this.toastr.error(err.error.message, 'Error saving search:'),
     });
   }
 

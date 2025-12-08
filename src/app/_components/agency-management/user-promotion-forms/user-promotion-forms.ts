@@ -5,6 +5,7 @@ import { AuthService } from '../../../_services/auth-service';
 import { ToastrService } from 'ngx-toastr';
 import { UserRequestDTO } from "../../../_types/users/UserRequestDTO";
 import { NgbNavModule } from '@ng-bootstrap/ng-bootstrap';
+import { UserStateService } from '../../../_services/user-state-service';
 
 @Component({
   selector: 'app-user-promotion-forms',
@@ -19,6 +20,7 @@ export class UserPromotionForms {
 
   protected client = inject(BackendClientService);
   protected authService = inject(AuthService);
+  protected userStateService = inject(UserStateService);
   protected toastr = inject(ToastrService);
 
   protected agentForm = new FormGroup({
@@ -39,10 +41,13 @@ export class UserPromotionForms {
         console.log('Agent created:', response);
         this.toastr.success('Agent ' + email + ' now works for the agency.');
         this.formSubmitted.emit();
+        if (this.userStateService.user()!.username === email) {
+          window.location.reload();
+        }
       },
       error: (error) => {
         console.error('Error creating agent:', error);
-        this.toastr.error(error.error.message);
+        this.toastr.error(error.error.message, 'Error creating agent:');
       }
     });
   }
@@ -60,7 +65,7 @@ export class UserPromotionForms {
       },
       error: (error) => {
         console.error('Error creating manager:', error);
-        this.toastr.error(error.error.message);
+        this.toastr.error(error.error.message, 'Error creating manager:');
       }
     });
   }
