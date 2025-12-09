@@ -71,7 +71,7 @@ export class NotificationsPreferences {
   private changeEmailNotificationsPreferences(isEnabled: boolean) {
     let currentPrefs = new NotificationPreferencesDTO();
     currentPrefs = Object.assign(currentPrefs, this.userState.notificationsPreferences());
-    if (currentPrefs && currentPrefs.emailNotificationsEnabled !== isEnabled) {
+    if (currentPrefs) {
       currentPrefs.emailNotificationsEnabled = isEnabled;
       this.userState.updateNotificationsPreferences(currentPrefs);
     }
