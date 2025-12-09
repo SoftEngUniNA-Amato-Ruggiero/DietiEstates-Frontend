@@ -2,7 +2,7 @@ import { Component, inject, signal } from '@angular/core';
 import { GeoapifyGeocoderAutocompleteModule } from '@geoapify/angular-geocoder-autocomplete';
 import { UserStateService } from '../../_services/user-state-service';
 import { GeoapifyClientService } from '../../_services/geoapify-client-service';
-import { NotificationPreferencesDTO } from '../../_types/NotificationPreferencesDTO';
+import { NotificationsPreferencesService } from '../../_services/notifications-preferences-service';
 
 @Component({
   selector: 'app-notifications-preferences',
@@ -11,26 +11,27 @@ import { NotificationPreferencesDTO } from '../../_types/NotificationPreferences
   styleUrl: './notifications-preferences.scss'
 })
 export class NotificationsPreferences {
-  protected userState = inject(UserStateService);
-  protected geoapify = inject(GeoapifyClientService);
-  protected selectedCity = signal<string | null>(null);
+  protected readonly userState = inject(UserStateService);
+  protected readonly notificationsPreferencesService = inject(NotificationsPreferencesService);
+  protected readonly geoapify = inject(GeoapifyClientService);
+  protected readonly selectedCity = signal<string | null>(null);
 
   protected toggleEmailNotifications() {
-    this.changeEmailNotificationsPreferences(!(this.userState.notificationsPreferences()?.emailNotificationsEnabled));
+    this.notificationsPreferencesService.changeEmailNotificationsPreferences(!(this.userState.notificationsPreferences()?.emailNotificationsEnabled));
   }
 
   protected toggleNotificationsForSale() {
-    this.changeNotificationsForSalePreferences(!(this.userState.notificationsPreferences()?.notificationsForSaleEnabled));
+    this.notificationsPreferencesService.changeNotificationsForSalePreferences(!(this.userState.notificationsPreferences()?.notificationsForSaleEnabled));
   }
 
   protected toggleNotificationsForRent() {
-    this.changeNotificationsForRentPreferences(!(this.userState.notificationsPreferences()?.notificationsForRentEnabled));
+    this.notificationsPreferencesService.changeNotificationsForRentPreferences(!(this.userState.notificationsPreferences()?.notificationsForRentEnabled));
   }
 
   protected updateCityInNotifications() {
     const city = this.selectedCity();
     if (city) {
-      this.changeCityInNotificationPreferences(city);
+      this.notificationsPreferencesService.changeCityInNotificationPreferences(city);
       this.selectedCity.set(null);
     }
   }
@@ -56,42 +57,6 @@ export class NotificationsPreferences {
   protected onUserInput(event: any) {
     if (!event.target.value) {
       this.selectedCity.set(null);
-    }
-  }
-
-  private changeCityInNotificationPreferences(city: string) {
-    let currentPrefs = new NotificationPreferencesDTO();
-    currentPrefs = Object.assign(currentPrefs, this.userState.notificationsPreferences());
-    if (currentPrefs && currentPrefs.city !== city) {
-      currentPrefs.city = city;
-      this.userState.updateNotificationsPreferences(currentPrefs);
-    }
-  }
-
-  private changeEmailNotificationsPreferences(isEnabled: boolean) {
-    let currentPrefs = new NotificationPreferencesDTO();
-    currentPrefs = Object.assign(currentPrefs, this.userState.notificationsPreferences());
-    if (currentPrefs) {
-      currentPrefs.emailNotificationsEnabled = isEnabled;
-      this.userState.updateNotificationsPreferences(currentPrefs);
-    }
-  }
-
-  private changeNotificationsForSalePreferences(isEnabled: boolean) {
-    let currentPrefs = new NotificationPreferencesDTO();
-    currentPrefs = Object.assign(currentPrefs, this.userState.notificationsPreferences());
-    if (currentPrefs && currentPrefs.notificationsForSaleEnabled !== isEnabled) {
-      currentPrefs.notificationsForSaleEnabled = isEnabled;
-      this.userState.updateNotificationsPreferences(currentPrefs);
-    }
-  }
-
-  private changeNotificationsForRentPreferences(isEnabled: boolean) {
-    let currentPrefs = new NotificationPreferencesDTO();
-    currentPrefs = Object.assign(currentPrefs, this.userState.notificationsPreferences());
-    if (currentPrefs && currentPrefs.notificationsForRentEnabled !== isEnabled) {
-      currentPrefs.notificationsForRentEnabled = isEnabled;
-      this.userState.updateNotificationsPreferences(currentPrefs);
     }
   }
 

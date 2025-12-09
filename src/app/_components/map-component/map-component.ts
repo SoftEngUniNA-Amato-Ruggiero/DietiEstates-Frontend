@@ -7,6 +7,7 @@ import * as L from 'leaflet';
 import { GeoapifyClientService } from '../../_services/geoapify-client-service';
 import { UserStateService } from '../../_services/user-state-service';
 import * as MapConstants from '../../_constants/map-component.constants';
+import { NotificationsPreferencesService } from '../../_services/notifications-preferences-service';
 
 @Component({
   selector: 'app-map-component',
@@ -26,6 +27,7 @@ export class MapComponent implements OnChanges {
   @Output() userInput = new EventEmitter<string>();
 
   protected readonly userState = inject(UserStateService);
+  protected readonly notificationsPreferencesService = inject(NotificationsPreferencesService);
   protected readonly geoapify = inject(GeoapifyClientService);
 
   protected map?: L.Map;
@@ -73,19 +75,21 @@ export class MapComponent implements OnChanges {
     this.currentPosition$.subscribe({
       next: (pos) => {
         this.map!.setView(pos, MapConstants.DEFAULT_ZOOM); //calls onMoveEnd automatically
+
         if (!this.userState.notificationsPreferences()?.city) {
-          this.setTemporaryCityInNotifications(pos);
+          this.setCityInNotificationsPreferences(pos);
         }
+
         this.userLocation.emit(pos);
       },
       error: (error) => { console.error('Error getting current position:', error); }
     });
   }
 
-  private setTemporaryCityInNotifications(pos: L.LatLng) {
+  private setCityInNotificationsPreferences(pos: L.LatLng) {
     this.geoapify.reverseGeocode(pos.lat, pos.lng).subscribe({
       next: (result: FeatureCollection) => {
-        this.userState.setTemporaryCityInNotificationPreferences(result.features[0].properties!['city']);
+        this.notificationsPreferencesService.changeCityInNotificationPreferences(result.features[0].properties!['city']);
       }
     });
   }

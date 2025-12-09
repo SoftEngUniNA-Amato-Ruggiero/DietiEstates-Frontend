@@ -104,14 +104,6 @@ export class UserStateService {
     })
   }
 
-  setTemporaryCityInNotificationPreferences(city: string) {
-    let currentPrefs = this.notificationsPreferenceSignal();
-    if (currentPrefs) {
-      currentPrefs.city = city;
-      this.notificationsPreferenceSignal.set(currentPrefs);
-    }
-  }
-
   public updateNotificationsPreferences(req: NotificationPreferencesDTO) {
     this.client.putNotificationsPreferences(req).subscribe({
       next: updatedPrefs => {
