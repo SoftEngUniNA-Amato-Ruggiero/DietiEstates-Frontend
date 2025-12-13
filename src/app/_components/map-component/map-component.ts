@@ -4,9 +4,10 @@ import { GeoapifyGeocoderAutocompleteModule } from '@geoapify/angular-geocoder-a
 import { Observable } from 'rxjs';
 import { FeatureCollection } from 'geojson';
 import * as L from 'leaflet';
-import { GeoapifyClientService } from '../../_services/geoapify-client-service';
-import { UserStateService } from '../../_services/user-state-service';
 import * as MapConstants from '../../_constants/map-component.constants';
+import { GeoapifyClientService } from '../../_services/geoapify-client-service';
+import { AuthService } from '../../_services/auth-service';
+import { UserStateService } from '../../_services/user-state-service';
 import { NotificationsPreferencesService } from '../../_services/notifications-preferences-service';
 
 @Component({
@@ -26,6 +27,7 @@ export class MapComponent implements OnChanges {
   @Output() placeSelected = new EventEmitter<L.LatLng>();
   @Output() userInput = new EventEmitter<string>();
 
+  protected readonly authService = inject(AuthService);
   protected readonly userState = inject(UserStateService);
   protected readonly notificationsPreferencesService = inject(NotificationsPreferencesService);
   protected readonly geoapify = inject(GeoapifyClientService);
@@ -76,7 +78,7 @@ export class MapComponent implements OnChanges {
       next: (pos) => {
         this.map!.setView(pos, MapConstants.DEFAULT_ZOOM); //calls onMoveEnd automatically
 
-        if (!this.userState.notificationsPreferences()?.city) {
+        if (this.authService.isAuthenticated() && !this.userState.notificationsPreferences()?.city) {
           this.setCityInNotificationsPreferences(pos);
         }
 
