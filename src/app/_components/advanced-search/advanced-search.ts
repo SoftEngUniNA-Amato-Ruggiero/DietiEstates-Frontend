@@ -218,7 +218,7 @@ export class AdvancedSearch {
 
   private showSearchResults(insertions: Page<InsertionSearchResultDTO>) {
     this.searchResultsLayerGroup = L.markerClusterGroup();
-    insertions.content.map((insertion) => this.searchResultsLayerGroup!.addLayer(this.initializeMarkerForInsertion(insertion))
+    insertions.content.forEach((insertion) => this.searchResultsLayerGroup!.addLayer(this.initializeMarkerForInsertion(insertion))
     );
   }
 
