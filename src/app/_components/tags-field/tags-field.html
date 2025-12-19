@@ -10,6 +10,6 @@
         </mat-chip-row>
         }
     </mat-chip-grid>
-    <input placeholder="New tag..." [matChipInputFor]="reactiveChipGrid"
+    <input placeholder="Press enter to add a tag." [matChipInputFor]="reactiveChipGrid"
         (matChipInputTokenEnd)="addReactiveKeyword($event)" />
 </mat-form-field>

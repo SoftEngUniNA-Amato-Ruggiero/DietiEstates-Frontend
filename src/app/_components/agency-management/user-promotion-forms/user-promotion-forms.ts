@@ -47,7 +47,7 @@ export class UserPromotionForms {
       },
       error: (error) => {
         console.error('Error creating agent:', error);
-        this.toastr.error(error.error.message, 'Error creating agent:');
+        this.toastr.error(error.statusText, 'Error creating agent');
       }
     });
   }

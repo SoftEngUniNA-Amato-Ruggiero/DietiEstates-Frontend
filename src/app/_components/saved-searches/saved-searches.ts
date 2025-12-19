@@ -68,7 +68,7 @@ export class SavedSearches {
   }
 
   deleteSearch(search: SavedSearch) {
-    if (confirm(`Are you sure you want to delete the saved search "${search}"?`)) {
+    if (confirm(`Are you sure you want to delete the saved search "${search.address}"?`)) {
       this.client.deleteSavedSearch(search.id).subscribe({
         next: () => {
           this.toastr.success('Saved search deleted successfully.');
